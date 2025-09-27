@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email        String  @unique
+  passwordHash String?
+
+  userProfile UserProfile?
+  // mealLogs    MealLog[]
+  accounts    Account[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Account {
+  id Int @id @default(autoincrement())
+
+  userId            Int
+  user              User   @relation(fields: [userId], references: [id])
+  provider          String // 'google'
+  providerAccountId String // google sub/id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model UserProfile {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  sex       String? // "female" | "male" | ...
+  birthDate DateTime?
+  heightCm  Int?
+  weightKg  Float?
+  bmi       Float?
+  prefs     Json? // предпочтения { "diet": "vegetarian" }
+
+  recipes  Recipe[]
+  mealLogs MealLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Recipe {
+  id Int @id @default(autoincrement())
+
+  authorProfileId Int?
+  authorProfile   UserProfile? @relation(fields: [authorProfileId], references: [id], onDelete: SetNull)
+
+  title       String
+  steps       Json
+  picture_url String
+
+  servings     Int
+  kcalPerServ  Float @default(0)
+  protPerServ  Float @default(0)
+  fatPerServ   Float @default(0)
+  carbPerServ  Float @default(0)
+  sugarPerServ Float @default(0)
+
+  ingredients RecipeIngredient[]
+
+  mealLogs MealLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model RecipeIngredient {
+  id Int @id @default(autoincrement())
+
+  recipeId   Int
+  recipe     Recipe @relation(fields: [recipeId], references: [id])
+  name       String // как вбили/распознали ("Milk", "Sugar")
+  amount     Float // сколько указано в рецепте
+  unit       String // 'g' | 'ml' | 'pcs' | ...
+  grams      Float // приведено к граммам
+  // вклад этой строки ВО ВЕСЬ РЕЦЕПТ (не на порцию) — посчитали при сохранении рецепта
+  kcalTotal  Float  @default(0)
+  protTotal  Float  @default(0)
+  fatTotal   Float  @default(0)
+  carbTotal  Float  @default(0)
+  sugarTotal Float  @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model MealLog {
+  id Int @id @default(autoincrement())
+
+  userProfileId Int
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+
+  recipeId Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+
+  servings Float // сколько порций съел
+  eatenAt  DateTime @default(now()) // когда съел
+
+  moodScore   Int? // настроение
+  energyScore Int? // энергия
+  sleepScore  Int? // качество сна
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([userProfileId, eatenAt])
+  @@index([recipeId, eatenAt])
+}
+
+model IngredientCache {
+  id Int @id @default(autoincrement())
+
+  externalId Int //fdcId
+
+  name           String // description из USDA
+  normalizedName String @unique
+  dataType       String // 'Foundation' | 'Branded' | 'SR Legacy'
+
+  basis String // 'PER_100G' | 'PER_1PC'
+
+  kcalBase  Float
+  protBase  Float
+  fatBase   Float
+  carbBase  Float
+  sugarBase Float
+
+  provider  String? // 'fdc'
+  fetchedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model PieceWeight {
+  id             Int      @id @default(autoincrement())
+  normalizedName String   @unique // например: "EGG", "GARLIC CLOVE"
+  gramsPerPiece  Float
+  source         String   @default("default") // 'default' | 'user' | 'admin'
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// "steps": [
+//   { 
+//     "order": 1, 
+//     "text": "Смешайте яйца, молоко и муку",
+//     "imageUrl": "https://cdn.example.com/recipes/blini/step1.jpg"
+//   },
+//   { 
+//     "order": 2, 
+//     "text": "Выпекайте на сковородке",
+//     "imageUrl": "https://cdn.example.com/recipes/blini/step2.jpg"
+//   },
+//   { 
+//     "order": 3, 
+//     "text": "Подавайте с мёдом",
+//     "imageUrl": "https://cdn.example.com/recipes/blini/step3.jpg"
+//   }
+// ]
