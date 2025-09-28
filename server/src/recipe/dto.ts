@@ -182,7 +182,7 @@ export class AddRecipeDto {
         {
           order: 1,
           text: 'Crack the eggs into a bowl and whisk with milk, salt, and pepper.',
-          imageUrl: 'https://cdn.example.com/recipes/eggs/step1.jpg'
+          imageUrl: 'https://cdn.example.com/recipes/eggs/step1.jpg',
         },
         { order: 2, text: 'Melt butter in a pan over medium heat.' },
         { order: 3, text: 'Pour in the eggs and stir gently until just set.' },
@@ -213,7 +213,6 @@ export class AddRecipeDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AddIngredientDto)
-  
   ingredients: AddIngredientDto[];
 }
 
@@ -225,11 +224,65 @@ export class RecipeListDto {
   meta: PageMetaDto;
 }
 
+export class RecipeFiltersDto {
+  @ApiProperty({ required: false, type: [String], example: ['oats'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  includeIngredients?: string[];
+
+  @ApiProperty({ required: false, type: [String], example: ['sugar'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  excludeIngredients?: string[];
+
+  @ApiProperty({ required: false, example: 100 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  minKcal?: number;
+
+  @ApiProperty({ required: false, example: 500 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  maxKcal?: number;
+
+  @ApiProperty({ required: false, example: 5 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  minSugar?: number;
+
+  @ApiProperty({ required: false, example: 20 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  maxSugar?: number;
+
+  @ApiProperty({ required: false, example: 15 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  minProt?: number;
+
+  @ApiProperty({ required: false, example: 50 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  maxProt?: number;
+}
+
 export class RecipeListQueryDto {
   @ApiProperty({ required: false, example: 'eggs' })
   @IsOptional()
   @IsString()
   q?: string;
+  @ApiProperty({ required: false, type: RecipeFiltersDto })
+  @IsOptional()
+
+  filters?: RecipeFiltersDto;
 
   @ApiProperty({ required: false, example: 1 })
   @IsOptional()

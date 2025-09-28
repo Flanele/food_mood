@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
-import { IngredientCache, Prisma } from 'generated/prisma';
+import { IngredientCache } from 'generated/prisma';
 import { UsdaService } from '../usda/usda.service';
 import { ExternalIngredient } from '../usda/usda.types';
 import { AddIngredientDto } from '../dto';

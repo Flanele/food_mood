@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiQuery, getSchemaPath } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SessionInfo } from 'src/auth/session-info.decorator';
 import { GetSessionInfoDto } from 'src/auth/dto';
@@ -18,6 +18,7 @@ import {
   AddRecipeDto,
   PatchRecipeDto,
   RecipeDto,
+  RecipeFiltersDto,
   RecipeListDto,
   RecipeListQueryDto,
 } from './dto';

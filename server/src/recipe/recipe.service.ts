@@ -9,6 +9,7 @@ import {
 } from './dto';
 import { IngredientService } from './ingredients/ingredient.service';
 import { Prisma } from 'generated/prisma';
+import { buildRecipeWhere, perServing, sumRows } from './recipe.helpers';
 
 @Injectable()
 export class RecipeService {
@@ -22,20 +23,7 @@ export class RecipeService {
     const limit = Math.min(100, Math.max(1, +(query.limit ?? 20)));
     const skip = (page - 1) * limit;
 
-    const where = query.q
-      ? {
-          OR: [
-            { title: { contains: query.q, mode: 'insensitive' as const } },
-            {
-              ingredients: {
-                some: {
-                  name: { contains: query.q, mode: 'insensitive' as const },
-                },
-              },
-            },
-          ],
-        }
-      : {};
+    const where = buildRecipeWhere(query);
 
     const [recipes, total] = await Promise.all([
       this.db.recipe.findMany({
@@ -50,12 +38,7 @@ export class RecipeService {
 
     return {
       recipes,
-      meta: {
-        total,
-        page,
-        limit,
-        pages: Math.ceil(total / limit),
-      },
+      meta: { total, page, limit, pages: Math.ceil(total / limit) },
     };
   }
 
@@ -63,51 +46,6 @@ export class RecipeService {
     const recipe = await this.db.recipe.findUnique({ where: { id } });
     if (!recipe) throw new BadRequestException({ type: 'recipe-not-found' });
     return recipe;
-  }
-
-  private round(x: number, d = 2) {
-    const p = 10 ** d;
-    return Math.round((x + Number.EPSILON) * p) / p;
-  }
-
-  private sum(
-    rows: Array<{
-      kcalTotal: number;
-      protTotal: number;
-      fatTotal: number;
-      carbTotal: number;
-      sugarTotal: number;
-    }>,
-  ) {
-    return rows.reduce(
-      (a, r) => ({
-        kcal: a.kcal + r.kcalTotal,
-        prot: a.prot + r.protTotal,
-        fat: a.fat + r.fatTotal,
-        carb: a.carb + r.carbTotal,
-        sugar: a.sugar + r.sugarTotal,
-      }),
-      { kcal: 0, prot: 0, fat: 0, carb: 0, sugar: 0 },
-    );
-  }
-
-  private perServing(
-    sum: {
-      kcal: number;
-      prot: number;
-      fat: number;
-      carb: number;
-      sugar: number;
-    },
-    servings: number,
-  ) {
-    return {
-      kcalPerServ: this.round(sum.kcal / servings),
-      protPerServ: this.round(sum.prot / servings),
-      fatPerServ: this.round(sum.fat / servings),
-      carbPerServ: this.round(sum.carb / servings),
-      sugarPerServ: this.round(sum.sugar / servings),
-    };
   }
 
   async addRecipe(dto: AddRecipeDto, userId: number) {
@@ -119,8 +57,7 @@ export class RecipeService {
       dto.ingredients.map((i) => this.ingredientsService.buildIngredientRow(i)),
     );
 
-    const sum = this.sum(rows);
-    const perServ = this.perServing(sum, dto.servings);
+    const macros = perServing(sumRows(rows), dto.servings);
 
     return this.db.$transaction((tx) =>
       tx.recipe.create({
@@ -130,7 +67,7 @@ export class RecipeService {
           steps: dto.steps as Prisma.InputJsonValue,
           picture_url: dto.picture_url,
           servings: dto.servings,
-          ...perServ,
+          ...macros,
           ingredients: { create: rows },
         },
         include: { ingredients: true },
@@ -143,7 +80,6 @@ export class RecipeService {
     if (!existing) throw new BadRequestException({ type: 'recipe-not-found' });
 
     return this.db.$transaction(async (tx) => {
-
       const data: Prisma.RecipeUpdateInput = {};
 
       if (dto.title !== undefined) data.title = dto.title;
@@ -165,10 +101,8 @@ export class RecipeService {
           data: rows.map((r) => ({ ...r, recipeId: id })),
         });
 
-        const sum = this.sum(rows);
-
         const servings = dto.servings ?? existing.servings;
-        Object.assign(data, this.perServing(sum, servings));
+        Object.assign(data, perServing(sumRows(rows), servings));
       }
 
       // если ингредиенты не пришли, но поменяли servings — пересчитать per-serv по текущим строкам
@@ -192,7 +126,7 @@ export class RecipeService {
           sugar: aggr._sum.sugarTotal ?? 0,
         };
 
-        Object.assign(data, this.perServing(sum, dto.servings));
+        Object.assign(data, perServing(sum, dto.servings));
       }
 
       return tx.recipe.update({

@@ -16,10 +16,18 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     origin: 'http://localhost:6005',
-    credentials: true 
-  })
+    credentials: true,
+  });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.getHttpAdapter().getInstance().set('query parser', 'extended');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
 
   await app.listen(process.env.PORT ?? 6005);
 }
