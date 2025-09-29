@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiQuery, getSchemaPath } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SessionInfo } from 'src/auth/session-info.decorator';
 import { GetSessionInfoDto } from 'src/auth/dto';
@@ -18,7 +18,6 @@ import {
   AddRecipeDto,
   PatchRecipeDto,
   RecipeDto,
-  RecipeFiltersDto,
   RecipeListDto,
   RecipeListQueryDto,
 } from './dto';
@@ -61,7 +60,7 @@ export class RecipeController {
 
   @UseGuards(AuthGuard)
   @Patch('/:id')
-  @ApiCreatedResponse({ type: RecipeDto })
+  @ApiOkResponse({ type: RecipeDto })
   patchRecipe(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: PatchRecipeDto,

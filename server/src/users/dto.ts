@@ -67,12 +67,6 @@ export class ProfileDTO {
     example: { diet: 'vegetarian', allergies: ['nuts'] },
   })
   prefs: Prisma.JsonValue | null;
-
-  @ApiProperty({ type: String, format: 'date-time' })
-  createdAt: Date;
-
-  @ApiProperty({ type: String, format: 'date-time' })
-  updatedAt: Date;
 }
 
 export class PatchProfileDTO {
