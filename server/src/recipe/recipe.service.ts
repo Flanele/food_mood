@@ -41,8 +41,19 @@ export class RecipeService {
     };
   }
 
+  async getAllNoLimit(where: Prisma.RecipeWhereInput = {}) {
+    return this.db.recipe.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: { ingredients: true },
+    });
+  }
+
   async getOneById(id: number) {
-    const recipe = await this.db.recipe.findUnique({ where: { id } });
+    const recipe = await this.db.recipe.findUnique({
+      where: { id },
+      include: { ingredients: true },
+    });
     if (!recipe) throw new BadRequestException({ type: 'recipe-not-found' });
     return recipe;
   }

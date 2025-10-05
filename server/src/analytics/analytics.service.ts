@@ -9,7 +9,8 @@ import {
   GetTopIngredientsQueryDto,
 } from './dto';
 import { Prisma } from 'generated/prisma';
-import { calcInfluence, getPerServ } from './analytics.helpers';
+import { getPerServ } from './analytics.helpers';
+import { calcInfluence, DetailRow } from 'src/lib/utils/calc-influence';
 
 @Injectable()
 export class AnalyticsService {
@@ -178,9 +179,18 @@ export class AnalyticsService {
       });
     }
 
-    score.correlation.mood = calcInfluence(score.details, 'mood');
-    score.correlation.energy = calcInfluence(score.details, 'energy');
-    score.correlation.sleep = calcInfluence(score.details, 'sleep');
+    score.correlation.mood = calcInfluence(
+      score.details as DetailRow[],
+      'mood',
+    );
+    score.correlation.energy = calcInfluence(
+      score.details as DetailRow[],
+      'energy',
+    );
+    score.correlation.sleep = calcInfluence(
+      score.details as DetailRow[],
+      'sleep',
+    );
 
     return score;
   }

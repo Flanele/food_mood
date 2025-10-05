@@ -20,6 +20,7 @@ export enum Sex {
 export enum Diet {
   Vegetarian = 'vegetarian',
   Vegan = 'vegan',
+  Pescatarian = 'pescatarian',
 }
 
 export class PrefsDto {

@@ -6,7 +6,7 @@ import { UserProfileService } from './user-profile.service';
 
 @Module({
   imports: [DbModule],
-  exports: [UserService],
+  exports: [UserService, UserProfileService],
   controllers: [UserController],
   providers: [UserService, UserProfileService]
 })
