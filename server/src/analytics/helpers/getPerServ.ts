@@ -1,5 +1,5 @@
 import { Prisma } from 'generated/prisma';
-import { Metric } from './dto';
+import { Metric } from '../dto';
 
 export function getPerServ(
   r: Prisma.RecipeGetPayload<{}>,

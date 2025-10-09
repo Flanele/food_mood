@@ -9,7 +9,7 @@ import {
   GetTopIngredientsQueryDto,
 } from './dto';
 import { Prisma } from 'generated/prisma';
-import { getPerServ } from './analytics.helpers';
+import { getPerServ } from './helpers/getPerServ';
 import { calcInfluence, DetailRow } from 'src/lib/utils/calc-influence';
 
 @Injectable()

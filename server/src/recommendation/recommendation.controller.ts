@@ -36,6 +36,20 @@ export class RecommendationController {
     return this.recommendationService.getForYou(query, session.id);
   }
 
+  @Get('/peers')
+  @UseGuards(AuthGuard)
+  @ApiOkResponse({
+    description: 'Recipes liked by similar users (peer-based ranking)',
+    type: GetRecommendationsDto,
+  })
+  getPeers(
+    @Query() query: GetRecommendationsQueryDto,
+    @SessionInfo() session: GetSessionInfoDto,
+  ) {
+    return this.recommendationService.getPeers(query, session.id);
+  }
+
+
   @Get('similar/:recipeId')
   @ApiOkResponse({
     description:
@@ -50,7 +64,7 @@ export class RecommendationController {
     return this.recommendationService.getSimilar(recipeId, query);
   }
 
-  @Get()
+  @Get('explain/:recipId')
   @UseGuards(AuthGuard)
   @ApiOkResponse({
     description:
@@ -58,9 +72,10 @@ export class RecommendationController {
     type: ExplainRecommendationDto,
   })
   explain(
+    @Param('recipId', ParseIntPipe) recipeId: number,
     @Query() query: ExplainQueryDto,
     @SessionInfo() session: GetSessionInfoDto,
   ) {
-    return this.recommendationService.explain(query, session.id);
+    return this.recommendationService.explain(recipeId, query, session.id);
   }
 }

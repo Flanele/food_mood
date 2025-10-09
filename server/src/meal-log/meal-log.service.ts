@@ -81,10 +81,23 @@ export class MealLogService {
     return this.db.mealLog.delete({ where: { id } });
   }
 
-  async findMany(
+  async findMany(where: Prisma.MealLogWhereInput = {}) {
+    return this.db.mealLog.findMany({
+      where,
+      include: {
+        recipe: {
+          include: {
+            ingredients: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findManyWithSelect(
     where: Prisma.MealLogWhereInput = {},
-    include: Prisma.MealLogInclude = {},
+    select: Prisma.MealLogSelect = {},
   ) {
-    return this.db.mealLog.findMany({ where, include });
+    return this.db.mealLog.findMany({ where, select });
   }
 }
