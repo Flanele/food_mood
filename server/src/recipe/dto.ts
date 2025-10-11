@@ -8,87 +8,11 @@ import {
   IsUrl,
   IsArray,
   ValidateNested,
-  IsObject,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
+import { AddIngredientDto, IngredientDto } from 'src/ingredient/dto';
 
-// ---------- Ingredient DTOs ----------
-
-export class IngredientDto {
-  @ApiProperty({ example: 7 })
-  @IsInt()
-  id: number;
-
-  @ApiProperty({ example: 2 })
-  @IsInt()
-  recipeId: number;
-
-  @ApiProperty({ example: 'egg' })
-  @IsString()
-  name: string;
-
-  @ApiProperty({ example: 2 })
-  @IsNumber()
-  amount: number;
-
-  @ApiProperty({ example: 'pcs' })
-  @IsString()
-  unit: string;
-
-  @ApiProperty({ example: 100 })
-  @IsNumber()
-  grams: number;
-
-  @ApiProperty({ example: 360 })
-  @IsNumber()
-  kcalTotal: number;
-
-  @ApiProperty({ example: 24 })
-  @IsNumber()
-  protTotal: number;
-
-  @ApiProperty({ example: 28 })
-  @IsNumber()
-  fatTotal: number;
-
-  @ApiProperty({ example: 4 })
-  @IsNumber()
-  carbTotal: number;
-
-  @ApiProperty({ example: 2 })
-  @IsNumber()
-  sugarTotal: number;
-
-  @ApiProperty({ type: String, format: 'date-time' })
-  createdAt: Date;
-
-  @ApiProperty({ type: String, format: 'date-time' })
-  updatedAt: Date;
-}
-
-export class AddIngredientDto {
-  @ApiProperty({ example: 'egg' })
-  @IsString()
-  name: string;
-
-  @ApiProperty({ example: 2 })
-  @IsNumber()
-  amount: number;
-
-  @ApiProperty({ example: 'pcs' })
-  @IsString()
-  unit: string;
-
-  @ApiProperty({ required: false, example: { pieceGrams: 60 } })
-  @IsOptional()
-  @IsObject()
-  opts?: {
-    pieceGrams?: number;
-  };
-}
-
-// ---------- Recipe DTOs ----------
 
 export class PageMetaDto {
   @ApiProperty() total: number; // всего записей
@@ -170,6 +94,21 @@ export class RecipeDto {
   updatedAt: Date;
 }
 
+export class StepDto {
+  @ApiProperty({ example: 1 })
+  @IsInt()
+  order: number;
+
+  @ApiProperty({ example: 'Boil pasta in salted water until al dente.' })
+  @IsString()
+  text: string;
+
+  @ApiProperty({ required: false, example: 'https://...' })
+  @IsOptional()
+  @IsUrl()
+  imageUrl?: string;
+}
+
 export class AddRecipeDto {
   @ApiProperty({ example: 'Scrambled Eggs' })
   @IsString()
@@ -222,6 +161,11 @@ export class RecipeListDto {
 
   @ApiProperty({ type: PageMetaDto })
   meta: PageMetaDto;
+}
+
+export class RecipeListLiteDto {
+  @ApiProperty({ type: [RecipeDto] })
+  recipes: RecipeDto[];
 }
 
 export class RecipeFiltersDto {
@@ -281,7 +225,6 @@ export class RecipeListQueryDto {
   q?: string;
   @ApiProperty({ required: false, type: RecipeFiltersDto })
   @IsOptional()
-
   filters?: RecipeFiltersDto;
 
   @ApiProperty({ required: false, example: 1 })
@@ -339,3 +282,4 @@ export class PatchRecipeDto {
   @Type(() => AddIngredientDto)
   ingredients?: AddIngredientDto[];
 }
+

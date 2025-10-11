@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { RecipeService } from './recipe.service';
 import { DbService } from 'src/db/db.service';
 import { BadRequestException } from '@nestjs/common';
-import { IngredientService } from './ingredients/ingredient.service';
+import { IngredientService } from '../ingredient/ingredient.service';
 import { AddRecipeDto, PatchRecipeDto, RecipeListQueryDto } from './dto';
 
 type MockDb = {

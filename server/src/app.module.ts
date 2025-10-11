@@ -8,10 +8,11 @@ import { RecipeModule } from './recipe/recipe.module';
 import { MealLogModule } from './meal-log/meal-log.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
+import { IngredientModule } from './ingredient/ingredient.module';
 
 
 @Module({
-  imports: [UserModule, AuthModule, AccountModule, RecipeModule, MealLogModule, AnalyticsModule, RecommendationModule],
+  imports: [UserModule, AuthModule, AccountModule, RecipeModule, MealLogModule, AnalyticsModule, RecommendationModule, IngredientModule],
   controllers: [AppController],
   providers: [AppService],
 })

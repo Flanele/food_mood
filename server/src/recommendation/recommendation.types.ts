@@ -13,3 +13,10 @@ export type LogLite = {
   energyScore: number | null;
   sleepScore: number | null;
 };
+
+export type PeerLogLite = {
+  recipeId: number;
+  moodScore: number | null;
+  energyScore: number | null;
+  sleepScore: number | null;
+};

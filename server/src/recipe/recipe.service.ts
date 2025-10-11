@@ -6,7 +6,7 @@ import {
   RecipeListDto,
   RecipeListQueryDto,
 } from './dto';
-import { IngredientService } from './ingredients/ingredient.service';
+import { IngredientService } from '../ingredient/ingredient.service';
 import { Prisma } from 'generated/prisma';
 import { buildRecipeWhere, perServing, sumRows } from './recipe.helpers';
 
@@ -49,6 +49,16 @@ export class RecipeService {
     });
   }
 
+  async getMy(userId: number) {
+    const recipes = await this.db.recipe.findMany({
+      where: { authorProfileId: userId },
+      orderBy: { createdAt: 'desc' },
+      include: { ingredients: true },
+    });
+
+    return { recipes };
+  }
+
   async getOneById(id: number) {
     const recipe = await this.db.recipe.findUnique({
       where: { id },
@@ -85,9 +95,15 @@ export class RecipeService {
     );
   }
 
-  async patchRecipe(id: number, dto: PatchRecipeDto) {
-    const existing = await this.db.recipe.findUnique({ where: { id } });
+  async patchRecipe(id: number, dto: PatchRecipeDto, userId: number) {
+    const existing = await this.db.recipe.findUnique({
+      where: { id },
+    });
     if (!existing) throw new BadRequestException({ type: 'recipe-not-found' });
+
+    if (existing.authorProfileId !== userId) {
+      throw new BadRequestException({ type: 'access-denied' });
+    }
 
     return this.db.$transaction(async (tx) => {
       const data: Prisma.RecipeUpdateInput = {};

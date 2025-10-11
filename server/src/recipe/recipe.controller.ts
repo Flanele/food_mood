@@ -10,7 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SessionInfo } from 'src/auth/session-info.decorator';
 import { GetSessionInfoDto } from 'src/auth/dto';
@@ -19,27 +22,30 @@ import {
   PatchRecipeDto,
   RecipeDto,
   RecipeListDto,
+  RecipeListLiteDto,
   RecipeListQueryDto,
 } from './dto';
-import { IngredientService } from './ingredients/ingredient.service';
 
 @Controller('recipes')
 export class RecipeController {
   constructor(
     private recipeService: RecipeService,
-    private ingredientService: IngredientService,
   ) {}
-
-  @Get('test')
-  async testFetch(@Query('name') name: string) {
-    const result = await this.ingredientService['getOrFetch'](name);
-    return result ?? { message: 'not found' };
-  }
+  
 
   @Get()
   @ApiOkResponse({ type: RecipeListDto })
   getAll(@Query() query: RecipeListQueryDto): Promise<RecipeListDto> {
     return this.recipeService.getAll(query);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('my-recipes')
+  @ApiOkResponse({ type: RecipeListLiteDto })
+  getMyRecipes(
+    @SessionInfo() session: GetSessionInfoDto,
+  ): Promise<RecipeListLiteDto> {
+    return this.recipeService.getMy(session.id);
   }
 
   @Get('/:id')
@@ -66,6 +72,6 @@ export class RecipeController {
     @Body() dto: PatchRecipeDto,
     @SessionInfo() session: GetSessionInfoDto,
   ) {
-    return this.recipeService.patchRecipe(id, dto);
+    return this.recipeService.patchRecipe(id, dto, session.id);
   }
 }

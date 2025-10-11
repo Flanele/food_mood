@@ -14,7 +14,6 @@ import { calculateIngredientSimilarity } from './helpers/calcIngredientSimilarit
 import { Prisma } from 'generated/prisma';
 import { isProfileSimilar } from './helpers/isProfileSimilar';
 import { getAge } from 'src/lib/utils/get-age';
-import { pickScoreForObjective } from './helpers/pickSroceObjective';
 import { getConsumedIngredientGrams } from './helpers/getConsumedIngredientGrams';
 import { LogLite, RecipeLite } from './recommendation.types';
 import { computeNutrientsObjective } from './helpers/computeNutrientsObjective';
@@ -22,6 +21,7 @@ import { computeAffinityForRecipe } from './helpers/computeAffinityForRecipe';
 import { pickPeerScore } from './helpers/pickPeerScore';
 import { computeFinalScoreWithPrefs } from './helpers/computeFinalScoreWithPrefs';
 import { buildExplainReasons } from './helpers/buildExplainReasons';
+import { similarProfilesRecipesVoting } from './helpers/similarProfilesRecipesVoting';
 
 @Injectable()
 export class RecommendationService {
@@ -134,38 +134,11 @@ export class RecommendationService {
       { recipeId: true, moodScore: true, energyScore: true, sleepScore: true },
     );
 
-    const VOTE_STEP = 0.1;
-    const voteCountByRecipeId = new Map<number, number>();
-    const scoreByRecipeId = new Map<number, number>();
-
-    for (const log of peerLogs) {
-      const value = pickScoreForObjective(log, objective);
-      if (value == null) continue;
-
-      let vote = 0;
-      if (value >= 7) vote = +VOTE_STEP;
-      else if (value <= 4) vote = -VOTE_STEP;
-      else continue;
-
-      scoreByRecipeId.set(
-        log.recipeId,
-        (scoreByRecipeId.get(log.recipeId) ?? 0) + vote,
-      );
-      voteCountByRecipeId.set(
-        log.recipeId,
-        (voteCountByRecipeId.get(log.recipeId) ?? 0) + 1,
-      );
-    }
-
-    const MIN_VOTES_PER_RECIPE = 2;
-    const topRecipeIds = Array.from(scoreByRecipeId.entries())
-      .filter(
-        ([recipeId]) =>
-          (voteCountByRecipeId.get(recipeId) ?? 0) >= MIN_VOTES_PER_RECIPE,
-      )
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, limit)
-      .map(([recipeId]) => recipeId);
+    const { topRecipeIds, scoreByRecipeId } = similarProfilesRecipesVoting(
+      peerLogs,
+      objective,
+      limit,
+    );
 
     if (!topRecipeIds.length) return { items: [] };
 

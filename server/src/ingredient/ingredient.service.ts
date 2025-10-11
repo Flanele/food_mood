@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { IngredientCache } from 'generated/prisma';
-import { UsdaService } from '../usda/usda.service';
-import { ExternalIngredient } from '../usda/usda.types';
-import { AddIngredientDto } from '../dto';
+import { UsdaService } from './usda/usda.service';
+import { ExternalIngredient } from './usda/usda.types';
 import { PieceWeightRow } from './indredient.types';
+import { AddIngredientDto } from './dto';
 
 @Injectable()
 export class IngredientService {
@@ -76,7 +76,7 @@ export class IngredientService {
       if (opts?.pieceGrams && opts.pieceGrams > 0)
         return amount * opts.pieceGrams;
 
-      const row = await this.findIngredientWeight(cache.name);
+      const row = await this.findIngredientWeight(cache.normalizedName);
       if (row?.gramsPerPiece && row.gramsPerPiece > 0) {
         return amount * row.gramsPerPiece;
       }
@@ -111,6 +111,7 @@ export class IngredientService {
     if (!grams || grams <= 0) {
       throw new BadRequestException(
         `cannot convert "${ingredient.amount} ${ingredient.unit}" for "${ingredient.name}" to grams. ` +
+          `pieceWeight lookups tried: [${this.normalizeName(ingredient.name)}, ${cache.normalizedName}]. ` +
           `Provide opts.pieceGrams or use a mass/volume unit.`,
       );
     }

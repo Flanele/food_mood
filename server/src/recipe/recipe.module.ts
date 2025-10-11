@@ -2,14 +2,15 @@ import { Module } from '@nestjs/common';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { DbModule } from 'src/db/db.module';
-import { IngredientService } from './ingredients/ingredient.service';
-import { UsdaService } from './usda/usda.service';
-import { HttpModule } from '@nestjs/axios';
+import { IngredientModule } from 'src/ingredient/ingredient.module';
 
 @Module({
   exports: [RecipeService],
-  imports: [DbModule, HttpModule.register({ timeout: 15000 })],
+  imports: [
+    DbModule,
+    IngredientModule,
+  ],
   controllers: [RecipeController],
-  providers: [RecipeService, IngredientService, UsdaService],
+  providers: [RecipeService],
 })
 export class RecipeModule {}
