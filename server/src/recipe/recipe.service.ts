@@ -9,12 +9,14 @@ import {
 import { IngredientService } from '../ingredient/ingredient.service';
 import { Prisma } from 'generated/prisma';
 import { buildRecipeWhere, perServing, sumRows } from './recipe.helpers';
+import { UserProfileService } from 'src/users/user-profile.service';
 
 @Injectable()
 export class RecipeService {
   constructor(
     private db: DbService,
     private ingredientsService: IngredientService,
+    private userProfileService: UserProfileService,
   ) {}
 
   async getAll(query: RecipeListQueryDto): Promise<RecipeListDto> {
@@ -73,6 +75,8 @@ export class RecipeService {
       throw new BadRequestException('ingredients are required');
     }
 
+    const userProfile = await this.userProfileService.getProfile(userId);
+
     const rows = await Promise.all(
       dto.ingredients.map((i) => this.ingredientsService.buildIngredientRow(i)),
     );
@@ -82,7 +86,7 @@ export class RecipeService {
     return this.db.$transaction((tx) =>
       tx.recipe.create({
         data: {
-          authorProfileId: userId ?? null,
+          authorProfileId: userProfile.id ?? null,
           title: dto.title,
           steps: dto.steps as Prisma.InputJsonValue,
           picture_url: dto.picture_url,
@@ -101,7 +105,9 @@ export class RecipeService {
     });
     if (!existing) throw new BadRequestException({ type: 'recipe-not-found' });
 
-    if (existing.authorProfileId !== userId) {
+    const userProfile = await this.userProfileService.getProfile(userId);
+
+    if (existing.authorProfileId !== userProfile.id) {
       throw new BadRequestException({ type: 'access-denied' });
     }
 

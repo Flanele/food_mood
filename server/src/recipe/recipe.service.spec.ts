@@ -4,6 +4,7 @@ import { DbService } from 'src/db/db.service';
 import { BadRequestException } from '@nestjs/common';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { AddRecipeDto, PatchRecipeDto, RecipeListQueryDto } from './dto';
+import { UserProfileService } from 'src/users/user-profile.service';
 
 type MockDb = {
   recipe: {
@@ -25,10 +26,15 @@ type MockIngredients = {
   buildIngredientRow: jest.Mock;
 };
 
+type MockUserProfile = {
+  getProfile: jest.Mock;
+};
+
 describe('RecipeService', () => {
   let service: RecipeService;
   let db: MockDb;
   let ingredients: MockIngredients;
+  let userProfile: MockUserProfile;
 
   beforeEach(async () => {
     db = {
@@ -51,11 +57,16 @@ describe('RecipeService', () => {
       buildIngredientRow: jest.fn(),
     };
 
+    userProfile = {
+      getProfile: jest.fn().mockResolvedValue({ id: 1 }),
+    };
+
     const moduleRef = await Test.createTestingModule({
       providers: [
         RecipeService,
         { provide: DbService, useValue: db },
         { provide: IngredientService, useValue: ingredients },
+        { provide: UserProfileService, useValue: userProfile },
       ],
     }).compile();
 
@@ -128,7 +139,10 @@ describe('RecipeService', () => {
     const res = await service.getOneById(42);
 
     expect(res).toEqual({ id: 42 });
-    expect(db.recipe.findUnique).toHaveBeenCalledWith({ where: { id: 42 } });
+    expect(db.recipe.findUnique).toHaveBeenCalledWith({
+      where: { id: 42 },
+      include: { ingredients: true },
+    });
   });
 
   it('getOneById throws BadRequestException if not found', async () => {
@@ -196,7 +210,7 @@ describe('RecipeService', () => {
       ],
     };
 
-    const res = await service.addRecipe(dto, 123);
+    const res = await service.addRecipe(dto, 1);
 
     expect(res).toEqual({ id: 10, ingredients: rows });
 
@@ -204,7 +218,7 @@ describe('RecipeService', () => {
       expect.objectContaining({
         data: expect.objectContaining({
           title: 'Scrambled',
-          authorProfileId: 123,
+          authorProfileId: 1,
           kcalPerServ: 200, // (300+100)/2
         }),
       }),
@@ -212,7 +226,11 @@ describe('RecipeService', () => {
   });
 
   it('patchRecipe with ingredients rebuilds rows and recomputes per-serv', async () => {
-    db.recipe.findUnique.mockResolvedValueOnce({ id: 7, servings: 4 });
+    db.recipe.findUnique.mockResolvedValueOnce({
+      id: 7,
+      servings: 4,
+      authorProfileId: 1,
+    });
 
     const rows = [
       {
@@ -243,7 +261,11 @@ describe('RecipeService', () => {
       .mockResolvedValueOnce(rows[0])
       .mockResolvedValueOnce(rows[1]);
 
-    db.recipe.update.mockResolvedValueOnce({ id: 7, ingredients: rows });
+    db.recipe.update.mockResolvedValueOnce({
+      id: 7,
+      ingredients: rows,
+      authorProfileId: 1,
+    });
 
     const dto: PatchRecipeDto = {
       title: 'Porridge',
@@ -254,9 +276,10 @@ describe('RecipeService', () => {
       ],
     };
 
-    const res = await service.patchRecipe(7, dto);
+    const res = await service.patchRecipe(7, dto, 1);
 
-    expect(res).toEqual({ id: 7, ingredients: rows });
+    expect(userProfile.getProfile).toHaveBeenCalledWith(1);
+    expect(res).toMatchObject({ id: 7, ingredients: rows });
     expect(ingredients.buildIngredientRow).toHaveBeenCalledTimes(2);
     expect(db.recipeIngredient.deleteMany).toHaveBeenCalledWith({
       where: { recipeId: 7 },
@@ -280,7 +303,11 @@ describe('RecipeService', () => {
   });
 
   it('patchRecipe with only servings recomputes per-serv from aggregate', async () => {
-    db.recipe.findUnique.mockResolvedValueOnce({ id: 5, servings: 4 });
+    db.recipe.findUnique.mockResolvedValueOnce({
+      id: 5,
+      servings: 4,
+      authorProfileId: 1,
+    });
 
     db.recipeIngredient.aggregate.mockResolvedValueOnce({
       _sum: {
@@ -295,8 +322,9 @@ describe('RecipeService', () => {
     db.recipe.update.mockResolvedValueOnce({ id: 5, ingredients: [] });
 
     const dto: PatchRecipeDto = { servings: 3 };
-    const res = await service.patchRecipe(5, dto);
+    const res = await service.patchRecipe(5, dto, 1);
 
+    expect(userProfile.getProfile).toHaveBeenCalledWith(1);
     expect(res).toEqual({ id: 5, ingredients: [] });
     expect(db.recipeIngredient.aggregate).toHaveBeenCalledWith({
       where: { recipeId: 5 },

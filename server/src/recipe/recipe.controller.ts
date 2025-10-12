@@ -32,7 +32,6 @@ export class RecipeController {
     private recipeService: RecipeService,
   ) {}
   
-
   @Get()
   @ApiOkResponse({ type: RecipeListDto })
   getAll(@Query() query: RecipeListQueryDto): Promise<RecipeListDto> {
