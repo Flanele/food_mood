@@ -58,16 +58,21 @@ export class SignInBodyDTO {
   idToken?: string;
 }
 
-export class  GetSessionInfoDto {
+export class GetSessionInfoDto {
   @ApiProperty()
-  id: number
+  id: number;
 
   @ApiProperty()
-  email: string
+  email: string;
 
   @ApiProperty()
-  "iat": number;
+  'iat': number;
 
   @ApiProperty()
-  "exp": number;
+  'exp': number;
+}
+
+export class AccessTokenDto {
+  @ApiProperty()
+  accessToken: string;
 }

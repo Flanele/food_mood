@@ -1,0 +1,1271 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - App
+  /user/profile:
+    get:
+      operationId: UserController_getMyProfile
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDTO'
+      tags:
+        - User
+    patch:
+      operationId: UserController_editProfile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchProfileDTO'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDTO'
+      tags:
+        - User
+  /auth/sign-in:
+    post:
+      operationId: AuthController_signIn
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInBodyDTO'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenDto'
+      tags:
+        - Auth
+  /auth/sign-up:
+    post:
+      operationId: AuthController_signUp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpBodyDTO'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenDto'
+      tags:
+        - Auth
+  /auth/sign-out:
+    post:
+      operationId: AuthController_signOut
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Auth
+  /auth/session:
+    get:
+      operationId: AuthController_getSessionInfo
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSessionInfoDto'
+      tags:
+        - Auth
+  /auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenDto'
+      tags:
+        - Auth
+  /recipes:
+    get:
+      operationId: RecipeController_getAll
+      parameters:
+        - name: q
+          required: false
+          in: query
+          schema:
+            example: eggs
+            type: string
+        - name: filters
+          required: false
+          in: query
+          schema:
+            $ref: '#/components/schemas/RecipeFiltersDto'
+        - name: page
+          required: false
+          in: query
+          schema:
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeListDto'
+      tags:
+        - Recipe
+    post:
+      operationId: RecipeController_addRecipe
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddRecipeDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDto'
+      tags:
+        - Recipe
+  /recipes/my-recipes:
+    get:
+      operationId: RecipeController_getMyRecipes
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeListLiteDto'
+      tags:
+        - Recipe
+  /recipes/{id}:
+    get:
+      operationId: RecipeController_getOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDto'
+      tags:
+        - Recipe
+    patch:
+      operationId: RecipeController_patchRecipe
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchRecipeDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDto'
+      tags:
+        - Recipe
+  /ingredients/weight:
+    get:
+      operationId: IngredientController_findIngredientWeight
+      parameters:
+        - name: name
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientWeightDto'
+      tags:
+        - Ingredient
+  /ingredients/test:
+    get:
+      operationId: IngredientController_testFetch
+      parameters:
+        - name: name
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Ingredient
+  /meal-logs:
+    post:
+      operationId: MealLogController_addMealLog
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMealLogDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealLogDto'
+      tags:
+        - MealLog
+  /meal-logs/{id}:
+    get:
+      operationId: MealLogController_getOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealLogDto'
+      tags:
+        - MealLog
+    patch:
+      operationId: MealLogController_patchMealLog
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMealLogDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealLogDto'
+      tags:
+        - MealLog
+    delete:
+      operationId: MealLogController_deleteOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - MealLog
+  /analytics/macros:
+    get:
+      operationId: AnalyticsController_getAnalyticsByTime
+      parameters:
+        - name: from
+          required: false
+          in: query
+          schema:
+            format: date-time
+            example: '2025-09-01T00:00:00Z'
+            type: string
+        - name: to
+          required: false
+          in: query
+          schema:
+            format: date-time
+            example: '2025-09-07T23:59:59Z'
+            type: string
+        - name: groupBy
+          required: false
+          in: query
+          schema:
+            example: day
+            type: string
+            enum:
+              - day
+              - week
+              - month
+      responses:
+        '200':
+          description: Aggregated nutrition stats for a selected time period
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAnalyticsByTimeDto'
+      tags:
+        - Analytics
+  /analytics/top-ingredients:
+    get:
+      operationId: AnalyticsController_getTopIngredients
+      parameters:
+        - name: from
+          required: false
+          in: query
+          schema:
+            format: date-time
+            example: '2025-09-07T23:59:59Z'
+            type: string
+        - name: to
+          required: false
+          in: query
+          schema:
+            format: date-time
+            example: '2025-09-07T23:59:59Z'
+            type: string
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 10
+            type: number
+      responses:
+        '200':
+          description: >-
+            Most frequently used ingredients with their total usage and impact
+            scores
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTopIngredientsDto'
+      tags:
+        - Analytics
+  /analytics/score:
+    get:
+      operationId: AnalyticsController_getScoreCorrelationByMetric
+      parameters:
+        - name: metric
+          required: true
+          in: query
+          schema:
+            example: kcal
+            type: string
+            enum:
+              - kcal
+              - prot
+              - fat
+              - carb
+              - sugar
+        - name: from
+          required: false
+          in: query
+          schema:
+            format: date-time
+            example: '2025-09-07T23:59:59Z'
+            type: string
+        - name: to
+          required: false
+          in: query
+          schema:
+            format: date-time
+            example: '2025-09-07T23:59:59Z'
+            type: string
+      responses:
+        '200':
+          description: >-
+            Correlation between consumed nutrients and mood, energy, and sleep
+            scores
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNutrientsScoreDto'
+      tags:
+        - Analytics
+  /recommendation/for-you:
+    get:
+      operationId: RecommendationController_getForYou
+      parameters:
+        - name: objective
+          required: false
+          in: query
+          schema:
+            example: balanced
+            type: string
+            enum:
+              - balanced
+              - mood
+              - energy
+              - sleep
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 12
+            type: number
+      responses:
+        '200':
+          description: Personalized recipe recommendations for the current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRecommendationsDto'
+      tags:
+        - Recommendation
+  /recommendation/peers:
+    get:
+      operationId: RecommendationController_getPeers
+      parameters:
+        - name: objective
+          required: false
+          in: query
+          schema:
+            example: balanced
+            type: string
+            enum:
+              - balanced
+              - mood
+              - energy
+              - sleep
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 12
+            type: number
+      responses:
+        '200':
+          description: Recipes liked by similar users (peer-based ranking)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRecommendationsDto'
+      tags:
+        - Recommendation
+  /recommendation/similar/{recipeId}:
+    get:
+      operationId: RecommendationController_getSimilar
+      parameters:
+        - name: recipeId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 10
+            type: number
+      responses:
+        '200':
+          description: Recipes similar to the given one (ingredients/macros similarity)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRecommendationsDto'
+      tags:
+        - Recommendation
+  /recommendation/explain/{recipId}:
+    get:
+      operationId: RecommendationController_explain
+      parameters:
+        - name: recipId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: objective
+          required: false
+          in: query
+          schema:
+            example: balanced
+            type: string
+            enum:
+              - balanced
+              - mood
+              - energy
+              - sleep
+      responses:
+        '200':
+          description: Explain the score for a given recipe (reasons and score breakdown)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplainRecommendationDto'
+      tags:
+        - Recommendation
+info:
+  title: Food Mood
+  description: ''
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    ProfileDTO:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: number
+        sex:
+          type: string
+          enum:
+            - male
+            - female
+          nullable: true
+          example: male
+        birthDate:
+          type: string
+          format: date-time
+          nullable: true
+          example: '1999-05-10'
+        heightCm:
+          type: number
+          nullable: true
+          example: 187
+        weightKg:
+          type: number
+          nullable: true
+          example: 80
+        bmi:
+          type: number
+          nullable: true
+          example: 22.9
+        prefs:
+          type: object
+          nullable: true
+          example:
+            diet: vegetarian
+            allergies:
+              - nuts
+      required:
+        - id
+        - userId
+        - sex
+        - birthDate
+        - heightCm
+        - weightKg
+        - bmi
+        - prefs
+    PrefsDto:
+      type: object
+      properties: {}
+    PatchProfileDTO:
+      type: object
+      properties:
+        sex:
+          type: string
+          enum:
+            - male
+            - female
+        birthDate:
+          type: string
+          example: '1999-05-10'
+        heightCm:
+          type: number
+          example: 165
+        weightKg:
+          type: number
+          example: 57.5
+        prefs:
+          example:
+            diet: vegetarian
+            allergies:
+              - nuts
+          allOf:
+            - $ref: '#/components/schemas/PrefsDto'
+    SignInBodyDTO:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: credentials
+        email:
+          type: string
+          example: user@gmail.com
+        password:
+          type: string
+          example: qwerty
+        idToken:
+          type: string
+          description: Google ID tocken (JWT)
+      required:
+        - provider
+    AccessTokenDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
+      required:
+        - accessToken
+    SignUpBodyDTO:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: credentials
+        email:
+          type: string
+          example: user@gmail.com
+        password:
+          type: string
+          example: qwerty
+        idToken:
+          type: string
+          description: Google ID tocken (JWT)
+      required:
+        - provider
+    GetSessionInfoDto:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        iat:
+          type: number
+        exp:
+          type: number
+      required:
+        - id
+        - email
+        - iat
+        - exp
+    RecipeFiltersDto:
+      type: object
+      properties:
+        includeIngredients:
+          example:
+            - oats
+          type: array
+          items:
+            type: string
+        excludeIngredients:
+          example:
+            - sugar
+          type: array
+          items:
+            type: string
+        minKcal:
+          type: number
+          example: 100
+        maxKcal:
+          type: number
+          example: 500
+        minSugar:
+          type: number
+          example: 5
+        maxSugar:
+          type: number
+          example: 20
+        minProt:
+          type: number
+          example: 15
+        maxProt:
+          type: number
+          example: 50
+    IngredientDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 7
+        recipeId:
+          type: number
+          example: 2
+        name:
+          type: string
+          example: egg
+        amount:
+          type: number
+          example: 2
+        unit:
+          type: string
+          example: pcs
+        grams:
+          type: number
+          example: 100
+        kcalTotal:
+          type: number
+          example: 360
+        protTotal:
+          type: number
+          example: 24
+        fatTotal:
+          type: number
+          example: 28
+        carbTotal:
+          type: number
+          example: 4
+        sugarTotal:
+          type: number
+          example: 2
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - recipeId
+        - name
+        - amount
+        - unit
+        - grams
+        - kcalTotal
+        - protTotal
+        - fatTotal
+        - carbTotal
+        - sugarTotal
+        - createdAt
+        - updatedAt
+    RecipeDto:
+      type: object
+      properties:
+        id:
+          type: number
+        authorProfileId:
+          type: object
+          nullable: true
+          example: 10
+        title:
+          type: string
+          example: Scrambled Eggs
+        steps:
+          type: object
+          example:
+            steps:
+              - order: 1
+                text: >-
+                  Crack the eggs into a bowl and whisk with milk, salt, and
+                  pepper.
+                imageUrl: https://cdn.example.com/recipes/eggs/step1.jpg
+              - order: 2
+                text: Melt butter in a pan over medium heat.
+              - order: 3
+                text: Pour in the eggs and stir gently until just set.
+              - order: 4
+                text: Serve hot with bread or toast.
+        picture_url:
+          type: string
+          example: https://cdn.example.com/main-picture.jpg
+        servings:
+          type: number
+          example: 2
+        kcalPerServ:
+          type: number
+          example: 180
+        protPerServ:
+          type: number
+          example: 12
+        fatPerServ:
+          type: number
+          example: 14
+        carbPerServ:
+          type: number
+          example: 2
+        sugarPerServ:
+          type: number
+          example: 1
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngredientDto'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - authorProfileId
+        - title
+        - steps
+        - picture_url
+        - servings
+        - kcalPerServ
+        - protPerServ
+        - fatPerServ
+        - carbPerServ
+        - sugarPerServ
+        - ingredients
+        - createdAt
+        - updatedAt
+    PageMetaDto:
+      type: object
+      properties:
+        total:
+          type: number
+        page:
+          type: number
+        limit:
+          type: number
+        pages:
+          type: number
+      required:
+        - total
+        - page
+        - limit
+        - pages
+    RecipeListDto:
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeDto'
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+        - recipes
+        - meta
+    RecipeListLiteDto:
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeDto'
+      required:
+        - recipes
+    AddIngredientDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: egg
+        amount:
+          type: number
+          example: 2
+        unit:
+          type: string
+          example: pcs
+        opts:
+          type: object
+          example:
+            pieceGrams: 60
+      required:
+        - name
+        - amount
+        - unit
+    AddRecipeDto:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Scrambled Eggs
+        steps:
+          type: object
+          example:
+            steps:
+              - order: 1
+                text: >-
+                  Crack the eggs into a bowl and whisk with milk, salt, and
+                  pepper.
+                imageUrl: https://cdn.example.com/recipes/eggs/step1.jpg
+              - order: 2
+                text: Melt butter in a pan over medium heat.
+              - order: 3
+                text: Pour in the eggs and stir gently until just set.
+              - order: 4
+                text: Serve hot with bread or toast.
+        picture_url:
+          type: string
+          example: https://cdn.example.com/main-picture.jpg
+        servings:
+          type: number
+          example: 2
+        ingredients:
+          example:
+            - name: egg
+              amount: 4
+              unit: pcs
+            - name: milk
+              amount: 2
+              unit: tbsp
+            - name: butter
+              amount: 1
+              unit: tbsp
+            - name: salt
+              amount: 1
+              unit: pinch
+          type: array
+          items:
+            $ref: '#/components/schemas/AddIngredientDto'
+      required:
+        - title
+        - steps
+        - picture_url
+        - servings
+        - ingredients
+    PatchRecipeDto:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Scrambled Eggs
+        steps:
+          type: object
+          example:
+            steps:
+              - order: 1
+                text: Whisk eggs with milk, salt, pepper.
+              - order: 2
+                text: Melt butter in a pan.
+        picture_url:
+          type: string
+          example: https://cdn.example.com/main-picture.jpg
+        servings:
+          type: number
+          example: 2
+        ingredients:
+          example:
+            - name: egg
+              amount: 3
+              unit: pcs
+          type: array
+          items:
+            $ref: '#/components/schemas/AddIngredientDto'
+    IngredientWeightDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 4
+        normalizedName:
+          type: string
+          example: GARLIC CLOVE
+        gramsPerPiece:
+          type: number
+          example: 5
+        source:
+          type: string
+          example: default
+      required:
+        - id
+        - normalizedName
+        - gramsPerPiece
+        - source
+    AddMealLogDto:
+      type: object
+      properties:
+        recipeId:
+          type: number
+          example: 2
+        servings:
+          type: number
+          example: 2
+        eatenAt:
+          type: string
+          format: date-time
+          example: '2025-09-29T08:15:00.000Z'
+        moodScore:
+          type: number
+          example: 5
+        energyScore:
+          type: number
+          example: 6
+        sleepScore:
+          type: number
+          example: 7
+      required:
+        - recipeId
+        - servings
+    MealLogDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        userProfileId:
+          type: number
+          example: 1
+        recipeId:
+          type: number
+          example: 2
+        servings:
+          type: number
+          example: 1
+        eatenAt:
+          type: string
+          format: date-time
+          example: '2025-09-29T12:34:56.000Z'
+        moodScore:
+          type: number
+          nullable: true
+          example: 7
+        energyScore:
+          type: number
+          nullable: true
+          example: 8
+        sleepScore:
+          type: number
+          nullable: true
+          example: 6
+      required:
+        - id
+        - userProfileId
+        - recipeId
+        - servings
+        - eatenAt
+        - moodScore
+        - energyScore
+        - sleepScore
+    PatchMealLogDto:
+      type: object
+      properties:
+        servings:
+          type: number
+          example: 3
+        eatenAt:
+          type: string
+          format: date-time
+          example: '2025-09-29T19:45:00.000Z'
+        moodScore:
+          type: number
+          example: 8
+        energyScore:
+          type: number
+          example: 7
+        sleepScore:
+          type: number
+          example: 9
+    GetAnalyticsByTimeDto:
+      type: object
+      properties:
+        total:
+          type: object
+          example:
+            kcal: 14200
+            prot: 600
+            fat: 450
+            carb: 1200
+            sugar: 300
+        series:
+          example:
+            - key: '2025-09-01'
+              kcal: 1800
+              prot: 80
+              fat: 60
+              carb: 150
+              sugar: 40
+            - key: '2025-09-02'
+              kcal: 2000
+              prot: 90
+              fat: 70
+              carb: 180
+              sugar: 50
+          type: array
+          items:
+            type: string
+    GetTopIngredientsDto:
+      type: object
+      properties: {}
+    GetNutrientsScoreDto:
+      type: object
+      properties:
+        metric:
+          type: string
+          example: sugar
+          enum:
+            - kcal
+            - prot
+            - fat
+            - carb
+            - sugar
+        totalConsumed:
+          type: number
+          example: 320
+        correlation:
+          type: object
+          example:
+            mood: -0.1
+            energy: -0.3
+            sleep: -0.8
+          description: >-
+            Simplified correlation score showing how this nutrient relates to
+            mood, energy, and sleep. Range from -1 to 1: negative means worse
+            effect, positive means better effect.
+        details:
+          description: >-
+            Daily breakdown showing how much of this nutrient was consumed each
+            day and what mood, energy, and sleep scores were recorded by the
+            user
+          example:
+            - date: '2025-09-01'
+              metricValue: 30
+              mood: 5
+              energy: 4
+              sleep: 4
+            - date: '2025-09-02'
+              metricValue: 80
+              mood: 3
+              energy: 2
+              sleep: 2
+            - date: '2025-09-03'
+              metricValue: 20
+              mood: 5
+              energy: 5
+              sleep: 5
+          type: array
+          items:
+            type: string
+      required:
+        - metric
+        - totalConsumed
+        - correlation
+        - details
+    RecommendationItemDto:
+      type: object
+      properties:
+        recipeId:
+          type: number
+          example: 42
+        title:
+          type: string
+          example: Greek Salad
+        picture_url:
+          type: string
+          example: https://cdn.example.com/recipes/42.jpg
+        score:
+          type: number
+          example: 0.73
+        ingredients:
+          example:
+            - egg
+            - milk
+            - flour
+          type: array
+          items:
+            type: string
+      required:
+        - recipeId
+        - title
+        - picture_url
+        - score
+        - ingredients
+    GetRecommendationsDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecommendationItemDto'
+      required:
+        - items
+    ExplainBreakdownDto:
+      type: object
+      properties:
+        affinity:
+          type: number
+          example: 0.45
+          description: Ingredient affinity contribution
+        prefs:
+          type: number
+          example: 0.2
+          description: Diet/allergies match contribution
+        nutrientsObjective:
+          type: number
+          example: 0.1
+          description: Nutrient influence for the selected objective (e.g., sleep)
+        profileSimilarity:
+          type: number
+          example: -0.02
+          description: Similar-profile users feedback contribution
+      required:
+        - affinity
+        - prefs
+        - nutrientsObjective
+        - profileSimilarity
+    ExplainRecommendationDto:
+      type: object
+      properties:
+        recipeId:
+          type: number
+          example: 42
+        score:
+          type: number
+          example: 0.73
+        breakdown:
+          example:
+            affinity: 0.45
+            prefs: 0.2
+            nutrientsObjective: 0.1
+            profileSimilarity: -0.02
+          allOf:
+            - $ref: '#/components/schemas/ExplainBreakdownDto'
+        reasons:
+          example:
+            - contains tomato — you liked it before
+            - fits vegetarian diet
+          type: array
+          items:
+            type: string
+      required:
+        - recipeId
+        - score
+        - breakdown
+        - reasons
