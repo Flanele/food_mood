@@ -15,8 +15,10 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:6005',
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
     credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   app.getHttpAdapter().getInstance().set('query parser', 'extended');

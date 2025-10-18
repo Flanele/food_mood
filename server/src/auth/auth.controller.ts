@@ -13,6 +13,7 @@ import {
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import {
+  AccessTokenDto,
   GetSessionInfoDto,
   Provider,
   SignInBodyDTO,
@@ -33,7 +34,7 @@ export class AuthController {
   ) {}
 
   @Post('sign-in')
-  @ApiCreatedResponse()
+  @ApiCreatedResponse({ type: AccessTokenDto })
   async signIn(
     @Body() body: SignInBodyDTO,
     @Res({ passthrough: true }) res: Response,
@@ -69,7 +70,7 @@ export class AuthController {
 
   @Post('sign-up')
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse()
+  @ApiOkResponse({ type: AccessTokenDto })
   async signUp(
     @Body() body: SignUpBodyDTO,
     @Res({ passthrough: true }) res: Response,
@@ -119,7 +120,7 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse()
+  @ApiOkResponse({ type: AccessTokenDto })
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,

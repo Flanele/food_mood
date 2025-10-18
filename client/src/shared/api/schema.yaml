@@ -53,6 +53,10 @@ paths:
       responses:
         '201':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenDto'
       tags:
         - Auth
   /auth/sign-up:
@@ -68,6 +72,10 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenDto'
       tags:
         - Auth
   /auth/sign-out:
@@ -99,6 +107,10 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenDto'
       tags:
         - Auth
   /recipes:
@@ -640,6 +652,13 @@ components:
           description: Google ID tocken (JWT)
       required:
         - provider
+    AccessTokenDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
+      required:
+        - accessToken
     SignUpBodyDTO:
       type: object
       properties:
