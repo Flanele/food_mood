@@ -1,10 +1,19 @@
-import { LoginForm } from "@/features/auth/credentials/ui/login-form";
-import { Container } from "@/shared/ui/container";
+"use client";
 
-export default function Home() {
-  return (
-    <Container>
-      <LoginForm />
-    </Container>
-  );
+import { useSessionKey } from "@/entities/session/queries";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+export default function Page() {
+  const { isLoading, isError } = useSessionKey();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (isLoading) return;
+    router.replace(isError ? "/auth" : "/home");
+  }, [isLoading, isError, router]);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  return null;
 }

@@ -3,19 +3,19 @@ import { authApi } from "@/shared/api/gen/gen-clients/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-export const useGoogleSignIn = () => {
+export const useGoogleSignUp = () => {
   const router = useRouter();
 
   const googleSignInMutation = useMutation({
     mutationFn: (idToken: string) =>
-      authApi.authControllerSignIn({ provider: "google", idToken }),
+      authApi.authControllerSignUp({ provider: "google", idToken }),
     onSuccess() {
       router.push(ROUTES.HOME);
     },
   });
 
   return {
-    signIn: (idToken: string) => googleSignInMutation.mutate(idToken),
+    signUp: (idToken: string) => googleSignInMutation.mutate(idToken),
     isLoading: googleSignInMutation.isPending,
     serverError: googleSignInMutation.error,
   };
