@@ -1,30 +1,29 @@
 import { ROUTES } from "@/shared";
 import { authApi } from "@/shared/api/gen/gen-clients/auth";
-import { formSignInSchema } from "@/shared/schemas/sign-in-form-schema";
+import { formSignUpSchema } from "@/shared/schemas/sign-up-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
 import { useForm } from "react-hook-form";
 
 type LoginVars = { email: string; password: string };
 
-export const useSignInForm = () => {
+export const useSignUpForm = () => {
   const router = useRouter();
 
   const form = useForm<LoginVars>({
-    resolver: zodResolver(formSignInSchema),
+    resolver: zodResolver(formSignUpSchema),
   });
 
-  const signIn = ({ email, password }: LoginVars) =>
-    authApi.authControllerSignIn({
+  const signUp = ({ email, password }: LoginVars) =>
+    authApi.authControllerSignUp({
       provider: "credentials",
       email,
       password,
     });
 
   const signInMutation = useMutation({
-    mutationFn: signIn,
+    mutationFn: signUp,
     onSuccess() {
       router.push(ROUTES.HOME);
     },

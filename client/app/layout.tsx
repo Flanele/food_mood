@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Quantico, Roboto } from "next/font/google";
 import "./globals.css";
-import { AppProviders } from "./app-providers";
+import { AppProviders } from "../src/app/app-providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const quantico = Quantico({
+  variable: "--font-quantico",
   subsets: ["latin"],
+  weight: ["400", "700"], 
 });
 
 export const metadata: Metadata = {
@@ -25,9 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${roboto.variable} ${quantico.variable} antialiased`}>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

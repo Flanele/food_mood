@@ -67,5 +67,14 @@
   --color-ring: var(--ring);
 }
 
-* { border-color: var(--color-border); }
 html, body { background: var(--color-background); color: var(--color-foreground); }
+
+@layer base {
+  html {
+    font-family: var(--font-roboto), sans-serif;
+  }
+
+  .font-quantico {
+    font-family: var(--font-quantico), sans-serif;
+  }
+}
