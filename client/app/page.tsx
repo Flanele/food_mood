@@ -1,6 +1,7 @@
 "use client";
 
 import { useSessionKey } from "@/entities/session/queries";
+import { AppLoader } from "@/shared/ui/appLoader";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -13,7 +14,7 @@ export default function Page() {
     router.replace(isError ? "/auth" : "/home");
   }, [isLoading, isError, router]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <AppLoader />;
 
   return null;
 }

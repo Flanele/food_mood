@@ -15,7 +15,7 @@ export const useGoogleSignIn = () => {
   });
 
   return {
-    signIn: (idToken: string) => googleSignInMutation.mutate(idToken),
+    handleSubmit: (idToken: string) => googleSignInMutation.mutate(idToken),
     isLoading: googleSignInMutation.isPending,
     serverError: googleSignInMutation.error,
   };

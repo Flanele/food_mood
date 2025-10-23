@@ -12,14 +12,14 @@ interface Props {
 export const AuthPage: React.FC<Props> = ({ mode }) => {
   return (
     <Container>
-      <section className="h-screen border-5 border-primary p-4">
-        <div className="flex flex-col items-center gap-4">
+      <section className="h-screen border-5 border-primary px-4 py-6">
+        <div className="flex flex-col items-center gap-2">
           <div className="flex gap-5 items-center">
             <Image src="/assets/logo.png" width={130} height={130} alt="logo" />
-            <h2 className="text-[48px]">Welcome to FoodMood!</h2>
+            <h2 className="text-[40px] font-quantico">Welcome to FoodMood!</h2>
           </div>
 
-          <p className="text-[28px] mb-10">
+          <p className="text-[24px] mb-15 font-quantico">
             {mode == "sign-in"
               ? "please log in to continue"
               : "complete a quik registration to continue"}
@@ -28,7 +28,7 @@ export const AuthPage: React.FC<Props> = ({ mode }) => {
           <LoginForm mode={mode} />
 
           {mode == "sign-in" && (
-            <span className="p-8 test-lg">
+            <span className="p-8 test-lg font-quantico">
               Don't have an account?{" "}
               <Link
                 href={ROUTES.SIGN_UP}
@@ -41,7 +41,7 @@ export const AuthPage: React.FC<Props> = ({ mode }) => {
           )}
 
           {mode == "sign-up" && (
-            <span className="p-8 test-lg">
+            <span className="p-8 test-lg font-quantico">
               Do you already have an account?{" "}
               <Link
                 href={ROUTES.SIGN_IN}

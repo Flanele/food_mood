@@ -8,18 +8,25 @@ import { Button, ErrorText } from "@/shared/ui";
 import { GoogleLoginConponent } from "../../google/ui/google-login-button";
 import { useSignUpForm } from "../model/use-sign-up-form";
 import { Mode } from "@/shared";
+import { useGoogleSignIn } from "../../google/model/use-google-sign-in";
+import { useGoogleSignUp } from "../../google/model/use-google-sign-up";
 
 interface Props {
   mode: Mode;
 }
 
 export const LoginForm: React.FC<Props> = ({ mode }) => {
-  const signIn = useSignInForm();
-  const signUp = useSignUpForm();
+  const credSignIn = useSignInForm();
+  const credSignUp = useSignUpForm();
 
-  const cred = mode === "sign-in" ? signIn : signUp;
-  const isLoading = cred.isLoading;
-  const serverError = cred.serverError;
+  const googleSignIn = useGoogleSignIn();
+  const googleSignUp = useGoogleSignUp();
+
+  const cred = mode === "sign-in" ? credSignIn : credSignUp;
+  const google = mode === "sign-in" ? googleSignIn : googleSignUp;
+
+  const isLoading = cred.isLoading || google.isLoading;
+  const serverError = cred.serverError || google.serverError;
 
   return (
     <FormProvider {...cred.form}>
@@ -44,7 +51,7 @@ export const LoginForm: React.FC<Props> = ({ mode }) => {
         >
           {mode == "sign-in" ? "Sign In" : "Sign Up"}
         </Button>
-        <GoogleLoginConponent />
+        <GoogleLoginConponent onSuccess={google.handleSubmit} />
       </form>
     </FormProvider>
   );
