@@ -4,3 +4,4 @@ export { ClearButton } from "./clear-button";
 export { ErrorText } from "./error-text";
 export { RequiredSymbol } from './required-symbol';
 export { Container } from './container';
+export { Logo } from './logo';

@@ -1,6 +1,7 @@
 "use client";
 
-import { useSessionKey } from "@/entities/session/queries";
+
+import { useSessionKey } from "@/entities/session";
 import { AppLoader } from "@/shared/ui/appLoader";
 import { useRouter } from "next/navigation";
 import React from "react";

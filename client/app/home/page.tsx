@@ -1,5 +1,5 @@
-import { Container } from "@/shared/ui/container";
+import { HomePage } from "@/screens";
 
 export default function Home() {
-  return <Container>Home</Container>;
+  return <HomePage />;
 }
