@@ -1,0 +1,1 @@
+export { ChipsInput } from './chips-input/ui/chips-input';

@@ -1,6 +1,6 @@
 import { LoginForm } from "@/features/auth";
 import { Mode, ROUTES } from "@/shared";
-import { Container } from "@/shared/ui";
+import { Container, Logo } from "@/shared/ui";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -15,7 +15,7 @@ export const AuthPage: React.FC<Props> = ({ mode }) => {
       <section className="h-screen border-5 border-primary px-4 py-6">
         <div className="flex flex-col items-center gap-2">
           <div className="flex gap-5 items-center">
-            <Image src="/assets/logo.png" width={130} height={130} alt="logo" />
+            <Logo width={130} height={130} />
             <h2 className="text-[40px] font-quantico">Welcome to FoodMood!</h2>
           </div>
 
