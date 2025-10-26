@@ -1,4 +1,4 @@
-import { Button, Container, Logo } from "@/shared/ui";
+import { Button, Container, Logo, Title } from "@/shared/ui";
 import { CircleUser, Star, ThumbsUp, Utensils } from "lucide-react";
 
 import Link from "next/link";
@@ -17,7 +17,7 @@ export const Header: React.FC<Props> = ({ mode }) => {
         <div className="flex justify-between items-center p-1 pb-4">
           <Link href={"/"} className="flex flex-col items-center">
             <Logo width={65} height={65} />
-            <span className="font-quantico text-lg">Food Mood</span>
+            <Title text="Food Mood" size="sm" className="font-quantico" />
           </Link>
 
           {mode !== "home" && (
