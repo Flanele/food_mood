@@ -6,3 +6,5 @@ export { RequiredSymbol } from './required-symbol';
 export { Container } from './container';
 export { Logo } from './logo';
 export { Title } from './title';
+export { SimpleLoader } from './simple-loader';
+export { ErrorAnimation } from "./error-animation";
