@@ -2,7 +2,7 @@
 
 import { useRecipeList } from "@/features/recipes/recipe-list";
 import { RecipeListQuery } from "@/shared";
-import { Container, Input, Title } from "@/shared/ui";
+import { Button, Container, Input, Title } from "@/shared/ui";
 import {
   FiltersBar,
   Header,
@@ -10,6 +10,7 @@ import {
   Pagination,
   RecipeCatalog,
 } from "@/widgets";
+import Link from "next/link";
 import React from "react";
 
 export const HomePage = () => {
@@ -43,6 +44,9 @@ export const HomePage = () => {
                 }))
               }
             />
+            <Button variant='outline'>
+              <Link href="/add-recipe">Add recipe</Link>
+            </Button>
           </div>
 
           <div className="flex gap-20 flex-1">
@@ -75,7 +79,6 @@ export const HomePage = () => {
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={onPageChange}
-
                   />
                 </div>
               )}

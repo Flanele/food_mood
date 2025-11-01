@@ -24,15 +24,24 @@ export const RecipeCard: React.FC<Props> = ({
   className,
 }) => {
   return (
-    <div className={cn("flex border-1 border-secondary hover:border-primary cursor-pointer", className)}>
+    <div
+      className={cn(
+        "flex border-1 border-secondary hover:border-primary cursor-pointer",
+        className
+      )}
+    >
       <img
         className="w-[200px] h-full object-cover"
         src={pictureUrl}
+        width={200}
+        height={150}
         alt=""
+        loading="lazy"
+        decoding="async"
       />
 
       <div className="flex flex-col p-3">
-        <Title text={title} size="sm" />
+        <Title text={title} size="sm" className="line-clamp-2 break-words" />
         <span>kcal per serving: {kcalPerServ}</span>
         <span>prot per serving: {protPerServ}</span>
         <span>fat per serving: {fatPerServ}</span>

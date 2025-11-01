@@ -1,6 +1,7 @@
 import { ROUTES } from "@/shared";
 import { authApi } from "@/shared/api/gen/gen-clients/auth";
-import { formSignInSchema } from "@/shared/schemas/sign-in-form-schema";
+import { formSignInSchema } from "@/shared/schemas";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
