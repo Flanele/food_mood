@@ -1,4 +1,4 @@
-import { RecipeCard } from "@/entities/recipe/ui/recipe-card";
+import { RecipeCard } from "@/entities/recipe";
 import { RecipeDto } from "@/shared/api/gen";
 import { cn } from "@/shared/lib/utils";
 import { SimpleLoader } from "@/shared/ui";

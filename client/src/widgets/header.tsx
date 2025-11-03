@@ -4,7 +4,7 @@ import { CircleUser, Star, ThumbsUp, Utensils } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-type Mode = "home" | "recommendations" | "peers";
+type Mode = "home" | "recommendations" | "peers" | "other";
 
 interface Props {
   mode: Mode;
