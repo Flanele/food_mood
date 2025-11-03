@@ -17,3 +17,19 @@ export type RecipeListQuery = {
   page?: number;
   limit?: number;
 };
+
+export const UNITS = [
+  "g",
+  "mg",
+  "kg",
+  "ml",
+  "l",
+  "ounce",
+  "pounde",
+  "teaspoon",
+  "tablespoon",
+  "cup",
+  "piece",
+] as const;
+
+export type Unit = (typeof UNITS)[number];
