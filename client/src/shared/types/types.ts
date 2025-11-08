@@ -33,3 +33,5 @@ export const UNITS = [
 ] as const;
 
 export type Unit = (typeof UNITS)[number];
+
+export type StepDto = { order: number; text: string; imageUrl?: string };

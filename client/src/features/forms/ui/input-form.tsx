@@ -10,6 +10,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   required?: boolean;
   className?: string;
+  type?: React.HTMLInputTypeAttribute;
 }
 
 export const FormInput: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const FormInput: React.FC<Props> = ({
   label,
   required,
   className,
+  type,
   ...props
 }) => {
   const {
@@ -42,9 +44,14 @@ export const FormInput: React.FC<Props> = ({
       )}
 
       <div className="relative">
-        <Input className="h-12 text-md" {...props} {...register(name)}  />
+        <Input
+          type={type}
+          className="h-12 text-md"
+          {...props}
+          {...register(name)}
+        />
 
-        {value && <ClearButton onClick={onClickClear} />}
+        {value && type !== "number" && <ClearButton onClick={onClickClear} />}
       </div>
 
       {errorText && <ErrorText text={errorText} className="mt-2" />}

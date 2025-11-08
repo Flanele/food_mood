@@ -4,26 +4,14 @@ import { useFormContext } from "react-hook-form";
 import { FormInput } from "./input-form";
 import { cn } from "@/shared/lib/utils";
 import { FormFileInput } from "./form-file-input";
+import { useImageField } from "../model/use-image-field";
 
-export const ImageField: React.FC = () => {
-  const {  setValue, watch, resetField, clearErrors } = useFormContext();
-  const method = watch("imageMethod");
+interface Props {
+  prefix?: string;
+}
 
-  const switchToUrl = () => {
-    resetField("imageFile", { keepDirty: false, keepTouched: false });
-    setValue("imageFile", undefined, { shouldValidate: true });
-    clearErrors("imageFile");
-
-    setValue("imageMethod", "url", { shouldValidate: true });
-  };
-
-  const switchToFile = () => {
-    resetField("imageUrl", { keepDirty: false, keepTouched: false });
-    setValue("imageUrl", "", { shouldValidate: true });
-    clearErrors("imageUrl");
-
-    setValue("imageMethod", "file", { shouldValidate: true });
-  };
+export const ImageField: React.FC<Props> = ({ prefix = "" }) => {
+  const { names, method, switchToUrl, switchToFile } = useImageField(prefix);
 
   return (
     <div className="flex flex-col gap-4">
@@ -62,7 +50,7 @@ export const ImageField: React.FC = () => {
       {method === "url" && (
         <div className="w-full max-w-[520px]">
           <FormInput
-            name="imageUrl"
+            name={names.url}
             label="Image URL:"
             placeholder="https://example.com/image.jpg"
             required
@@ -73,12 +61,12 @@ export const ImageField: React.FC = () => {
 
       {/* режим: FILE (drag & drop + fallback input) */}
       {method === "file" && (
-         <FormFileInput
-         name="imageFile"
-         required
-         label="Image file:"
-         className="w-full max-w-[520px]"
-       />
+        <FormFileInput
+          name={names.file}
+          required
+          label="Image file:"
+          className="w-full max-w-[520px]"
+        />
       )}
     </div>
   );

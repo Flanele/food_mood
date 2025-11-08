@@ -77,4 +77,7 @@ html, body { background: var(--color-background); color: var(--color-foreground)
   .font-quantico {
     font-family: var(--font-quantico), sans-serif;
   }
+  
 }
+
+
