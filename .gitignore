@@ -1,0 +1,5 @@
+# игнорируем билд клиента и кэш Next.js
+client/.next/
+client/out/
+
+client/.env*

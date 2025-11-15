@@ -3,6 +3,8 @@ import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { AddRecipeDto } from './dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { FilesService } from 'src/files/files.service';
+import { Request } from 'express';
 
 describe('RecipeController', () => {
   let controller: RecipeController;
@@ -12,6 +14,9 @@ describe('RecipeController', () => {
     getOneById: jest.Mock;
     addRecipe: jest.Mock;
     patchRecipe: jest.Mock;
+  };
+  let filesService: {
+    mapFilesForRecipe: jest.Mock;
   };
 
   beforeEach(async () => {
@@ -23,9 +28,18 @@ describe('RecipeController', () => {
       patchRecipe: jest.fn(),
     };
 
+    filesService = {
+      mapFilesForRecipe: jest
+        .fn()
+        .mockReturnValue({ picture_url: undefined, stepImages: [] }),
+    };
+
     const moduleRef = await Test.createTestingModule({
       controllers: [RecipeController],
-      providers: [{ provide: RecipeService, useValue: service }],
+      providers: [
+        { provide: RecipeService, useValue: service },
+        { provide: FilesService, useValue: filesService },
+      ],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: jest.fn(() => true) })
@@ -64,14 +78,27 @@ describe('RecipeController', () => {
     service.addRecipe.mockResolvedValueOnce({ id: 7 });
     const dto: AddRecipeDto = {
       title: 'T',
-      steps: {}, // JsonValue
+      steps: {
+        steps: [
+          {
+            order: 1,
+            text: 'Step 1',
+            imageUrl: 'https://example.com/step1.jpg',
+          },
+        ],
+      },
       picture_url: 'https://example.com/img.jpg',
       servings: 1,
       ingredients: [{ name: 'egg', amount: 2, unit: 'pcs' }],
     };
 
     const session = { id: 10, email: 'ahsj@g.com', iat: 10, exp: 10 };
-    const res = await controller.addRecipe(dto, session);
+
+    const files: Express.Multer.File[] = [];
+    const req = {} as unknown as Request;
+
+    const res = await controller.addRecipe(dto, files, session, req);
+
     expect(service.addRecipe).toHaveBeenCalledWith(dto, 10);
     expect(res).toEqual({ id: 7 });
   });
@@ -80,7 +107,11 @@ describe('RecipeController', () => {
     service.patchRecipe.mockResolvedValueOnce({ id: 8 });
     const dto = { title: 'X' };
     const session = { id: 11, email: 'ahsj@g.com', iat: 10, exp: 10 };
-    const res = await controller.patchRecipe(8, dto, session);
+    const files: Express.Multer.File[] = [];
+    const req = {} as unknown as Request;
+
+    const res = await controller.patchRecipe(8, files, dto, session, req);
+
     expect(service.patchRecipe).toHaveBeenCalledWith(8, dto, 11);
     expect(res).toEqual({ id: 8 });
   });

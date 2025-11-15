@@ -156,7 +156,7 @@ describe('RecipeService', () => {
   it('addRecipe throws if no ingredients provided', async () => {
     const dto: AddRecipeDto = {
       title: 'x',
-      steps: {},
+      steps: { steps: [] },
       picture_url: 'u',
       servings: 2,
       ingredients: [],
@@ -201,7 +201,7 @@ describe('RecipeService', () => {
 
     const dto: AddRecipeDto = {
       title: 'Scrambled',
-      steps: {},
+      steps: { steps: [] },
       picture_url: 'https://x',
       servings: 2,
       ingredients: [

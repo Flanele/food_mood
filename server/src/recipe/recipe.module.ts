@@ -4,6 +4,7 @@ import { RecipeService } from './recipe.service';
 import { DbModule } from 'src/db/db.module';
 import { IngredientModule } from 'src/ingredient/ingredient.module';
 import { UserModule } from 'src/users/user.module';
+import { FilesService } from 'src/files/files.service';
 
 @Module({
   exports: [RecipeService],
@@ -13,6 +14,6 @@ import { UserModule } from 'src/users/user.module';
     UserModule
   ],
   controllers: [RecipeController],
-  providers: [RecipeService],
+  providers: [RecipeService, FilesService],
 })
 export class RecipeModule {}

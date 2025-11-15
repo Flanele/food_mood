@@ -13,7 +13,6 @@ import { Type } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
 import { AddIngredientDto, IngredientDto } from 'src/ingredient/dto';
 
-
 export class PageMetaDto {
   @ApiProperty() total: number; // всего записей
   @ApiProperty() page: number; // текущая страница
@@ -109,6 +108,14 @@ export class StepDto {
   imageUrl?: string;
 }
 
+export class StepsPayloadDto {
+  @ApiProperty({ type: [StepDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => StepDto)
+  steps: StepDto[];
+}
+
 export class AddRecipeDto {
   @ApiProperty({ example: 'Scrambled Eggs' })
   @IsString()
@@ -129,11 +136,12 @@ export class AddRecipeDto {
       ],
     },
   })
-  steps: Prisma.JsonValue;
+  steps: StepsPayloadDto;
 
   @ApiProperty({ example: 'https://cdn.example.com/main-picture.jpg' })
+  @IsOptional()
   @IsUrl()
-  picture_url: string;
+  picture_url?: string;
 
   @ApiProperty({ example: 2 })
   @IsInt()
@@ -282,4 +290,3 @@ export class PatchRecipeDto {
   @Type(() => AddIngredientDto)
   ingredients?: AddIngredientDto[];
 }
-
