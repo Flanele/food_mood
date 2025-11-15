@@ -9,10 +9,24 @@ import { MealLogModule } from './meal-log/meal-log.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
 import { IngredientModule } from './ingredient/ingredient.module';
-
+import { ServeStaticModule } from '@nestjs/serve-static';
+import path from 'path';
 
 @Module({
-  imports: [UserModule, AuthModule, AccountModule, RecipeModule, MealLogModule, AnalyticsModule, RecommendationModule, IngredientModule],
+  imports: [
+    UserModule,
+    AuthModule,
+    AccountModule,
+    RecipeModule,
+    MealLogModule,
+    AnalyticsModule,
+    RecommendationModule,
+    IngredientModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.join(process.cwd(), 'public', 'uploads'),
+      serveRoot: '/uploads',
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
