@@ -9,9 +9,7 @@ import {
   FieldValues,
 } from "react-hook-form";
 import { get } from "react-hook-form";
-import { Upload } from "lucide-react";
 import { ErrorText, RequiredSymbol } from "@/shared/ui";
-import { cn } from "@/shared/lib/utils";
 import { FileDropzone, FilePreview, HiddenFileInput } from "@/entities/file";
 
 type Props<T extends FieldValues> = {
