@@ -8,93 +8,67 @@ import type {
   AccessTokenDto,
   GetSessionInfoDto,
   SignInBodyDTO,
-  SignUpBodyDTO,
-} from "./";
+  SignUpBodyDTO
+} from './';
 
-import { createInstance } from "../api-instance";
-import type { BodyType } from "../api-instance";
+import { createInstance } from '../api-instance';
+import type { BodyType } from '../api-instance';
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export const getFoodMood = () => {
-  const authControllerSignIn = (
+
+  export const getFoodMood = () => {
+const authControllerSignIn = (
     signInBodyDTO: BodyType<SignInBodyDTO>,
-    options?: SecondParameter<typeof createInstance<AccessTokenDto>>
-  ) => {
-    return createInstance<AccessTokenDto>(
-      {
-        url: `/auth/sign-in`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: signInBodyDTO,
-      },
-      options
-    );
-  };
-
-  const authControllerSignUp = (
+ options?: SecondParameter<typeof createInstance<AccessTokenDto>>,) => {
+      return createInstance<AccessTokenDto>(
+      {url: `/auth/sign-in`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: signInBodyDTO
+    },
+      options);
+    }
+  
+const authControllerSignUp = (
     signUpBodyDTO: BodyType<SignUpBodyDTO>,
-    options?: SecondParameter<typeof createInstance<AccessTokenDto>>
-  ) => {
-    return createInstance<AccessTokenDto>(
-      {
-        url: `/auth/sign-up`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: signUpBodyDTO,
-      },
-      options
-    );
-  };
-
-  const authControllerSignOut = (
-    options?: SecondParameter<typeof createInstance<void>>
-  ) => {
-    return createInstance<void>(
-      { url: `/auth/sign-out`, method: "POST" },
-      options
-    );
-  };
-
-  const authControllerGetSessionInfo = (
-    options?: SecondParameter<typeof createInstance<GetSessionInfoDto>>
-  ) => {
-    return createInstance<GetSessionInfoDto>(
-      { url: `/auth/session`, method: "GET" },
-      options
-    );
-  };
-
-  const authControllerRefresh = (
-    options?: SecondParameter<typeof createInstance<AccessTokenDto>>
-  ) => {
-    return createInstance<AccessTokenDto>(
-      { url: `/auth/refresh`, method: "POST" },
-      options
-    );
-  };
-
-  return {
-    authControllerSignIn,
-    authControllerSignUp,
-    authControllerSignOut,
-    authControllerGetSessionInfo,
-    authControllerRefresh,
-  };
-};
-export type AuthControllerSignInResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getFoodMood>["authControllerSignIn"]>>
->;
-export type AuthControllerSignUpResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getFoodMood>["authControllerSignUp"]>>
->;
-export type AuthControllerSignOutResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getFoodMood>["authControllerSignOut"]>>
->;
-export type AuthControllerGetSessionInfoResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getFoodMood>["authControllerGetSessionInfo"]>
-  >
->;
-export type AuthControllerRefreshResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getFoodMood>["authControllerRefresh"]>>
->;
+ options?: SecondParameter<typeof createInstance<AccessTokenDto>>,) => {
+      return createInstance<AccessTokenDto>(
+      {url: `/auth/sign-up`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: signUpBodyDTO
+    },
+      options);
+    }
+  
+const authControllerSignOut = (
+    
+ options?: SecondParameter<typeof createInstance<void>>,) => {
+      return createInstance<void>(
+      {url: `/auth/sign-out`, method: 'POST'
+    },
+      options);
+    }
+  
+const authControllerGetSessionInfo = (
+    
+ options?: SecondParameter<typeof createInstance<GetSessionInfoDto>>,) => {
+      return createInstance<GetSessionInfoDto>(
+      {url: `/auth/session`, method: 'GET'
+    },
+      options);
+    }
+  
+const authControllerRefresh = (
+    
+ options?: SecondParameter<typeof createInstance<AccessTokenDto>>,) => {
+      return createInstance<AccessTokenDto>(
+      {url: `/auth/refresh`, method: 'POST'
+    },
+      options);
+    }
+  
+return {authControllerSignIn,authControllerSignUp,authControllerSignOut,authControllerGetSessionInfo,authControllerRefresh}};
+export type AuthControllerSignInResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['authControllerSignIn']>>>
+export type AuthControllerSignUpResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['authControllerSignUp']>>>
+export type AuthControllerSignOutResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['authControllerSignOut']>>>
+export type AuthControllerGetSessionInfoResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['authControllerGetSessionInfo']>>>
+export type AuthControllerRefreshResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['authControllerRefresh']>>>

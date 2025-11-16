@@ -31,11 +31,17 @@ const recipeControllerGetAll = (
   
 const recipeControllerAddRecipe = (
     addRecipeDto: BodyType<AddRecipeDto>,
- options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {
+ options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {const formData = new FormData();
+formData.append(`title`, addRecipeDto.title)
+formData.append(`steps`, JSON.stringify(addRecipeDto.steps));
+formData.append(`picture_url`, addRecipeDto.picture_url)
+formData.append(`servings`, addRecipeDto.servings.toString())
+addRecipeDto.ingredients.forEach(value => formData.append(`ingredients`, JSON.stringify(value)));
+
       return createInstance<RecipeDto>(
       {url: `/recipes`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: addRecipeDto
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
     },
       options);
     }
@@ -61,11 +67,27 @@ const recipeControllerGetOne = (
 const recipeControllerPatchRecipe = (
     id: number,
     patchRecipeDto: BodyType<PatchRecipeDto>,
- options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {
+ options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {const formData = new FormData();
+if(patchRecipeDto.title !== undefined) {
+ formData.append(`title`, patchRecipeDto.title)
+ }
+if(patchRecipeDto.steps !== undefined) {
+ formData.append(`steps`, JSON.stringify(patchRecipeDto.steps));
+ }
+if(patchRecipeDto.picture_url !== undefined) {
+ formData.append(`picture_url`, patchRecipeDto.picture_url)
+ }
+if(patchRecipeDto.servings !== undefined) {
+ formData.append(`servings`, patchRecipeDto.servings.toString())
+ }
+if(patchRecipeDto.ingredients !== undefined) {
+ patchRecipeDto.ingredients.forEach(value => formData.append(`ingredients`, JSON.stringify(value)));
+ }
+
       return createInstance<RecipeDto>(
       {url: `/recipes/${id}`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: patchRecipeDto
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
     },
       options);
     }

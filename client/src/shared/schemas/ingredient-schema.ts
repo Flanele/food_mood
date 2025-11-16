@@ -11,16 +11,16 @@ export const IngredientSchema = z
       .number()
       .positive({ message: "Amount must be greater than 0" }),
 
-    gramsPerPiece: z.coerce.number().optional(),
+    pieceGrams: z.coerce.number().optional(),
   })
   .refine(
     (d) =>
       d.unit !== "piece" ||
-      (!!d.gramsPerPiece &&
-        !Number.isNaN(Number(d.gramsPerPiece)) &&
-        Number(d.gramsPerPiece) > 0),
+      (!!d.pieceGrams &&
+        !Number.isNaN(Number(d.pieceGrams)) &&
+        Number(d.pieceGrams) > 0),
     {
-      path: ["gramsPerPiece"],
+      path: ["pieceGrams"],
       message: 'Grams per piece required when unit is "piece"',
     }
   );

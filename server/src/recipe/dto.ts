@@ -9,7 +9,7 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { plainToInstance, Transform, Type } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
 import { AddIngredientDto, IngredientDto } from 'src/ingredient/dto';
 
@@ -136,6 +136,15 @@ export class AddRecipeDto {
       ],
     },
   })
+  @ValidateNested()
+  @Type(() => StepsPayloadDto)
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      const parsed = JSON.parse(value); // ожидаем { steps: [...] }
+      return plainToInstance(StepsPayloadDto, parsed);
+    }
+    return value;
+  })
   steps: StepsPayloadDto;
 
   @ApiProperty({ example: 'https://cdn.example.com/main-picture.jpg' })
@@ -160,6 +169,27 @@ export class AddRecipeDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AddIngredientDto)
+  @Transform(({ value }) => {
+    // multipart: приходит ОДНА строка:
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+  
+      // если это уже JSON-массив — парсим как есть
+      const json = trimmed.startsWith('[') ? trimmed : `[${trimmed}]`;
+  
+      const parsed = JSON.parse(json) as unknown[];
+      return plainToInstance(AddIngredientDto, parsed);
+    }
+  
+    // обычный JSON: массив объектов
+    if (Array.isArray(value)) {
+      return plainToInstance(AddIngredientDto, value as unknown[]);
+    }
+  
+    // fallback: один объект
+    return plainToInstance(AddIngredientDto, [value] as unknown[]);
+  })
+  
   ingredients: AddIngredientDto[];
 }
 
