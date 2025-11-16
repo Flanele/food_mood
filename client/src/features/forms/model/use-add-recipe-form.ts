@@ -10,7 +10,7 @@ export const useAddRecipeForm = () => {
       title: "",
       servings: 1,
       ingredients: [
-        { name: "", unit: "g", amount: undefined, gramsPerPiece: "" },
+        { name: "", unit: "g", amount: undefined, pieceGrams: "" },
       ],
       imageMethod: "url",
       imageUrl: "",

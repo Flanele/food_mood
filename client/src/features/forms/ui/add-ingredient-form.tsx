@@ -48,7 +48,7 @@ export const AddIngredientForm: React.FC<Props> = ({
 
       {unit === "piece" && (
         <FormInput
-          name={`ingredients.${index}.gramsPerPiece`}
+          name={`ingredients.${index}.pieceGrams`}
           label="Grams per piece:"
           required
           placeholder="50"
