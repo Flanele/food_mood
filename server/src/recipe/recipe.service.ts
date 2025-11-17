@@ -77,6 +77,11 @@ export class RecipeService {
 
     const userProfile = await this.userProfileService.getProfile(userId);
 
+    if (!dto.picture_url) {
+      throw new BadRequestException('picture_url is required');
+    }
+    const pictureUrl = dto.picture_url;
+
     const rows = await Promise.all(
       dto.ingredients.map((i) => this.ingredientsService.buildIngredientRow(i)),
     );
@@ -88,8 +93,8 @@ export class RecipeService {
         data: {
           authorProfileId: userProfile.id ?? null,
           title: dto.title,
-          steps: dto.steps as Prisma.InputJsonValue,
-          picture_url: dto.picture_url,
+          steps: dto.steps as unknown as Prisma.InputJsonValue,
+          picture_url: pictureUrl,
           servings: dto.servings,
           ...macros,
           ingredients: { create: rows },

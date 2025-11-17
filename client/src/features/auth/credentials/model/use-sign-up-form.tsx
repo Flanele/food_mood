@@ -1,6 +1,6 @@
 import { ROUTES } from "@/shared";
 import { authApi } from "@/shared/api/gen/gen-clients/auth";
-import { formSignUpSchema } from "@/shared/schemas";
+import { FormSignUpSchema } from "@/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ export const useSignUpForm = () => {
   const router = useRouter();
 
   const form = useForm<LoginVars>({
-    resolver: zodResolver(formSignUpSchema),
+    resolver: zodResolver(FormSignUpSchema),
   });
 
   const signUp = ({ email, password }: LoginVars) =>

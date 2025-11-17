@@ -34,8 +34,10 @@ export const mapFormToAddRecipeDto = (
     steps: {
       steps,
     },
-    picture_url: "",
+    picture_url: form.imageUrl || "",
   };
+
+  console.log("dto from mapper:", dto);
 
   return dto;
 };

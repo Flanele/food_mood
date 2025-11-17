@@ -18,6 +18,10 @@ export const AddRecipeForm = () => {
     stepFields,
     appendStep,
     removeStep,
+
+    handleSubmit,
+    isLoading,
+    isError,
   } = useAddRecipeForm();
 
   return (
@@ -104,9 +108,17 @@ export const AddRecipeForm = () => {
             </Button>
           </div>
 
-          <Button type="submit" className="bg-primary text-white">
-            Submit
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button type="submit" className="bg-primary" disabled={isLoading} onClick={handleSubmit}>
+              {isLoading ? "Submitting..." : "Submit"}
+            </Button>
+
+            {isError && (
+              <span className="text-red-500 text-sm">
+                Something went wrong. Please try again.
+              </span>
+            )}
+          </div>
         </form>
       </FormProvider>
     </div>
