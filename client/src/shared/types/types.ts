@@ -35,3 +35,13 @@ export const UNITS = [
 export type Unit = (typeof UNITS)[number];
 
 export type StepDto = { order: number; text: string; imageUrl?: string };
+
+export type AddRecipeFiles = {
+  picture_file?: File;
+  stepFiles?: (File | null | undefined)[];
+};
+
+export type PatchRecipeFiles = {
+  picture_file?: File;
+  stepFiles?: (File | null | undefined)[];
+};

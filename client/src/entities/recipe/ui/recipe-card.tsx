@@ -31,7 +31,7 @@ export const RecipeCard: React.FC<Props> = ({
       )}
     >
       <img
-        className="w-[200px] h-full object-cover"
+        className="object-cover"
         src={pictureUrl}
         width={200}
         height={150}

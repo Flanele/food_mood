@@ -17,8 +17,18 @@ export const useAddRecipeMutation = () => {
     mutationFn: async (form: FormAddRecipeOutput) => {
       const dto = mapFormToAddRecipeDto(form);
 
+      const files = {
+        picture_file:
+          form.imageMethod === "file" ? form.imageFile ?? undefined : undefined,
+        stepFiles: form.steps.map((step) =>
+          step.image.imageMethod === "file"
+            ? step.image.imageFile ?? undefined
+            : undefined
+        ),
+      };
+
       console.log("dto from mutation:", dto);
-      await recipesApi.recipeControllerAddRecipe(dto);
+      await recipesApi.recipeControllerAddRecipe(dto, files);
     },
     onSuccess: () => {
       router.push(ROUTES.HOME);

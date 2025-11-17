@@ -10,91 +10,142 @@ import type {
   RecipeControllerGetAllParams,
   RecipeDto,
   RecipeListDto,
-  RecipeListLiteDto
-} from './';
+  RecipeListLiteDto,
+} from "./";
 
-import { createInstance } from '../api-instance';
-import type { BodyType } from '../api-instance';
+import { createInstance } from "../api-instance";
+import type { BodyType } from "../api-instance";
+import { AddRecipeFiles } from "@/shared/types/types";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-  export const getFoodMood = () => {
-const recipeControllerGetAll = (
+export const getFoodMood = () => {
+  const recipeControllerGetAll = (
     params?: RecipeControllerGetAllParams,
- options?: SecondParameter<typeof createInstance<RecipeListDto>>,) => {
-      return createInstance<RecipeListDto>(
-      {url: `/recipes`, method: 'GET',
-        params
-    },
-      options);
-    }
-  
-const recipeControllerAddRecipe = (
-    addRecipeDto: BodyType<AddRecipeDto>,
- options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {const formData = new FormData();
-formData.append(`title`, addRecipeDto.title)
-formData.append(`steps`, JSON.stringify(addRecipeDto.steps));
-formData.append(`picture_url`, addRecipeDto.picture_url)
-formData.append(`servings`, addRecipeDto.servings.toString())
-addRecipeDto.ingredients.forEach(value => formData.append(`ingredients`, JSON.stringify(value)));
+    options?: SecondParameter<typeof createInstance<RecipeListDto>>
+  ) => {
+    return createInstance<RecipeListDto>(
+      { url: `/recipes`, method: "GET", params },
+      options
+    );
+  };
 
-      return createInstance<RecipeDto>(
-      {url: `/recipes`, method: 'POST',
-      headers: {'Content-Type': 'multipart/form-data', },
-       data: formData
-    },
-      options);
+  const recipeControllerAddRecipe = (
+    addRecipeDto: BodyType<AddRecipeDto>,
+    files?: AddRecipeFiles,
+    options?: SecondParameter<typeof createInstance<RecipeDto>>
+  ) => {
+    const formData = new FormData();
+    formData.append(`title`, addRecipeDto.title);
+    formData.append(`steps`, JSON.stringify(addRecipeDto.steps));
+    formData.append(`picture_url`, addRecipeDto.picture_url);
+    formData.append(`servings`, addRecipeDto.servings.toString());
+    addRecipeDto.ingredients.forEach((value) =>
+      formData.append(`ingredients`, JSON.stringify(value))
+    );
+
+    if (files?.picture_file) {
+      formData.append("picture_file", files.picture_file);
     }
-  
-const recipeControllerGetMyRecipes = (
-    
- options?: SecondParameter<typeof createInstance<RecipeListLiteDto>>,) => {
-      return createInstance<RecipeListLiteDto>(
-      {url: `/recipes/my-recipes`, method: 'GET'
-    },
-      options);
+
+    if (files?.stepFiles && Array.isArray(files.stepFiles)) {
+      files.stepFiles.forEach((file, index) => {
+        if (file) {
+          formData.append(`steps[${index}].image_file`, file);
+        }
+      });
     }
-  
-const recipeControllerGetOne = (
+
+    return createInstance<RecipeDto>(
+      {
+        url: `/recipes`,
+        method: "POST",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      },
+      options
+    );
+  };
+
+  const recipeControllerGetMyRecipes = (
+    options?: SecondParameter<typeof createInstance<RecipeListLiteDto>>
+  ) => {
+    return createInstance<RecipeListLiteDto>(
+      { url: `/recipes/my-recipes`, method: "GET" },
+      options
+    );
+  };
+
+  const recipeControllerGetOne = (
     id: number,
- options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {
-      return createInstance<RecipeDto>(
-      {url: `/recipes/${id}`, method: 'GET'
-    },
-      options);
-    }
-  
-const recipeControllerPatchRecipe = (
+    options?: SecondParameter<typeof createInstance<RecipeDto>>
+  ) => {
+    return createInstance<RecipeDto>(
+      { url: `/recipes/${id}`, method: "GET" },
+      options
+    );
+  };
+
+  const recipeControllerPatchRecipe = (
     id: number,
     patchRecipeDto: BodyType<PatchRecipeDto>,
- options?: SecondParameter<typeof createInstance<RecipeDto>>,) => {const formData = new FormData();
-if(patchRecipeDto.title !== undefined) {
- formData.append(`title`, patchRecipeDto.title)
- }
-if(patchRecipeDto.steps !== undefined) {
- formData.append(`steps`, JSON.stringify(patchRecipeDto.steps));
- }
-if(patchRecipeDto.picture_url !== undefined) {
- formData.append(`picture_url`, patchRecipeDto.picture_url)
- }
-if(patchRecipeDto.servings !== undefined) {
- formData.append(`servings`, patchRecipeDto.servings.toString())
- }
-if(patchRecipeDto.ingredients !== undefined) {
- patchRecipeDto.ingredients.forEach(value => formData.append(`ingredients`, JSON.stringify(value)));
- }
-
-      return createInstance<RecipeDto>(
-      {url: `/recipes/${id}`, method: 'PATCH',
-      headers: {'Content-Type': 'multipart/form-data', },
-       data: formData
-    },
-      options);
+    options?: SecondParameter<typeof createInstance<RecipeDto>>
+  ) => {
+    const formData = new FormData();
+    if (patchRecipeDto.title !== undefined) {
+      formData.append(`title`, patchRecipeDto.title);
     }
-  
-return {recipeControllerGetAll,recipeControllerAddRecipe,recipeControllerGetMyRecipes,recipeControllerGetOne,recipeControllerPatchRecipe}};
-export type RecipeControllerGetAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['recipeControllerGetAll']>>>
-export type RecipeControllerAddRecipeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['recipeControllerAddRecipe']>>>
-export type RecipeControllerGetMyRecipesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['recipeControllerGetMyRecipes']>>>
-export type RecipeControllerGetOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['recipeControllerGetOne']>>>
-export type RecipeControllerPatchRecipeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['recipeControllerPatchRecipe']>>>
+    if (patchRecipeDto.steps !== undefined) {
+      formData.append(`steps`, JSON.stringify(patchRecipeDto.steps));
+    }
+    if (patchRecipeDto.picture_url !== undefined) {
+      formData.append(`picture_url`, patchRecipeDto.picture_url);
+    }
+    if (patchRecipeDto.servings !== undefined) {
+      formData.append(`servings`, patchRecipeDto.servings.toString());
+    }
+    if (patchRecipeDto.ingredients !== undefined) {
+      patchRecipeDto.ingredients.forEach((value) =>
+        formData.append(`ingredients`, JSON.stringify(value))
+      );
+    }
+
+    return createInstance<RecipeDto>(
+      {
+        url: `/recipes/${id}`,
+        method: "PATCH",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      },
+      options
+    );
+  };
+
+  return {
+    recipeControllerGetAll,
+    recipeControllerAddRecipe,
+    recipeControllerGetMyRecipes,
+    recipeControllerGetOne,
+    recipeControllerPatchRecipe,
+  };
+};
+export type RecipeControllerGetAllResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getFoodMood>["recipeControllerGetAll"]>>
+>;
+export type RecipeControllerAddRecipeResult = NonNullable<
+  Awaited<
+    ReturnType<ReturnType<typeof getFoodMood>["recipeControllerAddRecipe"]>
+  >
+>;
+export type RecipeControllerGetMyRecipesResult = NonNullable<
+  Awaited<
+    ReturnType<ReturnType<typeof getFoodMood>["recipeControllerGetMyRecipes"]>
+  >
+>;
+export type RecipeControllerGetOneResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getFoodMood>["recipeControllerGetOne"]>>
+>;
+export type RecipeControllerPatchRecipeResult = NonNullable<
+  Awaited<
+    ReturnType<ReturnType<typeof getFoodMood>["recipeControllerPatchRecipe"]>
+  >
+>;
