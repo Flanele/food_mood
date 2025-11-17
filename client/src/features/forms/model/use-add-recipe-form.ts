@@ -1,4 +1,9 @@
-import { FormAddRecipeInput, formAddRecipeSchema } from "@/shared/schemas";
+import { useAddRecipeMutation } from "@/entities/recipe";
+import {
+  FormAddRecipeInput,
+  FormAddRecipeOutput,
+  formAddRecipeSchema,
+} from "@/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -10,7 +15,7 @@ export const useAddRecipeForm = () => {
       title: "",
       servings: 1,
       ingredients: [
-        { name: "", unit: "g", amount: undefined, pieceGrams: "" },
+        { name: "", unit: "g", amount: undefined, pieceGrams: undefined },
       ],
       imageMethod: "url",
       imageUrl: "",
@@ -52,6 +57,8 @@ export const useAddRecipeForm = () => {
   const titleValue = watch("title");
   const titleLength = titleValue?.length || 0;
 
+  const addRecipeMutation = useAddRecipeMutation();
+
   return {
     form,
     titleLength,
@@ -63,5 +70,11 @@ export const useAddRecipeForm = () => {
     stepFields,
     appendStep,
     removeStep,
+
+    handleSubmit: form.handleSubmit((data) =>
+      addRecipeMutation.mutate(data as FormAddRecipeOutput)
+    ),
+    isLoading: addRecipeMutation.isPending,
+    isError: addRecipeMutation.isError,
   };
 };

@@ -94,8 +94,8 @@ export class RecipeController {
     }
 
     for (const img of mapped.stepImages) {
-      if (dto.steps?.[img.index]) {
-        dto.steps[img.index].imageUrl = img.imageUrl;
+      if (dto.steps?.steps?.[img.index]) {
+        dto.steps.steps[img.index].imageUrl = img.imageUrl;
       }
     }
 

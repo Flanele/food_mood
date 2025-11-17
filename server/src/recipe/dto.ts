@@ -143,12 +143,19 @@ export class AddRecipeDto {
       const parsed = JSON.parse(value); // ожидаем { steps: [...] }
       return plainToInstance(StepsPayloadDto, parsed);
     }
+
     return value;
   })
   steps: StepsPayloadDto;
 
   @ApiProperty({ example: 'https://cdn.example.com/main-picture.jpg' })
   @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'undefined' || value === '' || value == null) {
+      return undefined;
+    }
+    return value;
+  })
   @IsUrl()
   picture_url?: string;
 
@@ -173,23 +180,29 @@ export class AddRecipeDto {
     // multipart: приходит ОДНА строка:
     if (typeof value === 'string') {
       const trimmed = value.trim();
-  
+
       // если это уже JSON-массив — парсим как есть
       const json = trimmed.startsWith('[') ? trimmed : `[${trimmed}]`;
-  
+
       const parsed = JSON.parse(json) as unknown[];
       return plainToInstance(AddIngredientDto, parsed);
     }
-  
-    // обычный JSON: массив объектов
+
+    //  несколько полей "ingredients" → массив строк
     if (Array.isArray(value)) {
-      return plainToInstance(AddIngredientDto, value as unknown[]);
-    }
+      const parsedArray = value.map((item) => {
+        if (typeof item === 'string') {
+          return JSON.parse(item);
+        }
+        return item;
+      });
   
+      return plainToInstance(AddIngredientDto, parsedArray);
+    }
+
     // fallback: один объект
     return plainToInstance(AddIngredientDto, [value] as unknown[]);
   })
-  
   ingredients: AddIngredientDto[];
 }
 
