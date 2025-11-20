@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { Request } from 'express';
+import { SupabaseService } from 'src/supabase/supabase.service';
 
 type RecipeFilesResult = {
   picture_url?: string;
@@ -8,12 +10,47 @@ type RecipeFilesResult = {
 
 @Injectable()
 export class FilesService {
-  buildPublicUrl(req: Request, folder: 'recipes' | 'steps', filename: string) {
-    const base = `${req.protocol}://${req.get('host')}`;
-    return `${base}/uploads/${folder}/${filename}`;
+  private bucket = process.env.SUPABASE_STORAGE_BUCKET ?? 'recipes_assets';
+
+  constructor(private supabaseService: SupabaseService) {}
+
+  private async uploadToSupabase(
+    file: Express.Multer.File,
+    folder: 'recipes' | 'steps',
+  ): Promise<string> {
+    const supabase = this.supabaseService.getClient();
+
+    const ext =
+      (file.originalname.split('.').pop() &&
+        `.${file.originalname.split('.').pop()}`) ||
+      '.jpg';
+
+    const filename = `${Date.now()}-${randomUUID()}${ext}`;
+    const path = `${folder}/${filename}`;
+
+    const { data, error } = await supabase.storage
+      .from(this.bucket)
+      .upload(path, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false,
+      });
+
+    if (error) {
+      console.log(error);
+      throw new BadRequestException('File upload failed');
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(this.bucket).getPublicUrl(data.path);
+
+    return publicUrl;
   }
 
-  mapFilesForRecipe(files: Express.Multer.File[], req: Request) {
+  async mapFilesForRecipe(
+    files: Express.Multer.File[],
+    req: Request,
+  ): Promise<RecipeFilesResult> {
     const result: RecipeFilesResult = {
       picture_url: undefined,
       stepImages: [],
@@ -21,7 +58,8 @@ export class FilesService {
 
     for (const file of files) {
       if (file.fieldname === 'picture_file') {
-        result.picture_url = this.buildPublicUrl(req, 'recipes', file.filename);
+        const url = await this.uploadToSupabase(file, 'recipes');
+        result.picture_url = url;
         continue;
       }
 
@@ -29,9 +67,9 @@ export class FilesService {
       if (!match) continue;
 
       const index = Number(match[1]);
-      const imageUrl = this.buildPublicUrl(req, 'steps', file.filename);
+      const url = await this.uploadToSupabase(file, 'steps');
 
-      result.stepImages.push({ index, imageUrl });
+      result.stepImages.push({ index, imageUrl: url });
     }
 
     return result;
