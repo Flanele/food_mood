@@ -81,13 +81,13 @@ export class RecipeController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ type: RecipeDto })
-  addRecipe(
+  async addRecipe(
     @Body() dto: AddRecipeDto,
     @UploadedFiles() files: Express.Multer.File[],
     @SessionInfo() session: GetSessionInfoDto,
     @Req() req: Request,
   ) {
-    const mapped = this.filesService.mapFilesForRecipe(files, req);
+    const mapped = await this.filesService.mapFilesForRecipe(files, req);
 
     if (mapped.picture_url) {
       dto.picture_url = mapped.picture_url;
@@ -120,14 +120,14 @@ export class RecipeController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiOkResponse({ type: RecipeDto })
-  patchRecipe(
+  async patchRecipe(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFiles() files: Express.Multer.File[],
     @Body() dto: PatchRecipeDto,
     @SessionInfo() session: GetSessionInfoDto,
     @Req() req: Request,
   ) {
-    const mapped = this.filesService.mapFilesForRecipe(files, req);
+    const mapped = await this.filesService.mapFilesForRecipe(files, req);
 
     if (mapped.picture_url) {
       dto.picture_url = mapped.picture_url;
