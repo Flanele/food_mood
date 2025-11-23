@@ -1,10 +1,10 @@
 import React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
 import { FormInput } from "./input-form";
 import { UnitSelect } from "@/entities/ingredients";
 import { HelpTooltip } from "@/shared/ui";
 import { X } from "lucide-react";
 import { HELP_TEXTS } from "@/shared/constans/help-texts";
+import { useAddIngredientForm } from "../model/use-add-ingredient-form";
 
 interface Props {
   index: number;
@@ -19,12 +19,8 @@ export const AddIngredientForm: React.FC<Props> = ({
   onRemove,
   showTooltip,
 }) => {
-  const { control } = useFormContext();
-
-  const unit = useWatch({
-    control,
-    name: `ingredients.${index}.unit`,
-  });
+  const { unit, suggestedGrams, isFetching, handleUseSuggested } =
+    useAddIngredientForm(index);
 
   return (
     <div className="flex items-start gap-6">
@@ -47,13 +43,38 @@ export const AddIngredientForm: React.FC<Props> = ({
       />
 
       {unit === "piece" && (
-        <FormInput
-          name={`ingredients.${index}.pieceGrams`}
-          label="Grams per piece:"
-          required
-          placeholder="50"
-          className="w-[160px]"
-        />
+        <div className="flex flex-col gap-1">
+          <FormInput
+            name={`ingredients.${index}.pieceGrams`}
+            label="Grams per piece:"
+            required
+            placeholder="50"
+            className="w-[160px]"
+          />
+
+          {/* подсказка из кэша */}
+          {isFetching && (
+            <span className="text-xs text-gray-400">
+              Checking cached weight...
+            </span>
+          )}
+
+          {!isFetching && suggestedGrams != null && (
+            <button
+              type="button"
+              onClick={handleUseSuggested}
+              className="text-xs text-blue-600 hover:underline text-left cursor-pointer"
+            >
+              Use suggested: {suggestedGrams} g per piece
+            </button>
+          )}
+
+          {!isFetching && suggestedGrams == null && (
+            <span className="text-xs text-gray-400">
+              No cached weight for this ingredient.
+            </span>
+          )}
+        </div>
       )}
 
       {canRemove && (
