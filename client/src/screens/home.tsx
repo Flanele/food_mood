@@ -1,7 +1,9 @@
 "use client";
 
-import { useRecipeList } from "@/features/recipes/recipe-list";
-import { RecipeListQuery } from "@/shared";
+import {
+  useRecipeList,
+  useRecipeListFilters,
+} from "@/features/recipes/recipe-list";
 import { Button, Container, Input, Title } from "@/shared/ui";
 import {
   FiltersBar,
@@ -17,7 +19,6 @@ export const HomePage = () => {
   const {
     data,
     query,
-    setQuery,
     currentPage,
     totalPages,
     onPageChange,
@@ -25,6 +26,8 @@ export const HomePage = () => {
     isLoading,
     error,
   } = useRecipeList();
+
+  const filters = useRecipeListFilters();
 
   return (
     <>
@@ -36,15 +39,12 @@ export const HomePage = () => {
             <Input
               placeholder="Search recipe..."
               className="max-w-[50%] self-center rounded-[22px] mx-auto bg-primary/10 border-primary/20 placeholder:text-lg !text-lg"
-              onChange={(e) =>
-                setQuery((prev: RecipeListQuery) => ({
-                  ...prev,
-                  page: 1,
-                  q: e.target.value,
-                }))
-              }
+              onChange={(e) => {
+                filters.setPage(1);
+                filters.setQ(e.target.value);
+              }}
             />
-            <Button variant='outline'>
+            <Button variant="outline">
               <Link href="/add-recipe">Add recipe</Link>
             </Button>
           </div>
@@ -54,8 +54,6 @@ export const HomePage = () => {
               <Title size="md" text="Filters:" className="mb-4 mt-4" />
               <FiltersBar
                 className="w-[250px]"
-                value={query}
-                onChange={setQuery}
               />
             </div>
 
