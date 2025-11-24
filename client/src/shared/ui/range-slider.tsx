@@ -13,6 +13,7 @@ type SliderProps = {
   formatLabel?: (value: number) => string;
   value?: number[] | readonly number[];
   onValueChange?: (values: number[]) => void;
+  onValueCommit?: (values: number[]) => void; 
 };
 
 const RangeSlider = React.forwardRef(
@@ -25,6 +26,7 @@ const RangeSlider = React.forwardRef(
       formatLabel,
       value,
       onValueChange,
+      onValueCommit,
       ...props
     }: SliderProps,
     ref
@@ -52,6 +54,7 @@ const RangeSlider = React.forwardRef(
         step={step}
         value={localValues}
         onValueChange={handleValueChange}
+        onValueCommit={onValueCommit} 
         className={cn(
           "relative flex w-full touch-none select-none mb-6 items-center",
           className
