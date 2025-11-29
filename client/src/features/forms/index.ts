@@ -7,3 +7,4 @@ export { useImageField } from "./model/use-image-field";
 export { useAddRecipeForm } from "./model/use-add-recipe-form";
 export { AddRecipeForm } from "./ui/add-recipe-form";
 export { useAddIngredientForm } from "./model/use-add-ingredient-form";
+export { EditRecipeForm } from "./ui/edit-recipe-form";

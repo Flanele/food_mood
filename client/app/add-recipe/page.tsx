@@ -1,5 +1,5 @@
-import { AddRecipePage } from "@/screens/add-recipe";
+import { AddRecipePage } from "@/screens";
 
-export default function Page () {
-    return <AddRecipePage />
+export default function Page() {
+  return <AddRecipePage />;
 }

@@ -196,7 +196,7 @@ export class AddRecipeDto {
         }
         return item;
       });
-  
+
       return plainToInstance(AddIngredientDto, parsedArray);
     }
 
@@ -306,6 +306,26 @@ export class PatchRecipeDto {
     },
   })
   @IsOptional()
+  @ValidateNested()
+  @Type(() => StepsPayloadDto)
+  @Transform(({ value }) => {
+    if (
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      value === 'undefined'
+    ) {
+      // поле просто не патчим
+      return undefined;
+    }
+
+    if (typeof value === 'string') {
+      const parsed = JSON.parse(value); // ожидаем { steps: [...] }
+      return plainToInstance(StepsPayloadDto, parsed);
+    }
+
+    return value;
+  })
   steps?: Prisma.JsonValue;
 
   @ApiProperty({
@@ -313,6 +333,12 @@ export class PatchRecipeDto {
     required: false,
   })
   @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'undefined' || value === '' || value == null) {
+      return undefined;
+    }
+    return value;
+  })
   @IsUrl()
   picture_url?: string;
 
@@ -331,5 +357,36 @@ export class PatchRecipeDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AddIngredientDto)
+  @Transform(({ value }) => {
+    if (
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      value === 'undefined'
+    ) {
+      return undefined;
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      const json = trimmed.startsWith('[') ? trimmed : `[${trimmed}]`;
+      const parsed = JSON.parse(json) as unknown[];
+
+      return plainToInstance(AddIngredientDto, parsed);
+    }
+
+    if (Array.isArray(value)) {
+      const parsedArray = value.map((item) => {
+        if (typeof item === 'string') {
+          return JSON.parse(item);
+        }
+        return item;
+      });
+
+      return plainToInstance(AddIngredientDto, parsedArray);
+    }
+
+    return plainToInstance(AddIngredientDto, [value] as unknown[]);
+  })
   ingredients?: AddIngredientDto[];
 }

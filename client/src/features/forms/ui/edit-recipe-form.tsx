@@ -1,14 +1,19 @@
 "use client";
 
+import React from "react";
+import { useEditRecipeForm } from "../model/use-edit-recipe-form";
 import { FormProvider } from "react-hook-form";
-import { useAddRecipeForm } from "../model/use-add-recipe-form";
 import { FormInput } from "./input-form";
 import { AddIngredientForm } from "./add-ingredient-form";
 import { Button } from "@/shared/ui";
 import { ImageField } from "./image-field";
 import { StepForm } from "./step-form";
 
-export const AddRecipeForm = () => {
+interface Props {
+  id: number;
+}
+
+export const EditRecipeForm: React.FC<Props> = ({ id }) => {
   const {
     form,
     titleLength,
@@ -22,7 +27,7 @@ export const AddRecipeForm = () => {
     handleSubmit,
     isLoading,
     isError,
-  } = useAddRecipeForm();
+  } = useEditRecipeForm({ id });
 
   return (
     <div className="mt-10 w-full border-2 border-secondary p-8">
@@ -106,7 +111,12 @@ export const AddRecipeForm = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button type="submit" className="bg-primary" disabled={isLoading} onClick={handleSubmit}>
+            <Button
+              type="submit"
+              className="bg-primary"
+              disabled={isLoading}
+              onClick={handleSubmit}
+            >
               {isLoading ? "Submitting..." : "Submit"}
             </Button>
 
