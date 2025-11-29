@@ -5,6 +5,7 @@ import { BadRequestException } from '@nestjs/common';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { AddRecipeDto, PatchRecipeDto, RecipeListQueryDto } from './dto';
 import { UserProfileService } from 'src/users/user-profile.service';
+import { FilesService } from 'src/files/files.service';
 
 type MockDb = {
   recipe: {
@@ -30,11 +31,16 @@ type MockUserProfile = {
   getProfile: jest.Mock;
 };
 
+type MockFiles = {
+  deleteFromSupabase: jest.Mock;
+};
+
 describe('RecipeService', () => {
   let service: RecipeService;
   let db: MockDb;
   let ingredients: MockIngredients;
   let userProfile: MockUserProfile;
+  let files: MockFiles;
 
   beforeEach(async () => {
     db = {
@@ -50,7 +56,7 @@ describe('RecipeService', () => {
         createMany: jest.fn(),
         aggregate: jest.fn(),
       },
-      $transaction: jest.fn((cb) => cb(db)),
+      $transaction: jest.fn(async (cb) => cb(db)),
     };
 
     ingredients = {
@@ -61,12 +67,17 @@ describe('RecipeService', () => {
       getProfile: jest.fn().mockResolvedValue({ id: 1 }),
     };
 
+    files = {
+      deleteFromSupabase: jest.fn(),
+    };
+
     const moduleRef = await Test.createTestingModule({
       providers: [
         RecipeService,
         { provide: DbService, useValue: db },
         { provide: IngredientService, useValue: ingredients },
         { provide: UserProfileService, useValue: userProfile },
+        { provide: FilesService, useValue: files },
       ],
     }).compile();
 
@@ -230,6 +241,8 @@ describe('RecipeService', () => {
       id: 7,
       servings: 4,
       authorProfileId: 1,
+      picture_url: 'picture_2133123',
+      steps: [],
     });
 
     const rows = [
@@ -279,6 +292,8 @@ describe('RecipeService', () => {
     const res = await service.patchRecipe(7, dto, 1);
 
     expect(userProfile.getProfile).toHaveBeenCalledWith(1);
+    expect(db.$transaction).toHaveBeenCalledTimes(1);
+
     expect(res).toMatchObject({ id: 7, ingredients: rows });
     expect(ingredients.buildIngredientRow).toHaveBeenCalledTimes(2);
     expect(db.recipeIngredient.deleteMany).toHaveBeenCalledWith({
@@ -300,6 +315,8 @@ describe('RecipeService', () => {
         }),
       }),
     );
+
+    expect(files.deleteFromSupabase).not.toHaveBeenCalled();
   });
 
   it('patchRecipe with only servings recomputes per-serv from aggregate', async () => {
@@ -307,6 +324,8 @@ describe('RecipeService', () => {
       id: 5,
       servings: 4,
       authorProfileId: 1,
+      picture_url: '',
+      steps: [],
     });
 
     db.recipeIngredient.aggregate.mockResolvedValueOnce({
@@ -325,6 +344,7 @@ describe('RecipeService', () => {
     const res = await service.patchRecipe(5, dto, 1);
 
     expect(userProfile.getProfile).toHaveBeenCalledWith(1);
+    expect(db.$transaction).toHaveBeenCalledTimes(1);
     expect(res).toEqual({ id: 5, ingredients: [] });
     expect(db.recipeIngredient.aggregate).toHaveBeenCalledWith({
       where: { recipeId: 5 },
@@ -345,5 +365,7 @@ describe('RecipeService', () => {
         }),
       }),
     );
+
+    expect(files.deleteFromSupabase).not.toHaveBeenCalled();
   });
 });

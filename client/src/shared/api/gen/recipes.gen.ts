@@ -15,7 +15,7 @@ import type {
 
 import { createInstance } from "../api-instance";
 import type { BodyType } from "../api-instance";
-import { AddRecipeFiles } from "@/shared/types/types";
+import { AddRecipeFiles, PatchRecipeFiles } from "@/shared/types/types";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export const getFoodMood = () => {
@@ -88,9 +88,11 @@ export const getFoodMood = () => {
   const recipeControllerPatchRecipe = (
     id: number,
     patchRecipeDto: BodyType<PatchRecipeDto>,
+    files?: PatchRecipeFiles,
     options?: SecondParameter<typeof createInstance<RecipeDto>>
   ) => {
     const formData = new FormData();
+
     if (patchRecipeDto.title !== undefined) {
       formData.append(`title`, patchRecipeDto.title);
     }
@@ -107,6 +109,18 @@ export const getFoodMood = () => {
       patchRecipeDto.ingredients.forEach((value) =>
         formData.append(`ingredients`, JSON.stringify(value))
       );
+    }
+
+    if (files?.picture_file) {
+      formData.append("picture_file", files.picture_file);
+    }
+
+    if (files?.stepFiles && Array.isArray(files.stepFiles)) {
+      files.stepFiles.forEach((file, index) => {
+        if (file) {
+          formData.append(`steps[${index}].image_file`, file);
+        }
+      });
     }
 
     return createInstance<RecipeDto>(

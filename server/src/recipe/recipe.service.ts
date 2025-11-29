@@ -5,11 +5,13 @@ import {
   PatchRecipeDto,
   RecipeListDto,
   RecipeListQueryDto,
+  StepsPayloadDto,
 } from './dto';
 import { IngredientService } from '../ingredient/ingredient.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma, Recipe } from 'generated/prisma';
 import { buildRecipeWhere, perServing, sumRows } from './recipe.helpers';
 import { UserProfileService } from 'src/users/user-profile.service';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class RecipeService {
@@ -17,6 +19,7 @@ export class RecipeService {
     private db: DbService,
     private ingredientsService: IngredientService,
     private userProfileService: UserProfileService,
+    private filesService: FilesService,
   ) {}
 
   async getAll(query: RecipeListQueryDto): Promise<RecipeListDto> {
@@ -116,61 +119,110 @@ export class RecipeService {
       throw new BadRequestException({ type: 'access-denied' });
     }
 
-    return this.db.$transaction(async (tx) => {
-      const data: Prisma.RecipeUpdateInput = {};
+    const urlsToDelete = this.collectImagesToDelete(existing, dto);
 
-      if (dto.title !== undefined) data.title = dto.title;
-      if (dto.steps !== undefined)
-        data.steps = dto.steps as Prisma.InputJsonValue;
-      if (dto.picture_url !== undefined) data.picture_url = dto.picture_url;
-      if (dto.servings !== undefined) data.servings = dto.servings;
+    const updated = await this.db.$transaction((tx) =>
+      this.applyRecipePatch(tx, existing, dto),
+    );
 
-      // если пришли ингредиенты — пересобираем строки и пересчитываем per-serv
-      if (dto.ingredients) {
-        const rows = await Promise.all(
-          dto.ingredients.map((ingredient) =>
-            this.ingredientsService.buildIngredientRow(ingredient),
-          ),
-        );
+    if (urlsToDelete.length > 0) {
+      await this.filesService.deleteFromSupabase(urlsToDelete);
+    }
 
-        await tx.recipeIngredient.deleteMany({ where: { recipeId: id } });
-        await tx.recipeIngredient.createMany({
-          data: rows.map((r) => ({ ...r, recipeId: id })),
-        });
+    return updated;
+  }
 
-        const servings = dto.servings ?? existing.servings;
-        Object.assign(data, perServing(sumRows(rows), servings));
-      }
+  private collectImagesToDelete(
+    existing: Recipe,
+    dto: PatchRecipeDto,
+  ): string[] {
+    const urlsToDelete: string[] = [];
 
-      // если ингредиенты не пришли, но поменяли servings — пересчитать per-serv по текущим строкам
-      else if (dto.servings !== undefined) {
-        const aggr = await tx.recipeIngredient.aggregate({
-          where: { recipeId: id },
-          _sum: {
-            kcalTotal: true,
-            protTotal: true,
-            fatTotal: true,
-            carbTotal: true,
-            sugarTotal: true,
-          },
-        });
+    const oldPictureUrl = existing.picture_url;
+    const oldSteps = existing.steps as unknown as StepsPayloadDto | undefined;
+    const newSteps = dto.steps as unknown as StepsPayloadDto | undefined;
 
-        const sum = {
-          kcal: aggr._sum.kcalTotal ?? 0,
-          prot: aggr._sum.protTotal ?? 0,
-          fat: aggr._sum.fatTotal ?? 0,
-          carb: aggr._sum.carbTotal ?? 0,
-          sugar: aggr._sum.sugarTotal ?? 0,
-        };
+    if (dto.picture_url && oldPictureUrl && dto.picture_url !== oldPictureUrl) {
+      urlsToDelete.push(oldPictureUrl);
+    }
 
-        Object.assign(data, perServing(sum, dto.servings));
-      }
+    if (newSteps?.steps?.length && oldSteps?.steps?.length) {
+      newSteps.steps.forEach((newStep, index) => {
+        const prevStep = oldSteps.steps[index];
 
-      return tx.recipe.update({
-        where: { id },
-        data,
-        include: { ingredients: true },
+        if (
+          newStep?.imageUrl && // есть новый урл
+          prevStep?.imageUrl && // был старый урл
+          newStep.imageUrl !== prevStep.imageUrl // сменился
+        ) {
+          urlsToDelete.push(prevStep.imageUrl);
+        }
       });
+    }
+
+    return urlsToDelete;
+  }
+
+  private async applyRecipePatch(
+    tx: Prisma.TransactionClient,
+    existing: Recipe,
+    dto: PatchRecipeDto,
+  ) {
+    const data: Prisma.RecipeUpdateInput = {};
+
+    if (dto.title !== undefined) data.title = dto.title;
+    if (dto.steps !== undefined)
+      data.steps = dto.steps as Prisma.InputJsonValue;
+    if (dto.picture_url !== undefined) data.picture_url = dto.picture_url;
+    if (dto.servings !== undefined) data.servings = dto.servings;
+
+    // если пришли ингредиенты — пересобираем строки и пересчитываем per-serv
+    if (dto.ingredients) {
+      const rows = await Promise.all(
+        dto.ingredients.map((ingredient) =>
+          this.ingredientsService.buildIngredientRow(ingredient),
+        ),
+      );
+
+      await tx.recipeIngredient.deleteMany({
+        where: { recipeId: existing.id },
+      });
+      await tx.recipeIngredient.createMany({
+        data: rows.map((r) => ({ ...r, recipeId: existing.id })),
+      });
+
+      const servings = dto.servings ?? existing.servings;
+      Object.assign(data, perServing(sumRows(rows), servings));
+    }
+
+    // если ингредиенты не пришли, но поменяли servings — пересчитать per-serv по текущим строкам
+    else if (dto.servings !== undefined) {
+      const aggr = await tx.recipeIngredient.aggregate({
+        where: { recipeId: existing.id },
+        _sum: {
+          kcalTotal: true,
+          protTotal: true,
+          fatTotal: true,
+          carbTotal: true,
+          sugarTotal: true,
+        },
+      });
+
+      const sum = {
+        kcal: aggr._sum.kcalTotal ?? 0,
+        prot: aggr._sum.protTotal ?? 0,
+        fat: aggr._sum.fatTotal ?? 0,
+        carb: aggr._sum.carbTotal ?? 0,
+        sugar: aggr._sum.sugarTotal ?? 0,
+      };
+
+      Object.assign(data, perServing(sum, dto.servings));
+    }
+
+    return tx.recipe.update({
+      where: { id: existing.id },
+      data,
+      include: { ingredients: true },
     });
   }
 }
