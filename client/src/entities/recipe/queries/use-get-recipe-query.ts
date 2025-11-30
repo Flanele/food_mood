@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const recipeKey = ["recipe"];
 
-export const useGetRecipeQuery = ({ id }: { id: number }) => {
+export const useGetRecipeQuery = (id: number) => {
   const queryKey = [...recipeKey, id];
 
   return useQuery({

@@ -27,7 +27,7 @@ export const EditRecipeForm: React.FC<Props> = ({ id }) => {
     handleSubmit,
     isLoading,
     isError,
-  } = useEditRecipeForm({ id });
+  } = useEditRecipeForm(id);
 
   return (
     <div className="mt-10 w-full border-2 border-secondary p-8">
