@@ -12,8 +12,8 @@ type StepsPayload = {
   steps?: { text: string; imageUrl: string }[];
 };
 
-export const useEditRecipeForm = ({ id }: { id: number }) => {
-  const { data } = useGetRecipeQuery({ id });
+export const useEditRecipeForm = (id: number) => {
+  const { data } = useGetRecipeQuery(id);
 
   const form = useForm<FormAddRecipeInput>({
     resolver: zodResolver(formAddRecipeSchema),

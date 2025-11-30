@@ -4,6 +4,7 @@ import {
   useRecipeList,
   useRecipeListFilters,
 } from "@/features/recipes/recipe-list";
+import { ROUTES } from "@/shared";
 import { Button, Container, Input, Title } from "@/shared/ui";
 import {
   FiltersBar,
@@ -45,7 +46,7 @@ export const HomePage = () => {
               }}
             />
             <Button variant="outline">
-              <Link href="/add-recipe">Add recipe</Link>
+              <Link href={ROUTES.ADD_RECIPE}>Add recipe</Link>
             </Button>
           </div>
 
