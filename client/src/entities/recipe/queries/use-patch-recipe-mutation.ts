@@ -9,7 +9,7 @@ import { ROUTES } from "@/shared";
 
 const patchRecipeKey = ["patch-recipe"];
 
-export const usePatchRecipeMutation = ({ id }: { id: number }) => {
+export const usePatchRecipeMutation = (id: number) => {
   const router = useRouter();
 
   return useMutation({

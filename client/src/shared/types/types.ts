@@ -45,3 +45,5 @@ export type PatchRecipeFiles = {
   picture_file?: File;
   stepFiles?: (File | null | undefined)[];
 };
+
+export type Objective = 'balanced' | 'mood' | 'energy' | 'sleep';

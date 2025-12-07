@@ -35,6 +35,7 @@ export const RecipeCatalog: React.FC<Props> = ({
           fatPerServ={r.fatPerServ}
           carbPerServ={r.carbPerServ}
           sugarPerServ={r.sugarPerServ}
+          id={r.id}
         />
       ))}
     </div>
