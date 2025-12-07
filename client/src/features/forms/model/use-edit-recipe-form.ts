@@ -67,7 +67,7 @@ export const useEditRecipeForm = (id: number) => {
   const titleValue = watch("title");
   const titleLength = titleValue?.length || 0;
 
-  const patchRecipeMutation = usePatchRecipeMutation({ id });
+  const patchRecipeMutation = usePatchRecipeMutation(id);
 
   return {
     form,

@@ -1,11 +1,24 @@
 "use client";
 
 import { useRecipePage } from "@/features/recipes/recipe";
-import { Container, ErrorAnimation, SimpleLoader, Title } from "@/shared/ui";
+import {
+  Button,
+  Container,
+  ErrorAnimation,
+  SimpleLoader,
+  Title,
+} from "@/shared/ui";
 import { Header } from "@/widgets";
 import React from "react";
 import { NotFoundPage } from "./not-found";
-import { RecipeInfoCard } from "@/entities/recipe";
+import {
+  AnalyticsSection,
+  RecipeInfoCard,
+  RecipeStepsSection,
+} from "@/entities/recipe";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/shared";
+import { useSessionKey } from "@/entities/session";
 
 interface Props {
   id: number;
@@ -13,6 +26,7 @@ interface Props {
 
 export const RecipePage: React.FC<Props> = ({ id }) => {
   const { recipe, isLoading, isError, isNotFound } = useRecipePage(id);
+  const router = useRouter();
 
   if (isNotFound) {
     return <NotFoundPage />;
@@ -54,16 +68,59 @@ export const RecipePage: React.FC<Props> = ({ id }) => {
       <Header mode={"other"} />
       <Container>
         <div className="mt-10 p-2 gap-5 flex flex-col items-center w-full">
-          
-          <img
-            src={recipe.picture_url}
-           className="w-[70%] object-cover max-h-[620px]"
-            alt={recipe.title}
-          />
+          <div className="relative w-[80%] max-h-[620px] overflow-hidden group cursor-pointer">
+            <img
+              src={recipe.picture_url}
+              alt={recipe.title}
+              className="w-full h-full object-cover transition-all duration-300 group-hover:brightness-75"
+            />
+
+            {/* Оверлей с кнопкой */}
+            <div
+              className="absolute inset-0 flex items-center justify-center 
+               opacity-0 group-hover:opacity-100 transition-opacity duration-300 
+               pointer-events-none"
+            >
+              <button
+                className="
+                cursor-pointer
+                pointer-events-auto
+                w-[40%]
+                px-8 py-3 
+                border border-white/60 
+                text-white font-quantico text-xl
+                rounded-md
+                transition-all duration-300
+                hover:border-primary hover:text-primary hover:bg-white/85
+                active:scale-95
+              "
+              >
+                Eat it!
+              </button>
+            </div>
+          </div>
 
           <Title text={recipe.title} size="lg" />
 
-          <RecipeInfoCard recipe={recipe} className="w-full" />
+          <RecipeInfoCard recipe={recipe} className="w-[80%]" />
+
+          <AnalyticsSection recipe={recipe} className="w-[80%]" />
+
+          <RecipeStepsSection recipe={recipe} className="w-[80%]" />
+
+          <Button size="lg" className="w-[80%]">
+            Make log with this recipe
+          </Button>
+
+          <Button
+            onClick={() => router.push(ROUTES.EDIT_RECIPE + `/${recipe.id}`)}
+            variant="secondary"
+            size="lg"
+            className="w-[80%]"
+          >
+            {" "}
+            ✍️ Edit recipe
+          </Button>
         </div>
       </Container>
     </>

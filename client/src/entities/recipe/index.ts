@@ -3,4 +3,7 @@ export { mapFormToAddRecipeDto } from "./lib/mapFormToAddRecipeDto";
 export { useAddRecipeMutation } from "./queries/use-add-recipe-mutation";
 export { useGetRecipeQuery } from "./queries/use-get-recipe-query";
 export { usePatchRecipeMutation } from "./queries/use-patch-recipe-mutation";
-export { RecipeInfoCard } from './ui/recipe-info-card';
+export { RecipeInfoCard } from "./ui/recipe-info-card";
+export { RecipeStepsSection } from "./ui/recipe-steps-section";
+export { AnalyticsSection } from "./ui/analytics-section";
+export { useGetExplainRecommandation } from "./queries/use-get-explain-recommendation";
