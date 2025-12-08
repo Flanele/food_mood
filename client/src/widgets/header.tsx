@@ -1,3 +1,4 @@
+import { ROUTES } from "@/shared";
 import { Button, Container, Logo, Title } from "@/shared/ui";
 import { CircleUser, Star, ThumbsUp, Utensils } from "lucide-react";
 
@@ -23,7 +24,7 @@ export const Header: React.FC<Props> = ({ mode }) => {
           {mode !== "home" && (
             <div className="flex gap-3 hover:underline hover:text-primary transition-colors">
               <Utensils width={25} height={25} />
-              <Link className="font-quantico text-m" href={"/"}>
+              <Link className="font-quantico text-m" href={ROUTES.HOME}>
                 Home page
               </Link>{" "}
             </div>
@@ -52,7 +53,7 @@ export const Header: React.FC<Props> = ({ mode }) => {
             className="font-quantico text-black text-m border-black hover:border-primary hover:text-primary transition-colors rounded-[15px]"
           >
             <CircleUser className="mr-2" />
-            <Link href={"#"}>Profile</Link>
+            <Link href={ROUTES.PROFILE}>Profile</Link>
           </Button>
         </div>
       </Container>

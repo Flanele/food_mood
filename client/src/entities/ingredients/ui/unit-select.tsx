@@ -6,12 +6,12 @@ import {
   SelectValue,
 } from "@/shared/ui";
 
-import { Controller, get, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface Props {
   name: string;
   label?: string;
-}
+} 
 
 export const UnitSelect: React.FC<Props> = ({ name, label }) => {
   const { control } = useFormContext();
