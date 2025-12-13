@@ -1,24 +1,22 @@
 import z from "zod";
+import { allergiesSchema } from "./allergies-shema";
+import { optionalNumberSchema } from "./optional-number-shema";
+import { optionalDateSchema } from "./birth-date-schema";
+
 
 export const formProfileSchema = z.object({
   sex: z.enum(["male", "female"]).nullable().optional(),
 
-  birthDate: z
-    .string()
-    .nullable()
-    .optional()
-    .refine(
-      (val) => val === null || val === undefined || !isNaN(Date.parse(val)),
-      "Invalid date format"
-    ),
+  birthDate: optionalDateSchema,
 
-  heightCm: z.number().min(1, "Height must be > 0").nullable().optional(),
+  heightCm: optionalNumberSchema,
 
-  weightKg: z.number().min(1, "Weight must be > 0").nullable().optional(),
+  weightKg: optionalNumberSchema,
 
   diet: z.enum(["vegetarian", "vegan", "pescatarian"]).nullable().optional(),
 
-  allergies: z.array(z.string().min(2)).nullable().optional(),
+  allergies: allergiesSchema.optional(),
 });
 
-export type ProfileFormInput = z.infer<typeof formProfileSchema>;
+export type ProfileFormInput = z.input<typeof formProfileSchema>;
+export type ProfileFormOutput = z.output<typeof formProfileSchema>;

@@ -7,7 +7,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "./input-form";
-import { Button, Select } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 import { DietSelect, SexSelect } from "@/entities/profile";
 
 interface Props {
@@ -23,38 +23,44 @@ type PrefsForForm = {
 export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
   const prefs = (profile.prefs ?? {}) as PrefsForForm;
 
+  const onValid = (data: ProfileFormInput) => console.log("valid", data);
+  const onInvalid = (errs: typeof errors) => console.log("invalid", errs);
+
   const form = useForm<ProfileFormInput>({
     resolver: zodResolver(formProfileSchema),
+    mode: "onChange",
     defaultValues: {
-      sex: profile.sex ?? undefined,
+      sex: profile.sex ?? null,
       birthDate: profile.birthDate
         ? new Date(profile.birthDate as unknown as string)
             .toISOString()
             .slice(0, 10)
-        : undefined,
-      heightCm: profile.heightCm ?? undefined,
-      weightKg: profile.weightKg ?? undefined,
+        : null,
+      heightCm: profile.heightCm ?? null,
+      weightKg: profile.weightKg ?? null,
       diet: prefs.diet ?? null,
-      allergies: prefs.allergies ?? null,
+      allergies: (prefs.allergies as string[] | null) ?? null,
     },
   });
 
   const {
-    register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors, isSubmitting },
   } = form;
 
-  const allergies = watch("allergies") ?? [];
+  const allergies = watch("allergies");
 
   return (
     <div
       className={cn("mt-10 w-full border-2 border-secondary p-8", className)}
     >
       <FormProvider {...form}>
-        <form className="flex flex-col gap-8" onSubmit={() => {}}>
+        <form
+          className="flex flex-col gap-8"
+          onSubmit={handleSubmit(onValid, onInvalid)}
+        >
           {/* Sex */}
           <SexSelect name="sex" label="Sex:" />
 
@@ -72,7 +78,8 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
               name="heightCm"
               label="Height (cm):"
               type="number"
-              inputMode="numeric"
+              inputMode="decimal"
+              step="0.5"
               className="w-[180px]"
             />
 
@@ -81,7 +88,8 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
               name="weightKg"
               label="Weight (kg):"
               type="number"
-              inputMode="numeric"
+              inputMode="decimal"
+              step="0.5"
               className="w-[180px]"
             />
           </div>
@@ -100,39 +108,41 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
                     name={`allergies.${index}`}
                     className="w-[280px]"
                     placeholder="type allergy"
-                    
                   />
 
-                  <button
-                    type="button"
-                    className="text-xs text-red-500 underline cursor-pointer"
-                    onClick={() => {
-                      const next = allergies.filter((_, i) => i !== index);
-                      setValue("allergies", next, { shouldValidate: true });
-                    }}
-                  >
-                    remove
-                  </button>
+                  {allergies.length > 1 && (
+                    <button
+                      type="button"
+                      className="text-xs text-red-500 underline cursor-pointer"
+                      onClick={() => {
+                        const next = allergies.filter((_, i) => i !== index);
+                        setValue("allergies", next.length ? next : undefined);
+                      }}
+                    >
+                      remove
+                    </button>
+                  )}
                 </div>
               ))}
+
+              {errors.allergies?.root && (
+                <span className="text-xs text-red-500">
+                  {errors.allergies.root.message as string}
+                </span>
+              )}
+
               <Button
                 type="button"
                 variant="outline"
                 className="w-fit"
                 onClick={() =>
-                  setValue("allergies", [...allergies, ""], {
-                    shouldValidate: true,
+                  setValue("allergies", [...(allergies ?? []), ""], {
+                    shouldValidate: false,
                   })
                 }
               >
                 + Add allergy
               </Button>
-
-              {errors.allergies && (
-                <span className="text-xs text-red-500">
-                  {errors.allergies.message as string}
-                </span>
-              )}
             </div>
           </div>
 

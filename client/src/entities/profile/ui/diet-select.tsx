@@ -25,13 +25,14 @@ export const DietSelect: React.FC<Props> = ({ name, label }) => {
         control={control}
         render={({ field }) => (
           <Select
-            value={field.value ?? ""}
-            onValueChange={(val) => field.onChange(val || undefined)}
+            value={field.value ?? "none"}
+            onValueChange={(val) => field.onChange(val === "none" ? null : val)}
           >
             <SelectTrigger className="h-12">
               <SelectValue placeholder="select diet" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="none">No diet</SelectItem>
               <SelectItem value="vegetarian">vegetarian</SelectItem>
               <SelectItem value="vegan">vegan</SelectItem>
               <SelectItem value="pescatarian">pescatarian</SelectItem>
