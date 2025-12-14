@@ -608,9 +608,6 @@ components:
         - weightKg
         - bmi
         - prefs
-    PrefsDto:
-      type: object
-      properties: {}
     PatchProfileDTO:
       type: object
       properties:
@@ -619,22 +616,26 @@ components:
           enum:
             - male
             - female
+          nullable: true
         birthDate:
           type: string
           example: '1999-05-10'
+          nullable: true
         heightCm:
           type: number
           example: 165
+          nullable: true
         weightKg:
           type: number
           example: 57.5
+          nullable: true
         prefs:
+          type: object
           example:
             diet: vegetarian
             allergies:
               - nuts
-          allOf:
-            - $ref: '#/components/schemas/PrefsDto'
+          nullable: true
     SignInBodyDTO:
       type: object
       properties:

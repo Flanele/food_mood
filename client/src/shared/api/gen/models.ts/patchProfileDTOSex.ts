@@ -5,7 +5,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PatchProfileDTOSex = typeof PatchProfileDTOSex[keyof typeof PatchProfileDTOSex];
+/**
+ * @nullable
+ */
+export type PatchProfileDTOSex = typeof PatchProfileDTOSex[keyof typeof PatchProfileDTOSex] | null;
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

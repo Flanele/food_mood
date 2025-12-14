@@ -1,66 +1,33 @@
 import { ProfileDTO } from "@/shared/api/gen";
 import { cn } from "@/shared/lib/utils";
-import {
-  formProfileSchema,
-  ProfileFormInput,
-} from "@/shared/schemas/pforile-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import { FormInput } from "./input-form";
 import { Button } from "@/shared/ui";
 import { DietSelect, SexSelect } from "@/entities/profile";
+import { useEditProfileForm } from "../model/use-edit-profile-form";
 
 interface Props {
   className?: string;
   profile: ProfileDTO;
 }
 
-type PrefsForForm = {
-  diet?: ProfileFormInput["diet"];
-  allergies?: ProfileFormInput["allergies"];
-};
-
 export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
-  const prefs = (profile.prefs ?? {}) as PrefsForForm;
-
-  const onValid = (data: ProfileFormInput) => console.log("valid", data);
-  const onInvalid = (errs: typeof errors) => console.log("invalid", errs);
-
-  const form = useForm<ProfileFormInput>({
-    resolver: zodResolver(formProfileSchema),
-    mode: "onChange",
-    defaultValues: {
-      sex: profile.sex ?? null,
-      birthDate: profile.birthDate
-        ? new Date(profile.birthDate as unknown as string)
-            .toISOString()
-            .slice(0, 10)
-        : null,
-      heightCm: profile.heightCm ?? null,
-      weightKg: profile.weightKg ?? null,
-      diet: prefs.diet ?? null,
-      allergies: (prefs.allergies as string[] | null) ?? null,
-    },
-  });
-
   const {
+    form,
     handleSubmit,
-    watch,
+    allergies,
     setValue,
-    formState: { errors, isSubmitting },
-  } = form;
-
-  const allergies = watch("allergies");
+    isSubmitting,
+    formErrors,
+    isError,
+  } = useEditProfileForm(profile);
 
   return (
     <div
       className={cn("mt-10 w-full border-2 border-secondary p-8", className)}
     >
       <FormProvider {...form}>
-        <form
-          className="flex flex-col gap-8"
-          onSubmit={handleSubmit(onValid, onInvalid)}
-        >
+        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           {/* Sex */}
           <SexSelect name="sex" label="Sex:" />
 
@@ -78,8 +45,7 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
               name="heightCm"
               label="Height (cm):"
               type="number"
-              inputMode="decimal"
-              step="0.5"
+              inputMode="numeric"
               className="w-[180px]"
             />
 
@@ -125,9 +91,9 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
                 </div>
               ))}
 
-              {errors.allergies?.root && (
+              {formErrors.allergies?.root && (
                 <span className="text-xs text-red-500">
-                  {errors.allergies.root.message as string}
+                  {formErrors.allergies.root.message as string}
                 </span>
               )}
 
@@ -156,6 +122,8 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
             >
               {isSubmitting ? "Saving..." : "Save profile"}
             </Button>
+
+            {isError && <span className="text-red-500">Something went wrong...</span>}
           </div>
         </form>
       </FormProvider>

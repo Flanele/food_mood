@@ -9,3 +9,4 @@ export { AddRecipeForm } from "./ui/add-recipe-form";
 export { useAddIngredientForm } from "./model/use-add-ingredient-form";
 export { EditRecipeForm } from "./ui/edit-recipe-form";
 export { UserProfileForm } from "./ui/user-profile-form";
+export { useEditProfileForm } from "./model/use-edit-profile-form";

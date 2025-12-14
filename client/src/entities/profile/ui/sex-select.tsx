@@ -24,13 +24,14 @@ export const SexSelect: React.FC<SexSelectProps> = ({ name, label }) => {
         control={control}
         render={({ field }) => (
           <Select
-            value={field.value ?? ""}
-            onValueChange={(val) => field.onChange(val || undefined)}
+            value={field.value ?? "none"}
+            onValueChange={(val) => field.onChange(val === "none" ? null : val)}
           >
             <SelectTrigger className="h-12">
               <SelectValue placeholder="select sex" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="none">No specified</SelectItem>
               <SelectItem value="male">male</SelectItem>
               <SelectItem value="female">female</SelectItem>
             </SelectContent>
