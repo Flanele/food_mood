@@ -1,4 +1,5 @@
 import { useGetRecipeQuery, usePatchRecipeMutation } from "@/entities/recipe";
+import { IngredientDto } from "@/shared/api/gen";
 import {
   FormAddRecipeInput,
   FormAddRecipeOutput,
@@ -29,7 +30,7 @@ export const useEditRecipeForm = (id: number) => {
       title: data.title,
       servings: data.servings,
 
-      ingredients: data.ingredients.map((ing) => ({
+      ingredients: data.ingredients.map((ing: IngredientDto) => ({
         name: ing.name,
         unit: ing.unit,
         amount: ing.amount,

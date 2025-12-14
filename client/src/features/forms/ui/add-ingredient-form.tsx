@@ -16,7 +16,7 @@ interface Props {
 export const AddIngredientForm: React.FC<Props> = ({
   index,
   canRemove,
-  onRemove,
+  onRemove, 
   showTooltip,
 }) => {
   const { unit, suggestedGrams, isFetching, handleUseSuggested } =

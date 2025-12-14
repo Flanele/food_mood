@@ -6,4 +6,5 @@ export const ROUTES = {
   ADD_RECIPE: "/add-recipe",
   EDIT_RECIPE: "/edit-recipe",
   RECIPE: "/recipe",
+  PROFILE: "/my-profile"
 };

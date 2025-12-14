@@ -1,7 +1,6 @@
 import { LoginForm } from "@/features/auth";
 import { Mode, ROUTES } from "@/shared";
 import { Container, Logo } from "@/shared/ui";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 

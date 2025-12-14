@@ -71,34 +71,40 @@ export class ProfileDTO {
 }
 
 export class PatchProfileDTO {
-  @ApiProperty({ required: false, enum: Sex })
+  @ApiProperty({ required: false, enum: Sex, nullable: true })
   @IsOptional()
   @IsEnum(Sex)
-  sex?: Sex;
+  sex?: Sex | null;
 
-  @ApiProperty({ required: false, example: '1999-05-10' })
+  @ApiProperty({
+    required: false,
+    example: '1999-05-10',
+    nullable: true,
+    type: String,
+  })
   @IsOptional()
   @IsISO8601()
-  birthDate?: string;
+  birthDate?: string | null;
 
-  @ApiProperty({ required: false, example: 165 })
+  @ApiProperty({ required: false, example: 165, nullable: true, type: Number })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  heightCm?: number;
+  heightCm?: number | null;
 
-  @ApiProperty({ required: false, example: 57.5 })
+  @ApiProperty({ required: false, example: 57.5, nullable: true, type: Number })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  weightKg?: number;
+  weightKg?: number | null;
 
   @ApiProperty({
     required: false,
     example: { diet: 'vegetarian', allergies: ['nuts'] },
+    nullable: true,
   })
   @IsOptional()
   @Type(() => PrefsDto)
   @ValidateNested()
-  prefs?: PrefsDto;
+  prefs?: PrefsDto | null;
 }

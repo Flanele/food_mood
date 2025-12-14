@@ -1,3 +1,3 @@
 import { getFoodMood } from "../user.gen";
 
-export const userApi = getFoodMood;
+export const userApi = getFoodMood();

@@ -18,7 +18,6 @@ import {
 } from "@/entities/recipe";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/shared";
-import { useSessionKey } from "@/entities/session";
 
 interface Props {
   id: number;

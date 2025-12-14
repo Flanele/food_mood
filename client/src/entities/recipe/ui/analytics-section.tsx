@@ -4,9 +4,9 @@ import { RecipeDto } from "@/shared/api/gen";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui";
 import React from "react";
-import { useGetExplainRecommandation } from "../queries/use-get-explain-recommendation";
 import { Objective, ROUTES } from "@/shared";
 import Link from "next/link";
+import { useRecipeAnalyticsSection } from "@/features/recipes/recipe";
 
 interface Props {
   className?: string;
@@ -14,12 +14,15 @@ interface Props {
 }
 
 export const AnalyticsSection: React.FC<Props> = ({ className, recipe }) => {
-  const [isInfoOpen, setIsInfoOpen] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState<Objective>("balanced");
-  const { data, isLoading, isError } = useGetExplainRecommandation(
-    recipe.id,
-    activeTab
-  );
+  const {
+    isInfoOpen,
+    setIsInfoOpen,
+    activeTab,
+    setActiveTab,
+    data,
+    isLoading,
+    isError,
+  } = useRecipeAnalyticsSection(recipe.id);
 
   return (
     <div className={cn(className, "flex flex-col gap-2")}>
@@ -79,12 +82,6 @@ export const AnalyticsSection: React.FC<Props> = ({ className, recipe }) => {
                   logged in
                 </Link>{" "}
                 to view this section.
-              </p>
-            )}
-
-            {!isLoading && !isError && !data && (
-              <p className="text-muted-foreground">
-                No analytics available for this recipe.
               </p>
             )}
 

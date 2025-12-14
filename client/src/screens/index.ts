@@ -4,3 +4,4 @@ export { AddRecipePage } from "./add-recipe";
 export { EditRecipePage } from "./edit-recipe";
 export { RecipePage } from "./recipe";
 export { NotFoundPage } from "./not-found";
+export { UserProfilePage } from "./user-profile";

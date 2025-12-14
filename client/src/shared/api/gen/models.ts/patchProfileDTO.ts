@@ -5,12 +5,17 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { PatchProfileDTOSex } from './patchProfileDTOSex';
-import type { PrefsDto } from './prefsDto';
+import type { PatchProfileDTOPrefs } from './patchProfileDTOPrefs';
 
 export interface PatchProfileDTO {
+  /** @nullable */
   sex?: PatchProfileDTOSex;
-  birthDate?: string;
-  heightCm?: number;
-  weightKg?: number;
-  prefs?: PrefsDto;
+  /** @nullable */
+  birthDate?: string | null;
+  /** @nullable */
+  heightCm?: number | null;
+  /** @nullable */
+  weightKg?: number | null;
+  /** @nullable */
+  prefs?: PatchProfileDTOPrefs;
 }
