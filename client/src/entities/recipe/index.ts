@@ -7,3 +7,4 @@ export { RecipeInfoCard } from "./ui/recipe-info-card";
 export { RecipeStepsSection } from "./ui/recipe-steps-section";
 export { AnalyticsSection } from "./ui/analytics-section";
 export { useGetExplainRecommandation } from "./queries/use-get-explain-recommendation-query";
+export { RecipeMainBanner } from "./ui/recipe-main-banner";
