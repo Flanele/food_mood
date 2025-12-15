@@ -19,7 +19,6 @@ import React from "react";
 export const HomePage = () => {
   const {
     data,
-    query,
     currentPage,
     totalPages,
     onPageChange,
