@@ -31,7 +31,7 @@ export class MealLogDto {
   @ApiProperty({ nullable: true, type: Number, example: 6 })
   sleepScore?: number | null;
 }
-
+ 
 export class AddMealLogDto {
   @ApiProperty({ example: 2 })
   @IsInt()

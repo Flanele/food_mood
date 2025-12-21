@@ -10,3 +10,5 @@ export { useAddIngredientForm } from "./model/use-add-ingredient-form";
 export { EditRecipeForm } from "./ui/edit-recipe-form";
 export { UserProfileForm } from "./ui/user-profile-form";
 export { useEditProfileForm } from "./model/use-edit-profile-form";
+export { MealLogForm } from "./ui/meal-log-form";
+export { useMakeMealLogForm } from "./model/use-make-meal-log-form";

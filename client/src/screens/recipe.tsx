@@ -2,7 +2,7 @@
 
 import { useRecipePage } from "@/features/recipes/recipe";
 import { Button, Container, Title } from "@/shared/ui";
-import { Header, LoadingError, LoadingWithHeader } from "@/widgets";
+import { Header, LoadingError, LoadingWithHeader, MealLogModal } from "@/widgets";
 import React from "react";
 import { NotFoundPage } from "./not-found";
 import {
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { ROUTES } from "@/shared";
 import { useMyProfileId } from "@/features/profile";
 
+
 interface Props {
   id: number;
 }
@@ -22,6 +23,7 @@ interface Props {
 export const RecipePage: React.FC<Props> = ({ id }) => {
   const { recipe, isLoading, isError, isNotFound } = useRecipePage(id);
   const { myProfileId, isLoading: isProfileLoading } = useMyProfileId();
+  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
   const router = useRouter();
 
@@ -63,6 +65,8 @@ export const RecipePage: React.FC<Props> = ({ id }) => {
             onClick={() => {
               if (!myProfileId) {
                 router.push(ROUTES.AUTH);
+              } else {
+                setIsModalOpen(true);
               }
             }}
             size="lg"
@@ -83,6 +87,10 @@ export const RecipePage: React.FC<Props> = ({ id }) => {
             </Button>
           )}
         </div>
+
+        {isModalOpen && (
+          <MealLogModal id={id} onClose={() => setIsModalOpen(false)} />
+        )}
       </Container>
     </>
   );
