@@ -6,3 +6,4 @@ export { NotFoundError } from "./not-found-error";
 export { LoadingError } from "./loading-error";
 export { LoadingWithHeader } from "./loading-with-header";
 export { ForbiddenError } from "./forbidden-error";
+export { MealLogModal } from './modals/meal-log-modal';
