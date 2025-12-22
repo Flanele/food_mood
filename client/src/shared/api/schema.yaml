@@ -1047,6 +1047,9 @@ components:
         recipeId:
           type: number
           example: 2
+        recipeTitle:
+          type: string
+          example: Pasta Carbonara
         servings:
           type: number
           example: 1
@@ -1066,15 +1069,27 @@ components:
           type: number
           nullable: true
           example: 6
+        createdAt:
+          type: string
+          format: date-time
+          example: '2025-09-29T12:00:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2025-09-29T13:00:00.000Z'
+          nullable: true
       required:
         - id
         - userProfileId
         - recipeId
+        - recipeTitle
         - servings
         - eatenAt
         - moodScore
         - energyScore
         - sleepScore
+        - createdAt
+        - updatedAt
     PatchMealLogDto:
       type: object
       properties:
@@ -1088,12 +1103,15 @@ components:
         moodScore:
           type: number
           example: 8
+          nullable: true
         energyScore:
           type: number
           example: 7
+          nullable: true
         sleepScore:
           type: number
           example: 9
+          nullable: true
     GetAnalyticsByTimeDto:
       type: object
       properties:

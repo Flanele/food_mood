@@ -1,22 +1,31 @@
-"use client";
-
-import { cn, getNowDateTime } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import React from "react";
 import { FormInput } from "./input-form";
 import { Button } from "@/shared/ui";
-import { FormProvider } from "react-hook-form";
-import { useMakeMealLogForm } from "../model/use-make-meal-log-form";
+import { FormProvider, UseFormReturn, UseFormSetValue } from "react-hook-form";
+import { MealLogFormInput } from "@/shared/schemas";
 
 interface Props {
   className?: string;
-  id: number;
-  onSuccess: () => void,
+  form: UseFormReturn<MealLogFormInput>;
+  setValue: UseFormSetValue<MealLogFormInput>;
+  date: string;
+  time: string;
+  isLoading: boolean;
+  isError: boolean;
+  handleSubmit: () => void;
 }
 
-export const MealLogForm: React.FC<Props> = ({ className, id, onSuccess }) => {
-  const { form, setValue, date, time, isError, isLoading, handleSubmit } =
-    useMakeMealLogForm(id, onSuccess);
-
+export const MealLogForm: React.FC<Props> = ({
+  className,
+  form,
+  setValue,
+  date,
+  time,
+  isError,
+  isLoading,
+  handleSubmit,
+}) => {
   const clearBtnClass =
     "self-start mt-10 h-10 rounded-md px-3 text-sm text-muted-foreground hover:bg-secondary/40 hover:text-foreground cursor-pointer";
 

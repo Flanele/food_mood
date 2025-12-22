@@ -1,4 +1,5 @@
 import { MealLogForm } from "@/features/forms";
+import { MakeMealLogForm } from "@/features/meal-log";
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 
@@ -46,7 +47,7 @@ export const MealLogModal: React.FC<Props> = ({
           </div>
 
           {/* content */}
-            <MealLogForm id={id} onSuccess={onClose} />
+            <MakeMealLogForm recipeId={id} onSuccess={onClose} />
         </div>
       </div>
     </div>

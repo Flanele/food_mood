@@ -2,7 +2,7 @@
 
 import { AddMealLogDto } from "@/shared/api/gen";
 import { mealLogsApi } from "@/shared/api/gen/gen-clients/mealLogs";
-import { MakeMealLogFormOutput } from "@/shared/schemas";
+import { MealLogFormOutput } from "@/shared/schemas";
 import { useMutation } from "@tanstack/react-query";
 
 const makeMealLogKey = ["make-meal-log"];
@@ -10,7 +10,7 @@ const makeMealLogKey = ["make-meal-log"];
 export const useMakeMealLogMutation = (id: number, onSuccess: () => void) => {
   return useMutation({
     mutationKey: makeMealLogKey,
-    mutationFn: async (form: MakeMealLogFormOutput) => {
+    mutationFn: async (form: MealLogFormOutput) => {
       const dto: AddMealLogDto = {
         recipeId: id,
         servings: form.servings,

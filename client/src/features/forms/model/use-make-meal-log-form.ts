@@ -1,9 +1,9 @@
 import { useMakeMealLogMutation } from "@/entities/meal-log";
 import { getNowDateTime } from "@/shared/lib/utils";
 import {
-  formMakeMealLogSchema,
-  MakeMealLogFormInput,
-  MakeMealLogFormOutput,
+  formMealLogSchema,
+  MealLogFormInput,
+  MealLogFormOutput,
 } from "@/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,8 +13,8 @@ export const useMakeMealLogForm = (id: number, onSuccess: () => void) => {
 
   const { date, time } = getNowDateTime();
 
-  const form = useForm<MakeMealLogFormInput>({
-    resolver: zodResolver(formMakeMealLogSchema),
+  const form = useForm<MealLogFormInput>({
+    resolver: zodResolver(formMealLogSchema),
     defaultValues: {
       servings: 1,
       eatenDate: date,
@@ -31,9 +31,10 @@ export const useMakeMealLogForm = (id: number, onSuccess: () => void) => {
     date,
     time,
     handleSubmit: form.handleSubmit((data) => {
-      makeMealLogMutation.mutate(data as MakeMealLogFormOutput);
+      makeMealLogMutation.mutate(data as MealLogFormOutput);
     }),
     isLoading: makeMealLogMutation.isPending,
     isError: makeMealLogMutation.isError,
   };
 };
+

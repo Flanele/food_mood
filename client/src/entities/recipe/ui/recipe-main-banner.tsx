@@ -10,6 +10,7 @@ interface Props {
   title: string;
   picture_url: string;
   myProfileId: number | undefined;
+  setIsModalOpen: (v: boolean) => void;
 }
 
 export const RecipeMainBanner: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const RecipeMainBanner: React.FC<Props> = ({
   title,
   picture_url,
   myProfileId,
+  setIsModalOpen,
 }) => {
   const router = useRouter();
 
@@ -44,6 +46,8 @@ export const RecipeMainBanner: React.FC<Props> = ({
           onClick={() => {
             if (!myProfileId) {
               router.push(ROUTES.AUTH);
+            } else {
+              setIsModalOpen(true);
             }
           }}
           className="
