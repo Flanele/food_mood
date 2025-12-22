@@ -32,6 +32,13 @@ export class MealLogService {
   async getOne(id: number, userId: number) {
     const log = await this.db.mealLog.findUnique({
       where: { id, userProfileId: userId },
+      include: {
+        recipe: {
+          select: {
+            title: true,
+          },
+        },
+      },
     });
 
     if (!log) {
@@ -40,7 +47,10 @@ export class MealLogService {
       );
     }
 
-    return log;
+    return {
+      ...log,
+      recipeTitle: log.recipe.title,
+    }
   }
 
   async patchMealLog(id: number, dto: PatchMealLogDto, userId: number) {

@@ -9,6 +9,7 @@ export interface MealLogDto {
   id: number;
   userProfileId: number;
   recipeId: number;
+  recipeTitle: string;
   servings: number;
   eatenAt: string;
   /** @nullable */
@@ -17,4 +18,7 @@ export interface MealLogDto {
   energyScore: number | null;
   /** @nullable */
   sleepScore: number | null;
+  createdAt: string;
+  /** @nullable */
+  updatedAt: string | null;
 }

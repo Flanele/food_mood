@@ -12,3 +12,11 @@ export function getNowDateTime() {
     time: d.toTimeString().slice(0, 5), // HH:mm
   };
 }
+
+export function splitIsoDateTime(iso: string) {
+  const d = new Date(iso);
+  return {
+    date: d.toISOString().slice(0, 10), // YYYY-MM-DD
+    time: d.toTimeString().slice(0, 5), // HH:mm
+  };
+}

@@ -1,7 +1,7 @@
 import z from "zod";
 import { optionalScoreSchema } from "./optional-score-schema";
 
-export const formMakeMealLogSchema = z.object({
+export const formMealLogSchema = z.object({
   servings: z.coerce
     .number()
     .int({ message: "Servings must be an integer" })
@@ -17,5 +17,5 @@ export const formMakeMealLogSchema = z.object({
   sleepScore: optionalScoreSchema,
 });
 
-export type MakeMealLogFormInput = z.input<typeof formMakeMealLogSchema>;
-export type MakeMealLogFormOutput = z.output<typeof formMakeMealLogSchema>;
+export type MealLogFormInput = z.input<typeof formMealLogSchema>;
+export type MealLogFormOutput = z.output<typeof formMealLogSchema>;

@@ -8,7 +8,10 @@
 export interface PatchMealLogDto {
   servings?: number;
   eatenAt?: string;
-  moodScore?: number;
-  energyScore?: number;
-  sleepScore?: number;
+  /** @nullable */
+  moodScore?: number | null;
+  /** @nullable */
+  energyScore?: number | null;
+  /** @nullable */
+  sleepScore?: number | null;
 }

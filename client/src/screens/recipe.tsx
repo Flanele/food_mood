@@ -51,6 +51,7 @@ export const RecipePage: React.FC<Props> = ({ id }) => {
             title={recipe.title}
             picture_url={recipe.picture_url}
             myProfileId={myProfileId}
+            setIsModalOpen={setIsModalOpen}
           />
 
           <Title text={recipe.title} size="lg" />

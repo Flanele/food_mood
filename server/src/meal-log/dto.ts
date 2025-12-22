@@ -12,6 +12,9 @@ export class MealLogDto {
   @ApiProperty({ example: 2 })
   recipeId: number;
 
+  @ApiProperty({ example: "Pasta Carbonara" })
+  recipeTitle: string;
+
   @ApiProperty({ example: 1 })
   servings: number;
 
@@ -30,8 +33,23 @@ export class MealLogDto {
 
   @ApiProperty({ nullable: true, type: Number, example: 6 })
   sleepScore?: number | null;
+
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+    example: '2025-09-29T12:00:00.000Z',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+    example: '2025-09-29T13:00:00.000Z',
+    nullable: true,
+  })
+  updatedAt: Date | null;
 }
- 
+
 export class AddMealLogDto {
   @ApiProperty({ example: 2 })
   @IsInt()
@@ -89,17 +107,17 @@ export class PatchMealLogDto {
   @IsOptional()
   eatenAt?: Date;
 
-  @ApiProperty({ required: false, example: 8 })
+  @ApiProperty({ required: false, example: 8, nullable: true, type: Number })
   @IsOptional()
   @Type(() => Number)
   moodScore?: number;
 
-  @ApiProperty({ required: false, example: 7 })
+  @ApiProperty({ required: false, example: 7, nullable: true, type: Number })
   @IsOptional()
   @Type(() => Number)
   energyScore?: number;
 
-  @ApiProperty({ required: false, example: 9 })
+  @ApiProperty({ required: false, example: 9, nullable: true, type: Number })
   @IsOptional()
   @Type(() => Number)
   sleepScore?: number;
