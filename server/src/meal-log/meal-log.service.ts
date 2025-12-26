@@ -2,10 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { AddMealLogDto, PatchMealLogDto } from './dto';
 import { Prisma } from 'generated/prisma';
+import { UserProfileService } from 'src/users/user-profile.service';
 
 @Injectable()
 export class MealLogService {
-  constructor(private db: DbService) {}
+  constructor(
+    private db: DbService,
+    private profileService: UserProfileService,
+  ) {}
 
   async addMealLog(dto: AddMealLogDto, userId: number) {
     const recipe = await this.db.recipe.findFirst({
@@ -29,6 +33,22 @@ export class MealLogService {
     });
   }
 
+  async getAll(userId: number) {
+    const profile = await this.profileService.getProfile(userId);
+
+    const rows = await this.findManyWithSelect(
+      { userProfileId: profile.id },
+      { recipe: { select: { title: true } } },
+    );
+
+    const meallogs = rows.map(({ recipe, ...log }) => ({
+      ...log,
+      recipeTitle: recipe.title,
+    }));
+
+    return { meallogs };
+  }
+
   async getOne(id: number, userId: number) {
     const log = await this.db.mealLog.findUnique({
       where: { id, userProfileId: userId },
@@ -50,7 +70,7 @@ export class MealLogService {
     return {
       ...log,
       recipeTitle: log.recipe.title,
-    }
+    };
   }
 
   async patchMealLog(id: number, dto: PatchMealLogDto, userId: number) {
@@ -106,8 +126,12 @@ export class MealLogService {
 
   async findManyWithSelect(
     where: Prisma.MealLogWhereInput = {},
-    select: Prisma.MealLogSelect = {},
+    include: Prisma.MealLogInclude = {},
   ) {
-    return this.db.mealLog.findMany({ where, select });
+    return this.db.mealLog.findMany({
+      where,
+      include,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 }

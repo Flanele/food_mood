@@ -17,3 +17,4 @@ export const useRecipeListQuery = ({ query }: { query: RecipeListQuery }) => {
     refetchOnWindowFocus: false,
   });
 };
+ 
