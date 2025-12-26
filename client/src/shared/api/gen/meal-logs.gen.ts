@@ -7,6 +7,7 @@
 import type {
   AddMealLogDto,
   MealLogDto,
+  MealLogListDto,
   PatchMealLogDto
 } from './';
 
@@ -23,6 +24,15 @@ const mealLogControllerAddMealLog = (
       {url: `/meal-logs`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: addMealLogDto
+    },
+      options);
+    }
+  
+const mealLogControllerGetAll = (
+    
+ options?: SecondParameter<typeof createInstance<MealLogListDto>>,) => {
+      return createInstance<MealLogListDto>(
+      {url: `/meal-logs`, method: 'GET'
     },
       options);
     }
@@ -57,8 +67,9 @@ const mealLogControllerDeleteOne = (
       options);
     }
   
-return {mealLogControllerAddMealLog,mealLogControllerGetOne,mealLogControllerPatchMealLog,mealLogControllerDeleteOne}};
+return {mealLogControllerAddMealLog,mealLogControllerGetAll,mealLogControllerGetOne,mealLogControllerPatchMealLog,mealLogControllerDeleteOne}};
 export type MealLogControllerAddMealLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['mealLogControllerAddMealLog']>>>
+export type MealLogControllerGetAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['mealLogControllerGetAll']>>>
 export type MealLogControllerGetOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['mealLogControllerGetOne']>>>
 export type MealLogControllerPatchMealLogResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['mealLogControllerPatchMealLog']>>>
 export type MealLogControllerDeleteOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['mealLogControllerDeleteOne']>>>

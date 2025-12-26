@@ -12,7 +12,12 @@ import {
 import { MealLogService } from './meal-log.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { AddMealLogDto, MealLogDto, PatchMealLogDto } from './dto';
+import {
+  AddMealLogDto,
+  MealLogDto,
+  MealLogListDto,
+  PatchMealLogDto,
+} from './dto';
 import { SessionInfo } from 'src/auth/session-info.decorator';
 import { GetSessionInfoDto } from 'src/auth/dto';
 
@@ -28,6 +33,12 @@ export class MealLogController {
     @SessionInfo() session: GetSessionInfoDto,
   ) {
     return this.mealLogService.addMealLog(dto, session.id);
+  }
+
+  @Get()
+  @ApiOkResponse({ type: MealLogListDto })
+  getAll(@SessionInfo() session: GetSessionInfoDto) {
+    return this.mealLogService.getAll(session.id);
   }
 
   @Get('/:id')

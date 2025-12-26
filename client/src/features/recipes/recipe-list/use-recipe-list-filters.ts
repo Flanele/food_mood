@@ -5,7 +5,7 @@ import {
   parseAsInteger,
   parseAsString,
   useQueryState,
-} from "nuqs";
+} from "nuqs"; 
 
 export const useRecipeListFilters = () => {
   const [q, setQ] = useQueryState("q", parseAsString.withDefault(""));

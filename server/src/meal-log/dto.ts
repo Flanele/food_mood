@@ -12,7 +12,7 @@ export class MealLogDto {
   @ApiProperty({ example: 2 })
   recipeId: number;
 
-  @ApiProperty({ example: "Pasta Carbonara" })
+  @ApiProperty({ example: 'Pasta Carbonara' })
   recipeTitle: string;
 
   @ApiProperty({ example: 1 })
@@ -48,6 +48,11 @@ export class MealLogDto {
     nullable: true,
   })
   updatedAt: Date | null;
+}
+
+export class MealLogListDto {
+  @ApiProperty({ type: [MealLogDto] })
+  meallogs: MealLogDto[];
 }
 
 export class AddMealLogDto {

@@ -31,6 +31,7 @@ export * from './ingredientControllerTestFetchParams';
 export * from './ingredientDto';
 export * from './ingredientWeightDto';
 export * from './mealLogDto';
+export * from './mealLogListDto';
 export * from './pageMetaDto';
 export * from './patchMealLogDto';
 export * from './patchProfileDTO';

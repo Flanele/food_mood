@@ -272,6 +272,18 @@ paths:
                 $ref: '#/components/schemas/MealLogDto'
       tags:
         - MealLog
+    get:
+      operationId: MealLogController_getAll
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealLogListDto'
+      tags:
+        - MealLog
   /meal-logs/{id}:
     get:
       operationId: MealLogController_getOne
@@ -1090,6 +1102,15 @@ components:
         - sleepScore
         - createdAt
         - updatedAt
+    MealLogListDto:
+      type: object
+      properties:
+        meallogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealLogDto'
+      required:
+        - meallogs
     PatchMealLogDto:
       type: object
       properties:
