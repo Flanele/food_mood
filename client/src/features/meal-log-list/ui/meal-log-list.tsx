@@ -5,9 +5,10 @@ import React from "react";
 
 interface Props {
   className?: string;
+  onOpenLog: (logId: number) => void;
 }
 
-export const MealLogList: React.FC<Props> = ({ className }) => {
+export const MealLogList: React.FC<Props> = ({ className, onOpenLog }) => {
   const { data, isLoading, isError } = useMealLogListQuery();
 
   if (isLoading) {
@@ -53,7 +54,7 @@ export const MealLogList: React.FC<Props> = ({ className }) => {
             </p>
           </div>
 
-          <Button size="sm" variant="outline" onClick={() => {}}>
+          <Button size="sm" variant="outline" onClick={() => onOpenLog(log.id)}>
             View
           </Button>
         </div>

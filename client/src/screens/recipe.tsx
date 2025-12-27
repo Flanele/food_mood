@@ -90,7 +90,7 @@ export const RecipePage: React.FC<Props> = ({ id }) => {
         </div>
 
         {isModalOpen && (
-          <MealLogModal id={id} onClose={() => setIsModalOpen(false)} />
+          <MealLogModal recipeId={id} onClose={() => setIsModalOpen(false)} />
         )}
       </Container>
     </>

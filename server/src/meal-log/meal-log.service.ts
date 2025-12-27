@@ -36,10 +36,15 @@ export class MealLogService {
   async getAll(userId: number) {
     const profile = await this.profileService.getProfile(userId);
 
-    const rows = await this.findManyWithSelect(
-      { userProfileId: profile.id },
-      { recipe: { select: { title: true } } },
-    );
+    const rows = await this.db.mealLog.findMany({
+      where: { userProfileId: profile.id },
+      include: {
+        recipe: {
+          select: { title: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
 
     const meallogs = rows.map(({ recipe, ...log }) => ({
       ...log,
@@ -126,12 +131,8 @@ export class MealLogService {
 
   async findManyWithSelect(
     where: Prisma.MealLogWhereInput = {},
-    include: Prisma.MealLogInclude = {},
+    select: Prisma.MealLogSelect = {},
   ) {
-    return this.db.mealLog.findMany({
-      where,
-      include,
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.db.mealLog.findMany({ where, select });
   }
 }

@@ -1,18 +1,21 @@
-import { MealLogForm } from "@/features/forms";
-import { MakeMealLogForm } from "@/features/meal-log";
+import { EditMealLogForm, MakeMealLogForm } from "@/features/meal-log";
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 
-interface Props {
+type BaseProps = {
   className?: string;
-  id: number;
   contentWidth?: number;
   onClose: () => void;
-}
+};
+
+type Props =
+  | (BaseProps & { recipeId: number; mealLogId?: never })
+  | (BaseProps & { mealLogId: number; recipeId?: never });
 
 export const MealLogModal: React.FC<Props> = ({
   className,
-  id,
+  recipeId,
+  mealLogId,
   onClose,
   contentWidth = 740,
 }) => {
@@ -47,7 +50,12 @@ export const MealLogModal: React.FC<Props> = ({
           </div>
 
           {/* content */}
-            <MakeMealLogForm recipeId={id} onSuccess={onClose} />
+          {recipeId && (
+            <MakeMealLogForm recipeId={recipeId} onSuccess={onClose} />
+          )}
+          {mealLogId && (
+            <EditMealLogForm mealLogId={mealLogId} onSuccess={onClose} />
+          )}
         </div>
       </div>
     </div>
