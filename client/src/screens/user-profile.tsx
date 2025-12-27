@@ -1,22 +1,27 @@
 "use client";
 
-import { useGetUserProfile } from "@/entities/user";
 import { UserProfileForm } from "@/features/forms";
 import { MealLogList } from "@/features/meal-log-list";
+import { useProfilePage } from "@/features/profile";
 import { Button, Container } from "@/shared/ui";
-import { Header, LoadingError, LoadingWithHeader } from "@/widgets";
-import { parseAsString, useQueryState } from "nuqs";
+import {
+  Header,
+  LoadingError,
+  LoadingWithHeader,
+  MealLogModal,
+} from "@/widgets";
 import React from "react";
 
-type Tab = "form" | "recipes" | "logs" | "analytics";
-const tabs: Tab[] = ["form", "recipes", "logs", "analytics"];
-
 export const UserProfilePage: React.FC = () => {
-  const { data, isLoading, isError } = useGetUserProfile();
-
-  const [tab, setTab] = useQueryState("tab", parseAsString.withDefault("form"));
-
-  const safeTab = tabs.includes(tab as Tab) ? (tab as Tab) : "form";
+  const {
+    data,
+    isError,
+    isLoading,
+    safeTab,
+    setTab,
+    selectedMealLogId,
+    setSelectedMealLogId,
+  } = useProfilePage();
 
   if (isError) {
     return <LoadingError />;
@@ -30,7 +35,7 @@ export const UserProfilePage: React.FC = () => {
     <>
       <Header mode="other" />
       <Container>
-        <div className="mt-10 flex flex-col gap-6">
+        <div className="mt-10 mb-10 flex flex-col gap-6">
           {/* tabs */}
           <div className="flex flex-wrap gap-5">
             <Button
@@ -71,10 +76,19 @@ export const UserProfilePage: React.FC = () => {
 
           {safeTab === "recipes" && <div>TODO: My recipes</div>}
 
-          {safeTab === "logs" && <MealLogList />}
+          {safeTab === "logs" && (
+            <MealLogList onOpenLog={(id: number) => setSelectedMealLogId(id)} />
+          )}
 
           {safeTab === "analytics" && <div>TODO: My analytics</div>}
         </div>
+
+        {selectedMealLogId && (
+          <MealLogModal
+            mealLogId={selectedMealLogId}
+            onClose={() => setSelectedMealLogId(null)}
+          />
+        )}
       </Container>
     </>
   );
