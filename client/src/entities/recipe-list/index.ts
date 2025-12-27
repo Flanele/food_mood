@@ -1,1 +1,1 @@
-export { useRecipeList } from './queries';
+export { useRecipeListQuery } from "./queris/use-recipe-list-query";

@@ -1,2 +1,3 @@
-export { useRecipeList } from './use-recipe-list';
-export { useRecipeListFilters } from './use-recipe-list-filters';
+export { useRecipeList } from "./model/use-recipe-list";
+export { useRecipeListFilters } from "./model/use-recipe-list-filters";
+export { MyRecipeList } from "./ui/my-recipe-list";

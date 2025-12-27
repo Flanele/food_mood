@@ -1,8 +1,9 @@
 "use client";
 
 import { UserProfileForm } from "@/features/forms";
-import { MealLogList } from "@/features/meal-log-list";
+import { MealLogList } from "@/features/meal-logs/meal-log-list";
 import { useProfilePage } from "@/features/profile";
+import { MyRecipeList } from "@/features/recipes/recipe-list";
 import { Button, Container } from "@/shared/ui";
 import {
   Header,
@@ -41,7 +42,7 @@ export const UserProfilePage: React.FC = () => {
             <Button
               type="button"
               variant={safeTab === "form" ? "secondary" : "ghost"}
-              onClick={() => setTab("profile")}
+              onClick={() => setTab("form")}
             >
               Profile
             </Button>
@@ -74,7 +75,7 @@ export const UserProfilePage: React.FC = () => {
           {/* content */}
           {safeTab === "form" && <UserProfileForm profile={data} />}
 
-          {safeTab === "recipes" && <div>TODO: My recipes</div>}
+          {safeTab === "recipes" && <MyRecipeList />}
 
           {safeTab === "logs" && (
             <MealLogList onOpenLog={(id: number) => setSelectedMealLogId(id)} />
@@ -93,3 +94,4 @@ export const UserProfilePage: React.FC = () => {
     </>
   );
 };
+ 

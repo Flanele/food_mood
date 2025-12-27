@@ -1,7 +1,7 @@
-import { useRecipeListQuery } from "@/entities/recipe-list/queries";
+import { useRecipeListQuery } from "@/entities/recipe-list/queris/use-recipe-list-query";
 import { useDebouncedValue } from "@/features/debounce";
 import { RecipeListQuery } from "@/shared";
-import { useRecipeListFilters } from "./use-recipe-list-filters";
+import { useRecipeListFilters } from "./use-recipe-list-filters"; 
 
 export const useRecipeList = () => {
   const filters = useRecipeListFilters();

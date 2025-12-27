@@ -1,4 +1,4 @@
-import { EditMealLogForm, MakeMealLogForm } from "@/features/meal-log";
+import { EditMealLogForm, MakeMealLogForm } from "@/features/meal-logs/meal-log";
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 

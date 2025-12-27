@@ -1,3 +1,3 @@
-export { useRecipePage } from "./use-recipe-page";
-export { useRecipeAnalyticsSection } from "./use-recipe-analytics-section";
-export { useCanEditRecipe } from "./use-can-edit-recipe";
+export { useRecipePage } from "./model/use-recipe-page";
+export { useRecipeAnalyticsSection } from "./model/use-recipe-analytics-section";
+export { useCanEditRecipe } from "./model/use-can-edit-recipe";

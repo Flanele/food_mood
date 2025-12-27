@@ -26,3 +26,4 @@ export const useProfilePage = () => {
     setSelectedMealLogId,
   };
 };
+

@@ -42,7 +42,7 @@ export const MealLogList: React.FC<Props> = ({ className, onOpenLog }) => {
       {data.meallogs.map((log) => (
         <div
           key={log.id}
-          className="rounded-lg border border-secondary p-4 flex items-center justify-between"
+          className="rounded-md border border-secondary p-4 flex items-center justify-between"
         >
           <div className="flex flex-col gap-1">
             <p className="text-sm">

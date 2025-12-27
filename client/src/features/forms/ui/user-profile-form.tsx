@@ -24,7 +24,7 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
 
   return (
     <div
-      className={cn("mt-10 w-full border-2 border-secondary p-8", className)}
+      className={cn("w-full border-2 border-secondary p-8", className)}
     >
       <FormProvider {...form}>
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
