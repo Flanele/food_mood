@@ -1,5 +1,6 @@
 "use client";
 
+import { ProfileAnalytics } from "@/features/analytics";
 import { UserProfileForm } from "@/features/forms";
 import { MealLogList } from "@/features/meal-logs/meal-log-list";
 import { useProfilePage } from "@/features/profile";
@@ -81,7 +82,7 @@ export const UserProfilePage: React.FC = () => {
             <MealLogList onOpenLog={(id: number) => setSelectedMealLogId(id)} />
           )}
 
-          {safeTab === "analytics" && <div>TODO: My analytics</div>}
+          {safeTab === "analytics" && <ProfileAnalytics />}
         </div>
 
         {selectedMealLogId && (

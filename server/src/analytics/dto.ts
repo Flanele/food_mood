@@ -70,7 +70,7 @@ export class GetAnalyticsByTimeDto {
     required: false,
   })
   series?: Array<Record<string, string | number>>;
-}
+} 
 
 export class GetTopIngredientsQueryDto {
   @ApiProperty({

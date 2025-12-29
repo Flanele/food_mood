@@ -35,15 +35,15 @@ export const RecipeCard: React.FC<Props> = ({
           className
         )}
       >
-        <img
-          className="object-cover"
-          src={pictureUrl}
-          width={200}
-          height={150}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
+        <div className="w-[210px] h-[210px] shrink-0 overflow-hidden">
+          <img
+            className="h-full w-full object-cover"
+            src={pictureUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
 
         <div className="flex flex-col p-3">
           <Title text={title} size="sm" className="line-clamp-2 break-words" />
