@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import {
   GetAnalyticsByTimeDto,
@@ -11,6 +11,15 @@ import {
 import { Prisma } from 'generated/prisma';
 import { getPerServ } from './helpers/getPerServ';
 import { calcInfluence, DetailRow } from 'src/lib/utils/calc-influence';
+import {
+  EMPTY_TOTALS,
+  MS_DAY,
+  Resolution,
+  SeriesPoint,
+  Totals,
+} from './analytics.types';
+import { pickResolutionForCustomRange } from './helpers/pickResolutionForCustomRange';
+import { keyForResolution } from './helpers/keyForResolution';
 
 @Injectable()
 export class AnalyticsService {
@@ -24,51 +33,94 @@ export class AnalyticsService {
 
     const now = new Date();
 
+    if (!from && !to && !groupBy) {
+      to = now;
+      from = new Date(now.getTime() - MS_DAY);
+    }
+
+    // day → last 24h + hour points
+    // week → last 7d + weekday points
+    // month → last 30d + day points
+    let resolution: Resolution | null = null;
+
     if (!from && !to && groupBy) {
       to = now;
-      from = new Date(now);
 
       if (groupBy === 'day') {
-        from.setHours(0, 0, 0, 0);
+        from = new Date(now.getTime() - MS_DAY);
+        resolution = 'hour';
       } else if (groupBy === 'week') {
-        from.setDate(now.getDate() - 7);
-        from.setHours(0, 0, 0, 0);
+        from = new Date(now.getTime() - 7 * MS_DAY);
+        resolution = 'weekday';
       } else if (groupBy === 'month') {
-        from.setDate(now.getDate() - 30);
-        from.setHours(0, 0, 0, 0);
+        from = new Date(now.getTime() - 30 * MS_DAY);
+        resolution = 'day';
       }
+    }
+
+    // ручной период: если from/to есть — выбираем resolution автоматически
+    if (!resolution && (from || to)) {
+      if (from && !to) to = now;
+      if (!from && to) from = new Date(to.getTime() - MS_DAY);
+
+      const spanMs = to!.getTime() - from!.getTime();
+      if (spanMs > 366 * MS_DAY) {
+        throw new BadRequestException('Period is too large (max 1 year).');
+      }
+
+      resolution = pickResolutionForCustomRange(from!, to!);
     }
 
     const where: Prisma.MealLogWhereInput = {
       userProfileId: userId,
-      ...(from || to
-        ? {
-            eatenAt: {
-              ...(from ? { gte: from } : {}),
-              ...(to ? { lte: to } : {}),
-            },
-          }
-        : {}),
+      eatenAt: {
+        ...(from ? { gte: from } : {}),
+        ...(to ? { lte: to } : {}),
+      },
     };
 
     const mealLogs = await this.db.mealLog.findMany({
       where,
       include: { recipe: true },
+      orderBy: { eatenAt: 'asc' },
     });
 
-    const total = { kcal: 0, prot: 0, fat: 0, carb: 0, sugar: 0 };
+    const byKey = new Map<string, Totals>();
+    const total: Totals = { ...EMPTY_TOTALS };
 
     for (const log of mealLogs) {
       const s = log.servings;
       const r = log.recipe;
-      total.kcal += r.kcalPerServ * s;
-      total.prot += r.protPerServ * s;
-      total.fat += r.fatPerServ * s;
-      total.carb += r.carbPerServ * s;
-      total.sugar += r.sugarPerServ * s;
+
+      const kcal = r.kcalPerServ * s;
+      const prot = r.protPerServ * s;
+      const fat = r.fatPerServ * s;
+      const carb = r.carbPerServ * s;
+      const sugar = r.sugarPerServ * s;
+
+      total.kcal += kcal;
+      total.prot += prot;
+      total.fat += fat;
+      total.carb += carb;
+      total.sugar += sugar;
+
+      const key = keyForResolution(log.eatenAt, resolution!);
+      const acc = byKey.get(key) ?? { ...EMPTY_TOTALS };
+
+      acc.kcal += kcal;
+      acc.prot += prot;
+      acc.fat += fat;
+      acc.carb += carb;
+      acc.sugar += sugar;
+
+      byKey.set(key, acc);
     }
 
-    return { total };
+    const series = Array.from(byKey.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, v]) => ({ key, ...v }));
+
+    return { total, series };
   }
 
   async getTopIngredients(

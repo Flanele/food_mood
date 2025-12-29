@@ -66,14 +66,14 @@ export const HomePage = () => {
                   />
                 </div>
               ) : (
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 mb-10">
                   <RecipeCatalog
                     recipes={data?.recipes}
                     isLoading={isLoading || isFetching}
                   />
 
                   <Pagination
-                    className="justify-center mt-auto mb-10"
+                    className="justify-center mt-auto"
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={onPageChange}

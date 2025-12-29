@@ -47,3 +47,5 @@ export type PatchRecipeFiles = {
 };
 
 export type Objective = 'balanced' | 'mood' | 'energy' | 'sleep';
+
+export type TimeGrouping = 'day' | 'week' | 'month';
