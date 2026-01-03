@@ -5,8 +5,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GetAnalyticsByTimeDtoTotal } from './getAnalyticsByTimeDtoTotal';
+import type { AnalyticsByTimePointDto } from './analyticsByTimePointDto';
 
 export interface GetAnalyticsByTimeDto {
-  total?: GetAnalyticsByTimeDtoTotal;
-  series?: string[];
+  total: GetAnalyticsByTimeDtoTotal;
+  series: AnalyticsByTimePointDto[];
 }
