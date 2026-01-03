@@ -35,6 +35,26 @@ export class GetAnalyticsByTimeQueryDto {
   groupBy?: TimeGrouping;
 }
 
+export class AnalyticsByTimePointDto {
+  @ApiProperty({ example: '2025-09-01' })
+  key: string;
+
+  @ApiProperty({ example: 1800 })
+  kcal: number;
+
+  @ApiProperty({ example: 80 })
+  prot: number;
+
+  @ApiProperty({ example: 60 })
+  fat: number;
+
+  @ApiProperty({ example: 150 })
+  carb: number;
+
+  @ApiProperty({ example: 40 })
+  sugar: number;
+}
+
 export class GetAnalyticsByTimeDto {
   @ApiProperty({
     example: {
@@ -44,7 +64,6 @@ export class GetAnalyticsByTimeDto {
       carb: 1200,
       sugar: 300,
     },
-    required: false,
   })
   total: Record<string, number>;
 
@@ -67,10 +86,11 @@ export class GetAnalyticsByTimeDto {
         sugar: 50,
       },
     ],
-    required: false,
+    type: AnalyticsByTimePointDto,
+    isArray: true,
   })
-  series?: Array<Record<string, string | number>>;
-} 
+  series: AnalyticsByTimePointDto[];
+}
 
 export class GetTopIngredientsQueryDto {
   @ApiProperty({

@@ -1133,6 +1133,34 @@ components:
           type: number
           example: 9
           nullable: true
+    AnalyticsByTimePointDto:
+      type: object
+      properties:
+        key:
+          type: string
+          example: '2025-09-01'
+        kcal:
+          type: number
+          example: 1800
+        prot:
+          type: number
+          example: 80
+        fat:
+          type: number
+          example: 60
+        carb:
+          type: number
+          example: 150
+        sugar:
+          type: number
+          example: 40
+      required:
+        - key
+        - kcal
+        - prot
+        - fat
+        - carb
+        - sugar
     GetAnalyticsByTimeDto:
       type: object
       properties:
@@ -1160,7 +1188,10 @@ components:
               sugar: 50
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/AnalyticsByTimePointDto'
+      required:
+        - total
+        - series
     GetTopIngredientsDto:
       type: object
       properties: {}

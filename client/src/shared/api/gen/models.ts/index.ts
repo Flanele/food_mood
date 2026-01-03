@@ -11,6 +11,7 @@ export * from './addIngredientDtoOpts';
 export * from './addMealLogDto';
 export * from './addRecipeDto';
 export * from './addRecipeDtoSteps';
+export * from './analyticsByTimePointDto';
 export * from './analyticsControllerGetAnalyticsByTimeGroupBy';
 export * from './analyticsControllerGetAnalyticsByTimeParams';
 export * from './analyticsControllerGetScoreCorrelationByMetricMetric';

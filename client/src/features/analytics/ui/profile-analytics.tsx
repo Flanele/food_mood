@@ -2,6 +2,7 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui";
 import React from "react";
 import { useProfileAnalytics } from "../model/use-profile-analytics";
+import { AnalyticsByTime } from "./analytics-by-time";
 
 interface Props {
   className?: string;
@@ -44,7 +45,7 @@ export const ProfileAnalytics: React.FC<Props> = ({ className }) => {
       </div>
 
       {/* content placeholder */}
-      {safeAnalyticsTab === "by-time" && <div>TODO: Analytics by time</div>}
+      {safeAnalyticsTab === "by-time" && <AnalyticsByTime />}
       {safeAnalyticsTab === "by-ingredients" && (
         <div>TODO: Analytics by ingredients</div>
       )}

@@ -1,11 +1,13 @@
 "use client";
 
+import { useProfileTabs } from "@/entities/tabs";
+import { ProfileTabs } from "@/entities/tabs/ui/profile-tabs";
+import { useGetUserProfile } from "@/entities/user";
 import { ProfileAnalytics } from "@/features/analytics";
 import { UserProfileForm } from "@/features/forms";
 import { MealLogList } from "@/features/meal-logs/meal-log-list";
-import { useProfilePage } from "@/features/profile";
 import { MyRecipeList } from "@/features/recipes/recipe-list";
-import { Button, Container } from "@/shared/ui";
+import { Container } from "@/shared/ui";
 import {
   Header,
   LoadingError,
@@ -15,15 +17,12 @@ import {
 import React from "react";
 
 export const UserProfilePage: React.FC = () => {
-  const {
-    data,
-    isError,
-    isLoading,
-    safeTab,
-    setTab,
-    selectedMealLogId,
-    setSelectedMealLogId,
-  } = useProfilePage();
+  const { data, isError, isLoading } = useGetUserProfile();
+  const { tab, setTab } = useProfileTabs();
+
+  const [selectedMealLogId, setSelectedMealLogId] = React.useState<
+    number | null
+  >(null);
 
   if (isError) {
     return <LoadingError />;
@@ -39,50 +38,18 @@ export const UserProfilePage: React.FC = () => {
       <Container>
         <div className="mt-10 mb-10 flex flex-col gap-6">
           {/* tabs */}
-          <div className="flex flex-wrap gap-5">
-            <Button
-              type="button"
-              variant={safeTab === "form" ? "secondary" : "ghost"}
-              onClick={() => setTab("form")}
-            >
-              Profile
-            </Button>
-
-            <Button
-              type="button"
-              variant={safeTab === "recipes" ? "secondary" : "ghost"}
-              onClick={() => setTab("recipes")}
-            >
-              My recipes
-            </Button>
-
-            <Button
-              type="button"
-              variant={safeTab === "logs" ? "secondary" : "ghost"}
-              onClick={() => setTab("logs")}
-            >
-              My meal logs
-            </Button>
-
-            <Button
-              type="button"
-              variant={safeTab === "analytics" ? "secondary" : "ghost"}
-              onClick={() => setTab("analytics")}
-            >
-              My analytics
-            </Button>
-          </div>
+          <ProfileTabs value={tab} onChange={setTab} />
 
           {/* content */}
-          {safeTab === "form" && <UserProfileForm profile={data} />}
+          {tab === "form" && <UserProfileForm profile={data} />}
 
-          {safeTab === "recipes" && <MyRecipeList />}
+          {tab === "recipes" && <MyRecipeList />}
 
-          {safeTab === "logs" && (
-            <MealLogList onOpenLog={(id: number) => setSelectedMealLogId(id)} />
+          {tab === "logs" && (
+            <MealLogList onOpenLog={(id) => setSelectedMealLogId(id)} />
           )}
 
-          {safeTab === "analytics" && <ProfileAnalytics />}
+          {tab === "analytics" && <ProfileAnalytics />}
         </div>
 
         {selectedMealLogId && (
@@ -95,4 +62,3 @@ export const UserProfilePage: React.FC = () => {
     </>
   );
 };
- 
