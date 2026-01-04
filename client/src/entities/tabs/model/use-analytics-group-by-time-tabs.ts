@@ -1,5 +1,6 @@
 import { AnalyticsControllerGetAnalyticsByTimeParams } from "@/shared/api/gen";
 import { parseAsString, useQueryState } from "nuqs";
+import { useDateRange } from "./use-date-range";
 
 export type GroupByTab = "last-24h" | "last-7d" | "last-30d" | "custom-period";
 const groupByTabs: GroupByTab[] = [
@@ -32,10 +33,12 @@ export const useAnalyticsGroupByTimeTabs = () => {
 
   const isCustom = groupBy === "custom-period";
 
-  const [from, setFrom] = useQueryState("from", parseAsString);
-  const [to, setTo] = useQueryState("to", parseAsString);
+  const { from, setFrom, to, setTo, clearRange } = useDateRange();
 
-  const setGroupBy = (tab: GroupByTab) => setGroupByRaw(tab);
+  const setGroupBy = (tab: GroupByTab) => {
+    setGroupByRaw(tab);
+    if (tab !== "custom-period") clearRange();
+  };
 
   const params: AnalyticsControllerGetAnalyticsByTimeParams = isCustom
     ? {
@@ -54,6 +57,7 @@ export const useAnalyticsGroupByTimeTabs = () => {
     setFrom,
     to,
     setTo,
+    clearRange,
     params,
   };
 };

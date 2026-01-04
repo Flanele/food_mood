@@ -119,15 +119,31 @@ export class GetTopIngredientsQueryDto {
   limit?: number;
 }
 
-export class GetTopIngredientsDto {
-  items: {
-    name: string;
-    count: number; // сколько раз встречался
-    totalGrams: number; // общий вес за период
-    totalKcal: number; // общий вклад в ккал
-  }[];
+export class TopIngredientItemDto {
+  @ApiProperty({ example: 'Tomato' })
+  name: string;
+
+  @ApiProperty({ example: 12, description: 'How many times it appeared' })
+  count: number;
+
+  @ApiProperty({ example: 350, description: 'Total grams for the period' })
+  totalGrams: number;
+
+  @ApiProperty({ example: 420, description: 'Total kcal contribution' })
+  totalKcal: number;
 }
 
+export class GetTopIngredientsDto {
+  @ApiProperty({
+    type: TopIngredientItemDto,
+    isArray: true,
+    example: [
+      { name: 'Tomato', count: 12, totalGrams: 350, totalKcal: 420 },
+      { name: 'Chicken', count: 6, totalGrams: 900, totalKcal: 1400 },
+    ],
+  })
+  items: TopIngredientItemDto[];
+}
 export type Metric = 'kcal' | 'prot' | 'fat' | 'carb' | 'sugar';
 
 export class GetNutrientsScoreQueryDto {

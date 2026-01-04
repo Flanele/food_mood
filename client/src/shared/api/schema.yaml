@@ -1192,9 +1192,47 @@ components:
       required:
         - total
         - series
+    TopIngredientItemDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Tomato
+        count:
+          type: number
+          example: 12
+          description: How many times it appeared
+        totalGrams:
+          type: number
+          example: 350
+          description: Total grams for the period
+        totalKcal:
+          type: number
+          example: 420
+          description: Total kcal contribution
+      required:
+        - name
+        - count
+        - totalGrams
+        - totalKcal
     GetTopIngredientsDto:
       type: object
-      properties: {}
+      properties:
+        items:
+          example:
+            - name: Tomato
+              count: 12
+              totalGrams: 350
+              totalKcal: 420
+            - name: Chicken
+              count: 6
+              totalGrams: 900
+              totalKcal: 1400
+          type: array
+          items:
+            $ref: '#/components/schemas/TopIngredientItemDto'
+      required:
+        - items
     GetNutrientsScoreDto:
       type: object
       properties:

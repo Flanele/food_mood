@@ -1,3 +1,4 @@
+import { Metric } from "@/shared";
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 import {
@@ -9,8 +10,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
-type Metric = "kcal" | "prot" | "fat" | "carb" | "sugar";
 
 type Point = {
   key: string;
@@ -35,7 +34,7 @@ export const TimeSeriesLineChart: React.FC<Props> = ({
 
   return (
     <div className={cn(className)}>
-      <div className="relative h-80 w-full">
+      <div className="relative h-[430px] w-full">
         <ResponsiveContainer>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
