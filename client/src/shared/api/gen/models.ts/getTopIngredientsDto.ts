@@ -4,5 +4,8 @@
  * Food Mood
  * OpenAPI spec version: 1.0.0
  */
+import type { TopIngredientItemDto } from './topIngredientItemDto';
 
-export interface GetTopIngredientsDto { [key: string]: unknown }
+export interface GetTopIngredientsDto {
+  items: TopIngredientItemDto[];
+}

@@ -1,6 +1,5 @@
+import { Metric } from "@/shared";
 import { parseAsString, useQueryState } from "nuqs";
-
-export type Metric = "kcal" | "prot" | "fat" | "carb" | "sugar";
 
 const metricTabs: Metric[] = ["kcal", "prot", "fat", "carb", "sugar"];
 

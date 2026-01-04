@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const analyticsByTimeKey = ["analytics-by-time"];
 
-export const getAnalyticsByTimeQuery = (
+export const useGetAnalyticsByTimeQuery = (
   params: AnalyticsControllerGetAnalyticsByTimeParams
 ) => {
   return useQuery<GetAnalyticsByTimeDto>({

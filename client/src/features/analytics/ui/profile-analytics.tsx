@@ -1,57 +1,32 @@
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui";
 import React from "react";
-import { useProfileAnalytics } from "../model/use-profile-analytics";
 import { AnalyticsByTime } from "./analytics-by-time";
+import {
+  ProfileAnalyticsTabs,
+  useProfileAnalyticsTabChange,
+  useProfileAnalyticsTabs,
+} from "@/entities/tabs";
+import { AnalyticsByIngredients } from "./analytics-by-ingredients";
 
 interface Props {
   className?: string;
 }
 
 export const ProfileAnalytics: React.FC<Props> = ({ className }) => {
-  const { safeAnalyticsTab, setAnalyticsTab } = useProfileAnalytics();
+  const { analyticsTab, setAnalyticsTab } = useProfileAnalyticsTabs();
+  const { onChangeAnalyticsTab } =
+    useProfileAnalyticsTabChange(setAnalyticsTab);
 
   return (
     <div className={cn(className, "flex flex-col gap-6")}>
       {/* analytics tabs */}
-      <div className="flex flex-wrap gap-5">
-        <Button
-          type="button"
-          variant={safeAnalyticsTab === "by-time" ? "secondary" : "ghost"}
-          onClick={() => setAnalyticsTab("by-time")}
-        >
-          By time
-        </Button>
+      <ProfileAnalyticsTabs value={analyticsTab} onChange={onChangeAnalyticsTab} />
 
-        <Button
-          type="button"
-          variant={
-            safeAnalyticsTab === "by-ingredients" ? "secondary" : "ghost"
-          }
-          onClick={() => setAnalyticsTab("by-ingredients")}
-        >
-          By ingredients
-        </Button>
-
-        <Button
-          type="button"
-          variant={
-            safeAnalyticsTab === "nutrients-score" ? "secondary" : "ghost"
-          }
-          onClick={() => setAnalyticsTab("nutrients-score")}
-        >
-          Nutrients score
-        </Button>
-      </div>
-
-      {/* content placeholder */}
-      {safeAnalyticsTab === "by-time" && <AnalyticsByTime />}
-      {safeAnalyticsTab === "by-ingredients" && (
-        <div>TODO: Analytics by ingredients</div>
-      )}
-      {safeAnalyticsTab === "nutrients-score" && (
-        <div>TODO: Nutrients score</div>
-      )}
+      {/* content */}
+      {analyticsTab === "by-time" && <AnalyticsByTime />}
+      {analyticsTab === "by-ingredients" && <AnalyticsByIngredients />}
+      {analyticsTab === "nutrients-score" && <div>TODO: Nutrients score</div>}
     </div>
   );
 };

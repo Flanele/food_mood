@@ -49,3 +49,9 @@ export type PatchRecipeFiles = {
 export type Objective = 'balanced' | 'mood' | 'energy' | 'sleep';
 
 export type TimeGrouping = 'day' | 'week' | 'month';
+
+export type Metric = "kcal" | "prot" | "fat" | "carb" | "sugar";
+
+export type IngredientMetric = "count" | "totalGrams" | "totalKcal";
+
+export type Orientation = "vertical" | "horizontal";

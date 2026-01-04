@@ -1,37 +1,36 @@
-import { useGetAnalyticsByTimeQuery } from "@/entities/analytics";
+import { useGetTopIngredientsQuery } from "@/entities/analytics";
+import { IngredientBarChart } from "@/entities/charts";
+import {
+  IngredientMetricTabs,
+  IngredientPeriodTabs,
+  IngredientTopTabs,
+  useIngredientMetricTabs,
+  useIngredientPeriodTabs,
+  useIngredientTopTabs,
+} from "@/entities/tabs";
 import { AnalyticsPeriodForm } from "@/features/forms";
 import { getDefaultDayRange } from "@/shared";
 import { cn } from "@/shared/lib/utils";
-import React from "react";
-import {
-  AnalyticsMetricTabs,
-  AnalyticsTimeTabs,
-  useAnalyticsGroupByTimeTabs,
-  useAnalyticsMetricTabs,
-} from "@/entities/tabs";
-import { TimeSeriesLineChart } from "@/entities/charts";
 import { ErrorAnimation, SimpleLoader } from "@/shared/ui";
+import React from "react";
 
 interface Props {
   className?: string;
 }
 
-export const AnalyticsByTime: React.FC<Props> = ({ className }) => {
-  const {
-    params,
-    groupBy,
-    setGroupBy,
-    from,
-    setFrom,
-    to,
-    setTo,
-    isCustom,
-    clearRange,
-  } = useAnalyticsGroupByTimeTabs();
+export const AnalyticsByIngredients: React.FC<Props> = ({ className }) => {
+  const { period, setPeriod, from, setFrom, to, setTo, clearRange, isCustom } =
+    useIngredientPeriodTabs();
+  const { metric, setMetric } = useIngredientMetricTabs();
+  const { top, setTop, limit, orientation } = useIngredientTopTabs();
 
-  const { metric, setMetric } = useAnalyticsMetricTabs();
+  const params = {
+    ...(isCustom && from ? { from } : {}),
+    ...(isCustom && to ? { to } : {}),
+    limit,
+  };
 
-  const { data, isLoading, isError } = useGetAnalyticsByTimeQuery(params);
+  const { data, isLoading, isError } = useGetTopIngredientsQuery(params);
 
   if (isLoading) {
     return (
@@ -52,7 +51,7 @@ export const AnalyticsByTime: React.FC<Props> = ({ className }) => {
   }
 
   return (
-    <div className={cn(className, "flex flex-col gap-6")}>
+    <div className={cn(className, "flex flex-col gap-4")}>
       {/* controls */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-20">
         {/* period */}
@@ -61,13 +60,7 @@ export const AnalyticsByTime: React.FC<Props> = ({ className }) => {
             Period
           </div>
 
-          <AnalyticsTimeTabs
-            value={groupBy}
-            onChange={setGroupBy}
-            onResetCustomRange={() => {
-              clearRange();
-            }}
-          />
+          <IngredientPeriodTabs value={period} onChange={setPeriod} />
         </div>
 
         {/* metric */}
@@ -76,7 +69,14 @@ export const AnalyticsByTime: React.FC<Props> = ({ className }) => {
             Metric
           </div>
 
-          <AnalyticsMetricTabs value={metric} onChange={setMetric} />
+          <IngredientMetricTabs value={metric} onChange={setMetric} />
+        </div>
+
+        {/* top */}
+        <div className="flex flex-col gap-2">
+          <div className="text-sm font-medium text-muted-foreground">Top</div>
+
+          <IngredientTopTabs value={top} onChange={setTop} />
         </div>
       </div>
 
@@ -97,19 +97,13 @@ export const AnalyticsByTime: React.FC<Props> = ({ className }) => {
         />
       )}
 
-      {/* total */}
-      {data && (
-        <div className="text-lg font-medium">
-          Total: {(data.total[metric] as number).toFixed(2)}
-        </div>
-      )}
-
       {/* chart */}
-      <div className="p-4">
-        <TimeSeriesLineChart
-          data={data?.series ?? []}
+      <div className="p-2">
+        <IngredientBarChart
+          data={data?.items ?? []}
           metric={metric}
-          yLabel={`Number of ${metric} per period`}
+          orientation={orientation}
+          yLabel={`Top ingredients by ${metric}`}
         />
       </div>
     </div>

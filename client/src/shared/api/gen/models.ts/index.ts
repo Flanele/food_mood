@@ -64,3 +64,4 @@ export * from './recommendationControllerGetSimilarParams';
 export * from './recommendationItemDto';
 export * from './signInBodyDTO';
 export * from './signUpBodyDTO';
+export * from './topIngredientItemDto';
