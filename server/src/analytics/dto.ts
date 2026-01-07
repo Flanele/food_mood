@@ -173,6 +173,34 @@ export class GetNutrientsScoreQueryDto {
   to?: Date;
 }
 
+export class NutrientsScoreDetailDto {
+  @ApiProperty({ example: '2025-09-01' })
+  date: string;
+
+  @ApiProperty({ example: 30 })
+  metricValue: number;
+
+  @ApiProperty({ example: 5, nullable: true, type: Number })
+  mood: number | null;
+
+  @ApiProperty({ example: 4, nullable: true, type: Number })
+  energy: number | null;
+
+  @ApiProperty({ example: 4, nullable: true, type: Number })
+  sleep: number | null;
+}
+
+export class NutrientsScoreCorrelationDto {
+  @ApiProperty({ example: -0.1, required: false, nullable: true, type: Number })
+  mood: number | null;
+
+  @ApiProperty({ example: -0.3, required: false, nullable: true, type: Number })
+  energy: number | null;
+
+  @ApiProperty({ example: -0.8, required: false, nullable: true, type: Number })
+  sleep: number | null;
+}
+
 export class GetNutrientsScoreDto {
   @ApiProperty({
     example: 'sugar',
@@ -193,12 +221,9 @@ export class GetNutrientsScoreDto {
     },
     description:
       'Simplified correlation score showing how this nutrient relates to mood, energy, and sleep. Range from -1 to 1: negative means worse effect, positive means better effect.',
+    type: NutrientsScoreCorrelationDto,
   })
-  correlation: {
-    mood: number | null;
-    energy: number | null;
-    sleep: number | null;
-  };
+  correlation: NutrientsScoreCorrelationDto;
 
   @ApiProperty({
     description:
@@ -226,12 +251,8 @@ export class GetNutrientsScoreDto {
         sleep: 5,
       },
     ],
+    type: NutrientsScoreDetailDto,
+    isArray: true,
   })
-  details: Array<{
-    date: string;
-    metricValue: number;
-    mood: number | null;
-    energy: number | null;
-    sleep: number | null;
-  }>;
+  details: NutrientsScoreDetailDto[];
 }

@@ -1,5 +1,4 @@
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui";
 import React from "react";
 import { AnalyticsByTime } from "./analytics-by-time";
 import {
@@ -8,6 +7,7 @@ import {
   useProfileAnalyticsTabs,
 } from "@/entities/tabs";
 import { AnalyticsByIngredients } from "./analytics-by-ingredients";
+import { AnalyticsNutrientsScore } from "./analytics-nutrients-score";
 
 interface Props {
   className?: string;
@@ -26,7 +26,7 @@ export const ProfileAnalytics: React.FC<Props> = ({ className }) => {
       {/* content */}
       {analyticsTab === "by-time" && <AnalyticsByTime />}
       {analyticsTab === "by-ingredients" && <AnalyticsByIngredients />}
-      {analyticsTab === "nutrients-score" && <div>TODO: Nutrients score</div>}
+      {analyticsTab === "nutrients-score" && <AnalyticsNutrientsScore />}
     </div>
   );
 };

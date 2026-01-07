@@ -1233,6 +1233,48 @@ components:
             $ref: '#/components/schemas/TopIngredientItemDto'
       required:
         - items
+    NutrientsScoreCorrelationDto:
+      type: object
+      properties:
+        mood:
+          type: number
+          example: -0.1
+          nullable: true
+        energy:
+          type: number
+          example: -0.3
+          nullable: true
+        sleep:
+          type: number
+          example: -0.8
+          nullable: true
+    NutrientsScoreDetailDto:
+      type: object
+      properties:
+        date:
+          type: string
+          example: '2025-09-01'
+        metricValue:
+          type: number
+          example: 30
+        mood:
+          type: number
+          example: 5
+          nullable: true
+        energy:
+          type: number
+          example: 4
+          nullable: true
+        sleep:
+          type: number
+          example: 4
+          nullable: true
+      required:
+        - date
+        - metricValue
+        - mood
+        - energy
+        - sleep
     GetNutrientsScoreDto:
       type: object
       properties:
@@ -1249,7 +1291,6 @@ components:
           type: number
           example: 320
         correlation:
-          type: object
           example:
             mood: -0.1
             energy: -0.3
@@ -1258,6 +1299,8 @@ components:
             Simplified correlation score showing how this nutrient relates to
             mood, energy, and sleep. Range from -1 to 1: negative means worse
             effect, positive means better effect.
+          allOf:
+            - $ref: '#/components/schemas/NutrientsScoreCorrelationDto'
         details:
           description: >-
             Daily breakdown showing how much of this nutrient was consumed each
@@ -1281,7 +1324,7 @@ components:
               sleep: 5
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/NutrientsScoreDetailDto'
       required:
         - metric
         - totalConsumed
