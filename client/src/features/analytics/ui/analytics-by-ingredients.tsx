@@ -2,7 +2,7 @@ import { useGetTopIngredientsQuery } from "@/entities/analytics";
 import { IngredientBarChart } from "@/entities/charts";
 import {
   IngredientMetricTabs,
-  IngredientPeriodTabs,
+  PeriodTabs,
   IngredientTopTabs,
   useIngredientMetricTabs,
   useIngredientPeriodTabs,
@@ -60,7 +60,7 @@ export const AnalyticsByIngredients: React.FC<Props> = ({ className }) => {
             Period
           </div>
 
-          <IngredientPeriodTabs value={period} onChange={setPeriod} />
+          <PeriodTabs value={period} onChange={setPeriod} />
         </div>
 
         {/* metric */}

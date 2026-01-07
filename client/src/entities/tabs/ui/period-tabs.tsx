@@ -9,7 +9,7 @@ interface Props {
   onChange: (v: IngredientPeriodTab) => void;
 }
 
-export const IngredientPeriodTabs: React.FC<Props> = ({
+export const PeriodTabs: React.FC<Props> = ({
   className,
   value,
   onChange,

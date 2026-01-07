@@ -5,13 +5,14 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GetNutrientsScoreDtoMetric } from './getNutrientsScoreDtoMetric';
-import type { GetNutrientsScoreDtoCorrelation } from './getNutrientsScoreDtoCorrelation';
+import type { NutrientsScoreCorrelationDto } from './nutrientsScoreCorrelationDto';
+import type { NutrientsScoreDetailDto } from './nutrientsScoreDetailDto';
 
 export interface GetNutrientsScoreDto {
   metric: GetNutrientsScoreDtoMetric;
   totalConsumed: number;
   /** Simplified correlation score showing how this nutrient relates to mood, energy, and sleep. Range from -1 to 1: negative means worse effect, positive means better effect. */
-  correlation: GetNutrientsScoreDtoCorrelation;
+  correlation: NutrientsScoreCorrelationDto;
   /** Daily breakdown showing how much of this nutrient was consumed each day and what mood, energy, and sleep scores were recorded by the user */
-  details: string[];
+  details: NutrientsScoreDetailDto[];
 }

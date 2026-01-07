@@ -12,6 +12,10 @@ export const useProfileAnalyticsTabChange = (
     "ingredientPeriod",
     parseAsString.withDefault("all-time")
   );
+  const [, setNutrientScorePeriodRaw] = useQueryState(
+    "nutrientScorePeriod",
+    parseAsString.withDefault("all-time")
+  );
 
   const [, setFrom] = useQueryState("from", parseAsString);
   const [, setTo] = useQueryState("to", parseAsString);
@@ -23,7 +27,6 @@ export const useProfileAnalyticsTabChange = (
 
   const onChangeAnalyticsTab = (next: AnalyticsTab) => {
     setAnalyticsTab(next);
-
     clearRange();
 
     // сбрасываем режимы неактивных вкладок,
@@ -34,6 +37,10 @@ export const useProfileAnalyticsTabChange = (
 
     if (next !== "by-ingredients") {
       setIngredientPeriodRaw("all-time");
+    }
+
+    if (next !== "nutrients-score") {
+      setNutrientScorePeriodRaw("all-time");
     }
   };
 
