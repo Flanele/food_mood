@@ -33,7 +33,10 @@ export const Header: React.FC<Props> = ({ mode }) => {
           {mode !== "recommendations" && (
             <div className="flex gap-3 hover:underline hover:text-primary transition-colors">
               <Star width={25} height={25} />
-              <Link className="font-quantico text-m" href={"#"}>
+              <Link
+                className="font-quantico text-m"
+                href={ROUTES.PERSONAL_RECOMMENDATIONS}
+              >
                 Personal recommendations
               </Link>{" "}
             </div>
@@ -42,7 +45,7 @@ export const Header: React.FC<Props> = ({ mode }) => {
           {mode !== "peers" && (
             <div className="flex gap-3 hover:underline hover:text-primary transition-colors">
               <ThumbsUp width={25} height={25} />
-              <Link className="font-quantico text-m" href={"#"}>
+              <Link className="font-quantico text-m" href={ROUTES.PEERS}>
                 You might like it
               </Link>{" "}
             </div>

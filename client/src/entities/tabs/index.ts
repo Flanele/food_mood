@@ -14,3 +14,5 @@ export { IngredientTopTabs } from "./ui/ingredient-top-tabs";
 export { useDateRange } from "./model/use-date-range";
 export { useProfileAnalyticsTabChange } from "./model/use-profile-analytics-tab-change";
 export { useNutrientScorePeriodTabs } from "./model/use-nutrient-score-period-tabs";
+export { useRecommendationObjectiveTabs } from "./model/use-recommendation-objective-tabs";
+export { RecommendationObjectiveTabs } from "./ui/recommendation-objective-tabs";
