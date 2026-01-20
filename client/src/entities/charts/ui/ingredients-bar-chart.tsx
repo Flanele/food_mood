@@ -96,3 +96,4 @@ export const IngredientBarChart: React.FC<Props> = ({
     </div>
   );
 };
+

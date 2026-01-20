@@ -2,9 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { IngredientCache } from 'generated/prisma';
 import { UsdaService } from './usda/usda.service';
-import { ExternalIngredient } from './usda/usda.types';
+import { ExternalIngredient, Food } from './usda/usda.types';
 import { PieceWeightRow } from './indredient.types';
-import { AddIngredientDto } from './dto';
+import {
+  AddIngredientDto,
+  IngredientSuggestionDto,
+  IngredientSuggestQueryDto,
+} from './dto';
 
 @Injectable()
 export class IngredientService {
@@ -24,6 +28,12 @@ export class IngredientService {
     return this.db.ingredientCache.findUnique({ where: { normalizedName } });
   }
 
+  private async findOneInCacheByExternalId(
+    externalId: number,
+  ): Promise<IngredientCache | null> {
+    return this.db.ingredientCache.findFirst({ where: { externalId } });
+  }
+
   private async createCacheFromExternal(ext: ExternalIngredient, name: string) {
     return this.db.ingredientCache.create({
       data: {
@@ -33,17 +43,32 @@ export class IngredientService {
     });
   }
 
-  async getOrFetch(rawName: string): Promise<IngredientCache | null> {
-    const cached = await this.findOneInCache(rawName);
-    if (cached) return cached;
-
-    // если не нашли нигде — тянем извне
-    const ext = await this.usda.fetchFromUSDA(rawName);
-
-    if (!ext) {
-      return null;
+  async getOrFetch(
+    rawName: string,
+    externalId?: number,
+  ): Promise<IngredientCache | null> {
+    if (externalId) {
+      const cachedById = await this.findOneInCacheByExternalId(externalId);
+      if (cachedById) return cachedById;
     }
 
+    const cachedByName = await this.findOneInCache(rawName);
+    if (cachedByName) return cachedByName;
+
+    let food: Food | null = null;
+
+    if (externalId) {
+      food = await this.usda.findByExternalId(externalId);
+    }
+
+    if (!food) {
+      const candidates = await this.usda.searchByName(rawName, 10);
+      food = candidates[0] ?? null;
+    }
+
+    if (!food) return null;
+
+    const ext = this.usda.buildExternalInfredient(food);
     return this.createCacheFromExternal(ext, rawName);
   }
 
@@ -98,7 +123,7 @@ export class IngredientService {
   }
 
   async buildIngredientRow(ingredient: AddIngredientDto) {
-    const cache = await this.getOrFetch(ingredient.name);
+    const cache = await this.getOrFetch(ingredient.name, ingredient.externalId);
     if (!cache)
       throw new BadRequestException(`ingredient not found: ${ingredient.name}`);
 
@@ -135,6 +160,23 @@ export class IngredientService {
       carbTotal: round(carbTotal),
       sugarTotal: round(sugarTotal),
     };
+  }
+
+  async suggest(
+    dto: IngredientSuggestQueryDto,
+  ): Promise<IngredientSuggestionDto[]> {
+    const q = dto.query.trim();
+    if (q.length < 2) return [];
+
+    const limit = dto.limit ?? 10;
+
+    const suggestions = await this.usda.searchByName(q, limit);
+
+    return suggestions.map((s) => ({
+      externalId: s.fdcId,
+      name: s.description,
+      dataType: s.dataType,
+    }));
   }
 
   async findIngredientWeight(name: string): Promise<PieceWeightRow | null> {
