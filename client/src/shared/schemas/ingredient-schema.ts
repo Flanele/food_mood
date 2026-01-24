@@ -5,6 +5,8 @@ export const IngredientSchema = z
   .object({
     name: z.string().min(2, { message: "Ingredient required" }),
 
+    externalId: z.number().int().positive().optional(),
+
     unit: z.enum(UNITS),
 
     amount: z.coerce

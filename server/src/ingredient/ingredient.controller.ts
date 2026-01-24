@@ -1,7 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
-import { ApiOkResponse, ApiResponse } from '@nestjs/swagger';
-import { IngredientWeightDto } from './dto';
+import { ApiOkResponse, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import {
+  IngredientSuggestionDto,
+  IngredientSuggestQueryDto,
+  IngredientWeightDto,
+} from './dto';
 
 @Controller('ingredients')
 export class IngredientController {
@@ -22,9 +26,22 @@ export class IngredientController {
     return ingredientWeight ?? 0;
   }
 
+  @Get('search')
+  @ApiOkResponse({ type: IngredientSuggestionDto, isArray: true })
+  async makeIngredientSuggestion(
+    @Query() query: IngredientSuggestQueryDto,
+  ): Promise<IngredientSuggestionDto[]> {
+    return await this.ingredientService.suggest(query);
+  }
+
   @Get('test')
-  async testFetch(@Query('name') name: string) {
-    const result = await this.ingredientService['getOrFetch'](name);
-    return result ?? { message: 'not found' };
+  @ApiQuery({ name: 'name', required: true, type: String })
+  @ApiQuery({ name: 'externalId', required: false, type: Number })
+  async testFetch(
+    @Query('name') name: string,
+    @Query('externalId') externalId?: string,
+  ) {
+    const id = externalId ? Number(externalId) : undefined;
+    return this.ingredientService.getOrFetch(name, id);
   }
 }

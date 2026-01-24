@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type IngredientControllerTestFetchParams = {
-name: string;
-externalId?: number;
+export type IngredientControllerMakeIngredientSuggestionParams = {
+query: string;
+limit?: number;
 };

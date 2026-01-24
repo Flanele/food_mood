@@ -13,7 +13,7 @@ interface Props {
 
 export const Header: React.FC<Props> = ({ mode }) => {
   return (
-    <div className="border-b-6 border-primary bg-secondary bg-opacity-95 sticky top-0 z-50">
+    <div className="border-b-6 border-primary bg-secondary bg-opacity-95 sticky top-0 z-50 isolate">
       <Container>
         <div className="flex justify-between items-center p-1 pb-3">
           <Link href={"/"} className="flex flex-col items-center">

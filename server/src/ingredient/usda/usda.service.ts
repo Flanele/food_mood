@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { ExternalIngredient, Food, FoodNutrient } from './usda.types';
+import {
+  ExternalIngredient,
+  FDC_NUTRIENTS,
+  Food,
+  FoodNutrient,
+  MACRO_IDS,
+} from './usda.types';
 
 @Injectable()
 export class UsdaService {
@@ -10,14 +16,12 @@ export class UsdaService {
 
   constructor(private http: HttpService) {}
 
-  async fetchFromUSDA(query: string): Promise<ExternalIngredient | null> {
+  async searchByName(query: string, limit = 10): Promise<Food[]> {
     const url = `${this.baseUrl}/foods/search`;
     const ladders = [['Foundation'], ['SR Legacy'], ['Branded']];
     const words = query.trim().toUpperCase().split(/\s+/).filter(Boolean);
 
-    let best: Food | null = null;
-    let bestScore = 0;
-    const MACRO_IDS = [1008, 1003, 1004, 1005, 2000, 269, 1079, 1009];
+    const results: Array<{ food: Food; score: number }> = [];
 
     for (const dataType of ladders) {
       const { data } = await firstValueFrom(
@@ -40,30 +44,56 @@ export class UsdaService {
       for (const food of foods) {
         const desc = (food.description || '').toUpperCase();
         const score = words.filter((word) => desc.includes(word)).length;
-        if (score > bestScore) {
-          best = food;
-          bestScore = score;
-        }
+        if (score === 0) continue;
+
+        results.push({ food, score });
       }
     }
 
-    if (!best || bestScore === 0) return null;
+    return results
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map((r) => r.food);
+  }
 
-    const nutrients = this.buildNutrientMap(best.foodNutrients ?? []);
+  async findByExternalId(externalId: number): Promise<Food | null> {
+    const url = `${this.baseUrl}/food/${externalId}`;
 
-    const prot = nutrients.get(1003) ?? 0;
-    const fat = nutrients.get(1004) ?? 0;
-    const carb = nutrients.get(1005) ?? 0;
-    const kcal = nutrients.get(1008) ?? this.kcalFromAtwater(fat, prot, carb);
+    const { data } = await firstValueFrom(
+      this.http.get(url, {
+        params: {
+          api_key: this.apiKey,
+          nutrients: MACRO_IDS,
+        },
+        validateStatus: () => true,
+      }),
+    );
+
+    if (data?.fdcId) {
+      return data as Food;
+    }
+
+    return null;
+  }
+
+  buildExternalInfredient(food: Food): ExternalIngredient {
+    const nutrients = this.buildNutrientMap(food.foodNutrients ?? []);
+
+    const prot = nutrients.get(FDC_NUTRIENTS.PROTEIN) ?? 0;
+    const fat = nutrients.get(FDC_NUTRIENTS.FAT) ?? 0;
+    const carb = nutrients.get(FDC_NUTRIENTS.CARBS) ?? 0;
+    const kcal =
+      nutrients.get(FDC_NUTRIENTS.KCAL) ??
+      this.kcalFromAtwater(fat, prot, carb);
     const sugar =
-      nutrients.get(2000) ??
-      nutrients.get(269) ??
+      nutrients.get(FDC_NUTRIENTS.SUGAR_TOTAL) ??
+      nutrients.get(FDC_NUTRIENTS.SUGAR_FALLBACK) ??
       this.estimateSugar(nutrients, fat, prot);
 
     return {
-      externalId: best.fdcId,
-      name: best.description,
-      dataType: best.dataType,
+      externalId: food.fdcId,
+      name: food.description,
+      dataType: food.dataType,
       basis: 'PER_100G',
       kcalBase: Math.max(kcal, 0),
       protBase: Math.max(prot, 0),

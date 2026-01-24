@@ -6,7 +6,9 @@
  */
 import type {
   IngredientControllerFindIngredientWeightParams,
+  IngredientControllerMakeIngredientSuggestionParams,
   IngredientControllerTestFetchParams,
+  IngredientSuggestionDto,
   IngredientWeightDto
 } from './';
 
@@ -25,6 +27,16 @@ const ingredientControllerFindIngredientWeight = (
       options);
     }
   
+const ingredientControllerMakeIngredientSuggestion = (
+    params: IngredientControllerMakeIngredientSuggestionParams,
+ options?: SecondParameter<typeof createInstance<IngredientSuggestionDto[]>>,) => {
+      return createInstance<IngredientSuggestionDto[]>(
+      {url: `/ingredients/search`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
 const ingredientControllerTestFetch = (
     params: IngredientControllerTestFetchParams,
  options?: SecondParameter<typeof createInstance<void>>,) => {
@@ -35,6 +47,7 @@ const ingredientControllerTestFetch = (
       options);
     }
   
-return {ingredientControllerFindIngredientWeight,ingredientControllerTestFetch}};
+return {ingredientControllerFindIngredientWeight,ingredientControllerMakeIngredientSuggestion,ingredientControllerTestFetch}};
 export type IngredientControllerFindIngredientWeightResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['ingredientControllerFindIngredientWeight']>>>
+export type IngredientControllerMakeIngredientSuggestionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['ingredientControllerMakeIngredientSuggestion']>>>
 export type IngredientControllerTestFetchResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getFoodMood>['ingredientControllerTestFetch']>>>

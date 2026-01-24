@@ -5,6 +5,9 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  Max,
+  Min,
+  MinLength,
 } from 'class-validator';
 
 export class IngredientDto {
@@ -64,6 +67,15 @@ export class AddIngredientDto {
   @IsString()
   name: string;
 
+  @ApiProperty({
+    required: false,
+    example: 748967,
+    description: 'USDA fdcId',
+  })
+  @IsOptional()
+  @IsInt()
+  externalId?: number;
+
   @ApiProperty({ example: 2 })
   @IsNumber()
   amount: number;
@@ -96,4 +108,32 @@ export class IngredientWeightDto {
   @ApiProperty({ example: 'default' })
   @IsString()
   source: string;
+}
+
+export class IngredientSuggestQueryDto {
+  @ApiProperty({ example: 'egg' })
+  @IsString()
+  @MinLength(2)
+  query: string;
+
+  @ApiProperty({ required: false, example: 8 })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(20)
+  limit?: number;
+}
+
+export class IngredientSuggestionDto {
+  @ApiProperty({ example: 748967 })
+  @IsInt()
+  externalId: number;
+
+  @ApiProperty({ example: 'EGG, WHOLE, RAW, FRESH' })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ example: 'Foundation' })
+  @IsString()
+  dataType: string;
 }

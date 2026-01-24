@@ -30,6 +30,7 @@ export const mapFormToAddRecipeDto = (
       ...(i.pieceGrams
         ? { opts: { pieceGrams: i.pieceGrams } }
         : {}),
+      externalId: i.externalId
     })),
     steps: {
       steps,
