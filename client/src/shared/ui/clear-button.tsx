@@ -16,6 +16,10 @@ export const ClearButton: React.FC<Props> = ({ onClick, className }) => {
         className
       )}
       type="button"
+      onMouseDown={(e) => {
+        e.preventDefault(); // не даём инпуту потерять фокус
+        e.stopPropagation();
+      }}
     >
       <X className="h-5 w-5" />
     </button>

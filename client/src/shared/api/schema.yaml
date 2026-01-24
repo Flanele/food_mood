@@ -239,6 +239,33 @@ paths:
                 $ref: '#/components/schemas/IngredientWeightDto'
       tags:
         - Ingredient
+  /ingredients/search:
+    get:
+      operationId: IngredientController_makeIngredientSuggestion
+      parameters:
+        - name: query
+          required: true
+          in: query
+          schema:
+            example: egg
+            type: string
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 8
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IngredientSuggestionDto'
+      tags:
+        - Ingredient
   /ingredients/test:
     get:
       operationId: IngredientController_testFetch
@@ -248,6 +275,11 @@ paths:
           in: query
           schema:
             type: string
+        - name: externalId
+          required: false
+          in: query
+          schema:
+            type: number
       responses:
         '200':
           description: ''
@@ -910,6 +942,10 @@ components:
         name:
           type: string
           example: egg
+        externalId:
+          type: number
+          example: 748967
+          description: USDA fdcId
         amount:
           type: number
           example: 2
@@ -1022,6 +1058,22 @@ components:
         - normalizedName
         - gramsPerPiece
         - source
+    IngredientSuggestionDto:
+      type: object
+      properties:
+        externalId:
+          type: number
+          example: 748967
+        name:
+          type: string
+          example: EGG, WHOLE, RAW, FRESH
+        dataType:
+          type: string
+          example: Foundation
+      required:
+        - externalId
+        - name
+        - dataType
     AddMealLogDto:
       type: object
       properties:

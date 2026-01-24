@@ -8,6 +8,8 @@ import type { AddIngredientDtoOpts } from './addIngredientDtoOpts';
 
 export interface AddIngredientDto {
   name: string;
+  /** USDA fdcId */
+  externalId?: number;
   amount: number;
   unit: string;
   opts?: AddIngredientDtoOpts;

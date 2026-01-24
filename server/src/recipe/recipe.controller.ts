@@ -99,6 +99,8 @@ export class RecipeController {
       }
     }
 
+    console.log(dto)
+
     return this.recipeService.addRecipe(dto, session.id);
   }
 

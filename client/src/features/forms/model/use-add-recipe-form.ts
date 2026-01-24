@@ -15,7 +15,7 @@ export const useAddRecipeForm = () => {
       title: "",
       servings: 1,
       ingredients: [
-        { name: "", unit: "g", amount: undefined, pieceGrams: undefined },
+        { name: "", unit: "g", amount: undefined, pieceGrams: undefined, externalId: undefined },
       ],
       imageMethod: "url",
       imageUrl: "",
@@ -58,6 +58,10 @@ export const useAddRecipeForm = () => {
   const titleLength = titleValue?.length || 0;
 
   const addRecipeMutation = useAddRecipeMutation();
+
+  const values = form.getValues();
+console.log(values);
+
 
   return {
     form,

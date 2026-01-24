@@ -11,6 +11,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   required?: boolean;
   className?: string;
   type?: React.HTMLInputTypeAttribute;
+
+  onValueChange?: (value: string) => void;
 }
 
 export const FormInput: React.FC<Props> = ({
@@ -19,6 +21,7 @@ export const FormInput: React.FC<Props> = ({
   required,
   className,
   type,
+  onValueChange,
   ...props
 }) => {
   const {
@@ -33,7 +36,10 @@ export const FormInput: React.FC<Props> = ({
 
   const onClickClear = () => {
     setValue(name, "", { shouldValidate: true });
+    onValueChange?.("");
   };
+
+  const reg = register(name);
 
   return (
     <div className={className}>
@@ -48,7 +54,11 @@ export const FormInput: React.FC<Props> = ({
           type={type}
           className="h-12 text-md"
           {...props}
-          {...register(name)}
+          {...reg}
+          onChange={(e) => {
+            reg.onChange(e);
+            onValueChange?.(e.target.value);
+          }}
         />
 
         {value &&
