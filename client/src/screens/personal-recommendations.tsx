@@ -5,11 +5,10 @@ import {
   RecommendationObjectiveTabs,
   useRecommendationObjectiveTabs,
 } from "@/entities/tabs";
-import { Container } from "@/shared/ui";
 import {
-  Header,
   LoadingError,
   LoadingWithHeader,
+  PageShell,
   RecommendationCatalog,
 } from "@/widgets";
 
@@ -34,27 +33,24 @@ export const PersonalRecommendations: React.FC = () => {
   }
 
   return (
-    <>
-      <Header mode="recommendations" />
-      <Container>
-        <div className="flex flex-col items-center gap-2 mt-8 mb-10">
-          <div className="text-lg font-medium font-quantico">
-            Recommendation objective
-          </div>
-          <div className="max-w-xl text-center text-sm font-quantico text-muted-foreground">
-            Choose what you want to focus on. We’ll tailor recipe
-            recommendations based on your selected goal.
-          </div>
-
-          <RecommendationObjectiveTabs
-            value={tab}
-            onChange={setTab}
-            className="py-5 justify-center"
-          />
-
-          <RecommendationCatalog recommendations={data?.items ?? []} />
+    <PageShell mode="recommendations">
+      <div className="flex flex-col items-center gap-2 mt-8 mb-10">
+        <div className="text-lg font-medium font-quantico">
+          Recommendation objective
         </div>
-      </Container>
-    </>
+        <div className="max-w-xl text-center text-sm font-quantico text-muted-foreground">
+          Choose what you want to focus on. We’ll tailor recipe recommendations
+          based on your selected goal.
+        </div>
+
+        <RecommendationObjectiveTabs
+          value={tab}
+          onChange={setTab}
+          className="py-5 justify-center"
+        />
+
+        <RecommendationCatalog recommendations={data?.items ?? []} />
+      </div>
+    </PageShell>
   );
 };

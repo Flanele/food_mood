@@ -2,8 +2,12 @@
 
 import { EditRecipeForm } from "@/features/forms";
 import { useCanEditRecipe } from "@/features/recipes/recipe";
-import { Container } from "@/shared/ui";
-import { ForbiddenError, Header, LoadingError, LoadingWithHeader } from "@/widgets";
+import {
+  ForbiddenError,
+  LoadingError,
+  LoadingWithHeader,
+  PageShell,
+} from "@/widgets";
 import React from "react";
 import { NotFoundPage } from "./not-found";
 
@@ -27,15 +31,12 @@ export const EditRecipePage: React.FC<Props> = ({ id }) => {
   }
 
   if (!canEdit) {
-    return <ForbiddenError />
+    return <ForbiddenError />;
   }
 
   return (
-    <>
-      <Header mode="other" />
-      <Container>
-        <EditRecipeForm id={id} />
-      </Container>
-    </>
+    <PageShell mode="other">
+      <EditRecipeForm id={id} />
+    </PageShell>
   );
 };

@@ -1,17 +1,14 @@
 import React from "react";
-import { Header } from "./header";
-import { Container, SimpleLoader } from "@/shared/ui";
+import { SimpleLoader } from "@/shared/ui";
+import { PageShell } from "./page-shell";
 
 export const LoadingWithHeader: React.FC = () => {
   return (
-    <>
-      <Header mode="other" />
-      <Container>
-        <div className="flex flex-col items-center">
-          <SimpleLoader className="w-[600px] h-[600px]" />
-          <p className="text-xl">Loading...</p>
-        </div>
-      </Container>
-    </>
+    <PageShell mode="other">
+      <div className="flex flex-col items-center">
+        <SimpleLoader className="w-[600px] h-[600px]" />
+        <p className="text-xl">Loading...</p>
+      </div>
+    </PageShell>
   );
 };

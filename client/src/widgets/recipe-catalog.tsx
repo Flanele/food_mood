@@ -24,7 +24,7 @@ export const RecipeCatalog: React.FC<Props> = ({
   }
 
   return (
-    <div className={cn("flex flex-wrap gap-6", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr pr-1", className)}>
       {recipes?.map((r: RecipeDto) => (
         <RecipeCard
           key={r.id}
