@@ -50,17 +50,17 @@ export const useIngredientSuggestions = (index: number) => {
   const requestSuggestions = (value: string) => {
     const q = value.trim().replace(/\s+/g, " ");
 
-    if (q.length < 2) {
-      setParams(null);
-      return;
-    }
-
     // если юзер печатает — выбранный externalId больше невалиден
-    if (externalId) {
+    if (externalId !== undefined) {
       setValue(`ingredients.${index}.externalId`, undefined, {
         shouldDirty: true,
         shouldValidate: false,
       });
+    }
+
+    if (q.length < 2) {
+      setParams(null);
+      return;
     }
 
     debouncedSetParams(q);
@@ -68,7 +68,7 @@ export const useIngredientSuggestions = (index: number) => {
 
   const selectSuggestion = (s: IngredientSuggestionDto) => {
     console.log("SELECTED SUGGESTION:", s);
-    
+
     setValue(`ingredients.${index}.externalId`, s.externalId, {
       shouldDirty: true,
       shouldValidate: false,

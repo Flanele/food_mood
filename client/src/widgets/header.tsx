@@ -13,7 +13,7 @@ interface Props {
 
 export const Header: React.FC<Props> = ({ mode }) => {
   return (
-    <div className="border-b-6 border-primary bg-secondary bg-opacity-95 sticky top-0 z-50 isolate">
+    <div className="border-b-6 border-primary bg-secondary bg-opacity-95 fixed left-0 right-0 top-0 z-50">
       <Container>
         <div className="flex justify-between items-center p-1 pb-3">
           <Link href={"/"} className="flex flex-col items-center">
@@ -52,11 +52,14 @@ export const Header: React.FC<Props> = ({ mode }) => {
           )}
 
           <Button
+            asChild
             variant={"outline"}
-            className="font-quantico text-black text-m border-black hover:border-primary hover:text-primary transition-colors rounded-[15px]"
+            className="font-quantico text-black text-m border-black hover:border-primary hover:text-primary transition-colors rounded-[15px] mr-1"
           >
-            <CircleUser className="mr-2" />
-            <Link href={ROUTES.PROFILE}>Profile</Link>
+            <Link href={ROUTES.PROFILE} className="flex items-center">
+              <CircleUser className="mr-2" />
+              Profile
+            </Link>
           </Button>
         </div>
       </Container>

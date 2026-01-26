@@ -14,7 +14,7 @@ export const useRecipeListFilters = () => {
 
   const [limit, setLimit] = useQueryState(
     "limit",
-    parseAsInteger.withDefault(20)
+    parseAsInteger.withDefault(18)
   );
 
   const [includeIngredients, setIncludeIngredients] = useQueryState(

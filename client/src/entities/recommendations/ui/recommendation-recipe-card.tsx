@@ -30,11 +30,11 @@ export const RecommendationRecipeCard: React.FC<Props> = ({
     <Link href={`${ROUTES.RECIPE}/${id}`} className="block">
       <div
         className={cn(
-          "relative flex h-[210px] w-full overflow-hidden rounded-md border border-secondary cursor-pointer transition-colors hover:border-primary",
+          "relative flex h-[260px] w-full overflow-hidden rounded-md border border-secondary cursor-pointer transition-colors hover:border-primary",
           className
         )}
       >
-        <div className="h-full w-[210px] shrink-0 overflow-hidden">
+        <div className="h-full w-[230px] shrink-0 overflow-hidden">
           <img
             className="h-full w-full object-cover"
             src={pictureUrl}

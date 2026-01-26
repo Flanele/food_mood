@@ -28,30 +28,45 @@ export const RecipeCard: React.FC<Props> = ({
   id,
 }) => {
   return (
-    <Link href={`${ROUTES.RECIPE}/${id}`}>
+    <Link href={`${ROUTES.RECIPE}/${id}`} className="block">
       <div
         className={cn(
-          "flex border-1 border-secondary hover:border-primary cursor-pointer",
+          "flex flex-col h-[480px] overflow-hidden rounded-md border border-secondary hover:border-primary transition-colors cursor-pointer bg-white",
           className
         )}
       >
-        <div className="w-[210px] h-[210px] shrink-0 overflow-hidden">
+        <div className="w-full aspect-square overflow-hidden">
           <img
-            className="h-full w-full object-cover"
             src={pictureUrl}
-            alt=""
+            alt={title}
+            className="h-full w-full object-cover"
             loading="lazy"
             decoding="async"
           />
         </div>
 
-        <div className="flex flex-col p-3">
-          <Title text={title} size="sm" className="line-clamp-2 break-words" />
-          <span>kcal per serving: {kcalPerServ}</span>
-          <span>prot per serving: {protPerServ}</span>
-          <span>fat per serving: {fatPerServ}</span>
-          <span>carb per serving: {carbPerServ}</span>
-          <span>sugar per serving: {sugarPerServ}</span>
+        <div className="flex flex-col gap-1 p-3">
+          <Title
+            text={title}
+            size="sm"
+            className="line-clamp-2 break-words text-center"
+          />
+
+          <span className="text-sm text-muted-foreground text-center">
+            kcal per serving: {kcalPerServ}
+          </span>
+          <span className="text-sm text-muted-foreground text-center">
+            protein per serving: {protPerServ}
+          </span>
+          <span className="text-sm text-muted-foreground text-center">
+            fat per serving: {fatPerServ}
+          </span>
+          <span className="text-sm text-muted-foreground text-center">
+            carbs per serving: {carbPerServ}
+          </span>
+          <span className="text-sm text-muted-foreground text-center">
+            sugar per serving: {sugarPerServ}
+          </span>
         </div>
       </div>
     </Link>

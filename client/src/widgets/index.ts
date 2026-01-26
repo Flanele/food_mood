@@ -9,3 +9,4 @@ export { ForbiddenError } from "./forbidden-error";
 export { MealLogModal } from "./modals/meal-log-modal";
 export { RecommendationCatalog } from "./recommendation-catalog";
 export { PeersCatalog } from "./peers-catalog";
+export { PageShell } from "./page-shell";

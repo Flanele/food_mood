@@ -7,12 +7,11 @@ import { ProfileAnalytics } from "@/features/analytics";
 import { UserProfileForm } from "@/features/forms";
 import { MealLogList } from "@/features/meal-logs/meal-log-list";
 import { MyRecipeList } from "@/features/recipes/recipe-list";
-import { Container } from "@/shared/ui";
 import {
-  Header,
   LoadingError,
   LoadingWithHeader,
   MealLogModal,
+  PageShell,
 } from "@/widgets";
 import React from "react";
 
@@ -33,32 +32,29 @@ export const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <>
-      <Header mode="other" />
-      <Container>
-        <div className="mt-10 mb-10 flex flex-col gap-6">
-          {/* tabs */}
-          <ProfileTabs value={tab} onChange={setTab} />
+    <PageShell mode="other">
+      <div className="mt-10 mb-10 flex flex-col gap-6">
+        {/* tabs */}
+        <ProfileTabs value={tab} onChange={setTab} />
 
-          {/* content */}
-          {tab === "form" && <UserProfileForm profile={data} />}
+        {/* content */}
+        {tab === "form" && <UserProfileForm profile={data} />}
 
-          {tab === "recipes" && <MyRecipeList />}
+        {tab === "recipes" && <MyRecipeList />}
 
-          {tab === "logs" && (
-            <MealLogList onOpenLog={(id) => setSelectedMealLogId(id)} />
-          )}
-
-          {tab === "analytics" && <ProfileAnalytics />}
-        </div>
-
-        {selectedMealLogId && (
-          <MealLogModal
-            mealLogId={selectedMealLogId}
-            onClose={() => setSelectedMealLogId(null)}
-          />
+        {tab === "logs" && (
+          <MealLogList onOpenLog={(id) => setSelectedMealLogId(id)} />
         )}
-      </Container>
-    </>
+
+        {tab === "analytics" && <ProfileAnalytics />}
+      </div>
+
+      {selectedMealLogId && (
+        <MealLogModal
+          mealLogId={selectedMealLogId}
+          onClose={() => setSelectedMealLogId(null)}
+        />
+      )}
+    </PageShell>
   );
 };
