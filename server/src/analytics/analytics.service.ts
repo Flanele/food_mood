@@ -15,7 +15,6 @@ import {
   EMPTY_TOTALS,
   MS_DAY,
   Resolution,
-  SeriesPoint,
   Totals,
 } from './analytics.types';
 import { pickResolutionForCustomRange } from './helpers/pickResolutionForCustomRange';

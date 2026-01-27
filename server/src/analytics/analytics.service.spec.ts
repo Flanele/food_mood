@@ -26,6 +26,7 @@ describe('AnalyticsService', () => {
       dbMock.mealLog.findMany.mockResolvedValue([
         {
           servings: 2,
+          eatenAt: new Date('2025-09-29T08:15:00.000Z'),
           recipe: {
             kcalPerServ: 100,
             protPerServ: 10,
@@ -39,8 +40,15 @@ describe('AnalyticsService', () => {
       const res = await service.getAnalyticsByTime({}, 1);
 
       expect(dbMock.mealLog.findMany).toHaveBeenCalledWith({
-        where: { userProfileId: 1 },
+        where: {
+          userProfileId: 1,
+          eatenAt: {
+            gte: expect.any(Date),
+            lte: expect.any(Date),
+          },
+        },
         include: { recipe: true },
+        orderBy: { eatenAt: 'asc' },
       });
 
       expect(res.total).toEqual({

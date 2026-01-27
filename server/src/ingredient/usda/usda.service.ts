@@ -76,7 +76,7 @@ export class UsdaService {
     return null;
   }
 
-  buildExternalInfredient(food: Food): ExternalIngredient {
+  buildExternalIngredient(food: Food): ExternalIngredient {
     const nutrients = this.buildNutrientMap(food.foodNutrients ?? []);
 
     const prot = nutrients.get(FDC_NUTRIENTS.PROTEIN) ?? 0;
