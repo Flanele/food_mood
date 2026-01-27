@@ -4,6 +4,7 @@ import { AddMealLogDto, PatchMealLogDto } from './dto';
 import { BadRequestException } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { MealLog } from 'generated/prisma';
+import { UserProfileService } from 'src/users/user-profile.service';
 
 type MockDb = {
   recipe: {
@@ -12,6 +13,7 @@ type MockDb = {
   mealLog: {
     findUnique: jest.Mock;
     findFirst: jest.Mock;
+    findMany: jest.Mock;
     create: jest.Mock;
     update: jest.Mock;
     delete: jest.Mock;
@@ -22,6 +24,10 @@ describe('MealLogService', () => {
   let service: MealLogService;
   let db: MockDb;
 
+  const profileServiceMock = {
+    getProfile: jest.fn(),
+  };
+
   beforeEach(async () => {
     db = {
       recipe: {
@@ -30,6 +36,7 @@ describe('MealLogService', () => {
       mealLog: {
         findUnique: jest.fn(),
         findFirst: jest.fn(),
+        findMany: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
         delete: jest.fn(),
@@ -37,7 +44,11 @@ describe('MealLogService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MealLogService, { provide: DbService, useValue: db }],
+      providers: [
+        MealLogService,
+        { provide: DbService, useValue: db },
+        { provide: UserProfileService, useValue: profileServiceMock },
+      ],
     }).compile();
 
     service = module.get<MealLogService>(MealLogService);
@@ -97,14 +108,27 @@ describe('MealLogService', () => {
   });
 
   it('get meal log by id', async () => {
-    db.mealLog.findUnique.mockResolvedValueOnce({ id: 6 });
+    db.mealLog.findUnique.mockResolvedValueOnce({
+      id: 6,
+      userProfileId: 1,
+      recipeId: 2,
+      servings: 1,
+      eatenAt: new Date('2025-09-29T08:15:00.000Z'),
+      moodScore: 5,
+      energyScore: 6,
+      sleepScore: 7,
+      recipe: { title: 'Pasta' },
+    });
 
     const res = await service.getOne(6, 1);
 
     expect(db.mealLog.findUnique).toHaveBeenCalledWith({
       where: { id: 6, userProfileId: 1 },
+      include: { recipe: { select: { title: true } } },
     });
+    
     expect(res.id).toBe(6);
+    expect(res.recipeTitle).toBe('Pasta');
   });
 
   it('patch meal log', async () => {
@@ -132,14 +156,10 @@ describe('MealLogService', () => {
       where: { id: 10, userProfileId: 6 },
     });
 
-    expect(db.mealLog.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({
-          servings: 2,
-          moodScore: 9,
-        }),
-      }),
-    );
+    expect(db.mealLog.update).toHaveBeenCalledWith({
+      where: { id: 10 },
+      data: { servings: 2, moodScore: 9 },
+    });
 
     expect(res.id).toBe(10);
   });
@@ -183,5 +203,42 @@ describe('MealLogService', () => {
       BadRequestException,
     );
     expect(db.mealLog.delete).not.toHaveBeenCalled();
+  });
+
+  it('getAll returns meallogs with recipeTitle', async () => {
+    profileServiceMock.getProfile.mockResolvedValueOnce({ id: 42 });
+
+    db.mealLog.findMany.mockResolvedValueOnce([
+      {
+        id: 1,
+        userProfileId: 42,
+        recipeId: 7,
+        servings: 1,
+        eatenAt: new Date('2025-09-29T08:15:00.000Z'),
+        moodScore: 1,
+        energyScore: 2,
+        sleepScore: 3,
+        recipe: { title: 'Salad' },
+      },
+    ]);
+
+    const res = await service.getAll(999);
+
+    expect(profileServiceMock.getProfile).toHaveBeenCalledWith(999);
+
+    expect(db.mealLog.findMany).toHaveBeenCalledWith({
+      where: { userProfileId: 42 },
+      include: { recipe: { select: { title: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    expect(res).toEqual({
+      meallogs: [
+        expect.objectContaining({
+          id: 1,
+          recipeTitle: 'Salad',
+        }),
+      ],
+    });
   });
 });

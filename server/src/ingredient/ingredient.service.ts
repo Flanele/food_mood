@@ -68,7 +68,7 @@ export class IngredientService {
 
     if (!food) return null;
 
-    const ext = this.usda.buildExternalInfredient(food);
+    const ext = this.usda.buildExternalIngredient(food);
     return this.createCacheFromExternal(ext, rawName);
   }
 

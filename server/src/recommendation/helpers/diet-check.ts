@@ -30,7 +30,6 @@ export const FORBIDDEN_VEGAN = [...FORBIDDEN_VEGETARIAN, ...ANIMAL_PRODUCTS];
 
 export const FORBIDDEN_PESCATARIAN = [...MEAT_PRODUCTS];
 
-
 export function isDietSafe(
   ingredients: { name: string }[],
   diet?: Diet,
@@ -48,9 +47,10 @@ export function isDietSafe(
           ? FORBIDDEN_PESCATARIAN
           : [];
 
-  return !forbidden.some((f) => ingredientNames.includes(f));
+  return !forbidden.some((f) =>
+    ingredientNames.some((name) => name.includes(f)),
+  );
 }
-
 
 export function isAllergySafe(
   ingredients: { name: string }[],
@@ -60,7 +60,6 @@ export function isAllergySafe(
 
   const ingredientNames = ingredients.map((i) => i.name.toLowerCase().trim());
   return !allergies.some((a) =>
-    ingredientNames.includes(a.toLowerCase().trim()),
+    ingredientNames.some((name) => name.includes(a.toLowerCase().trim())),
   );
 }
-
