@@ -66,6 +66,7 @@ export const HomePage = () => {
                 <RecipeCatalog
                   recipes={data?.recipes}
                   isLoading={isLoading || isFetching}
+                  className="pb-5"
                 />
 
                 <Pagination
