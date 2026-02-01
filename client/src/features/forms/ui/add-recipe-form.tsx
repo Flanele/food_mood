@@ -27,9 +27,7 @@ export const AddRecipeForm = () => {
   return (
     <div className="mt-10 w-full border-2 border-secondary p-8">
       <FormProvider {...form}>
-        <form
-          className="flex flex-col gap-8"
-        >
+        <form className="flex flex-col gap-8">
           <div className="flex items-end gap-10">
             <FormInput
               name="title"
@@ -106,7 +104,12 @@ export const AddRecipeForm = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button type="submit" className="bg-primary" disabled={isLoading} onClick={handleSubmit}>
+            <Button
+              type="submit"
+              className="bg-primary"
+              disabled={isLoading}
+              onClick={handleSubmit}
+            >
               {isLoading ? "Submitting..." : "Submit"}
             </Button>
 

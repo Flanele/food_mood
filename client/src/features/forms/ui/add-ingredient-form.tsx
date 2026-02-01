@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FormInput } from "./input-form";
 import { IngredientHint, UnitSelect } from "@/entities/ingredients";
@@ -54,7 +56,7 @@ export const AddIngredientForm: React.FC<Props> = ({
           hint={hint}
         />
       </div>
-  
+
       <div className="flex items-start gap-6 flex-wrap">
         <IngredientSuggestionsDropDown
           open={openPopover}
@@ -77,9 +79,9 @@ export const AddIngredientForm: React.FC<Props> = ({
             autoComplete="off"
           />
         </IngredientSuggestionsDropDown>
-  
+
         <UnitSelect name={`ingredients.${index}.unit`} label="Unit:" />
-  
+
         <FormInput
           name={`ingredients.${index}.amount`}
           label="Amount:"
@@ -87,7 +89,7 @@ export const AddIngredientForm: React.FC<Props> = ({
           placeholder="100"
           className="w-[120px]"
         />
-  
+
         {unit === "piece" && (
           <div className="flex flex-col gap-1">
             <FormInput
@@ -97,13 +99,13 @@ export const AddIngredientForm: React.FC<Props> = ({
               placeholder="50"
               className="w-[160px]"
             />
-  
+
             {isFetching && (
               <span className="text-xs text-gray-400">
                 Checking cached weight...
               </span>
             )}
-  
+
             {!isFetching && suggestedGrams != null && (
               <button
                 type="button"
@@ -113,7 +115,7 @@ export const AddIngredientForm: React.FC<Props> = ({
                 Use suggested: {suggestedGrams} g per piece
               </button>
             )}
-  
+
             {!isFetching && suggestedGrams == null && (
               <span className="text-xs text-gray-400">
                 No cached weight for this ingredient.
@@ -121,7 +123,7 @@ export const AddIngredientForm: React.FC<Props> = ({
             )}
           </div>
         )}
-  
+
         {canRemove && (
           <button
             type="button"
@@ -131,7 +133,7 @@ export const AddIngredientForm: React.FC<Props> = ({
             <X className="h-5 w-5" />
           </button>
         )}
-  
+
         {showTooltip && (
           <div className="mt-10">
             <HelpTooltip text={HELP_TEXTS.ingredients} />
@@ -140,5 +142,4 @@ export const AddIngredientForm: React.FC<Props> = ({
       </div>
     </div>
   );
-  
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import { useAddRecipeMutation } from "@/entities/recipe";
 import {
   FormAddRecipeInput,
@@ -15,7 +17,13 @@ export const useAddRecipeForm = () => {
       title: "",
       servings: 1,
       ingredients: [
-        { name: "", unit: "g", amount: undefined, pieceGrams: undefined, externalId: undefined },
+        {
+          name: "",
+          unit: "g",
+          amount: undefined,
+          pieceGrams: undefined,
+          externalId: undefined,
+        },
       ],
       imageMethod: "url",
       imageUrl: "",
@@ -60,8 +68,7 @@ export const useAddRecipeForm = () => {
   const addRecipeMutation = useAddRecipeMutation();
 
   const values = form.getValues();
-console.log(values);
-
+  console.log(values);
 
   return {
     form,

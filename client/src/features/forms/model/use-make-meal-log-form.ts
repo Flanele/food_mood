@@ -1,3 +1,5 @@
+"use client";
+
 import { useMakeMealLogMutation } from "@/entities/meal-log";
 import { getNowDateTime } from "@/shared/lib/utils";
 import {
@@ -37,4 +39,3 @@ export const useMakeMealLogForm = (id: number, onSuccess: () => void) => {
     isError: makeMealLogMutation.isError,
   };
 };
-

@@ -14,6 +14,6 @@ export const useRecipePage = (id: number) => {
     recipe: data,
     isLoading,
     isError,
-    isNotFound
+    isNotFound,
   };
 };

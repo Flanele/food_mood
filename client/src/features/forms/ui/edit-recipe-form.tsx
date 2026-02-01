@@ -32,9 +32,7 @@ export const EditRecipeForm: React.FC<Props> = ({ id }) => {
   return (
     <div className="mt-10 w-full border-2 border-secondary p-8">
       <FormProvider {...form}>
-        <form
-          className="flex flex-col gap-8"
-        >
+        <form className="flex flex-col gap-8">
           <div className="flex items-end gap-10">
             <FormInput
               name="title"

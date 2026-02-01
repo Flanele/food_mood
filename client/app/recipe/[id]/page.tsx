@@ -1,4 +1,4 @@
-import { RecipePage } from "@/screens";
+import { RecipePage } from "@/screens/recipe";
 
 export default async function Page({
   params,

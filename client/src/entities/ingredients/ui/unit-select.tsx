@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Select,
   SelectContent,
@@ -11,7 +13,7 @@ import { Controller, useFormContext } from "react-hook-form";
 interface Props {
   name: string;
   label?: string;
-} 
+}
 
 export const UnitSelect: React.FC<Props> = ({ name, label }) => {
   const { control } = useFormContext();
