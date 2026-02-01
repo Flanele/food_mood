@@ -5,7 +5,7 @@ import {
   parseAsInteger,
   parseAsString,
   useQueryState,
-} from "nuqs"; 
+} from "nuqs";
 
 export const useRecipeListFilters = () => {
   const [q, setQ] = useQueryState("q", parseAsString.withDefault(""));
@@ -40,16 +40,27 @@ export const useRecipeListFilters = () => {
   const [maxProt, setMaxProt] = useQueryState("maxProt", parseAsInteger);
 
   return {
-    q, setQ,
-    page, setPage,
-    limit, setLimit,
-    includeIngredients, setIncludeIngredients,
-    excludeIngredients, setExcludeIngredients,
-    minKcal, setMinKcal,
-    maxKcal, setMaxKcal,
-    minSugar, setMinSugar,
-    maxSugar, setMaxSugar,
-    minProt, setMinProt,
-    maxProt, setMaxProt,
-  }
+    q,
+    setQ,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    includeIngredients,
+    setIncludeIngredients,
+    excludeIngredients,
+    setExcludeIngredients,
+    minKcal,
+    setMinKcal,
+    maxKcal,
+    setMaxKcal,
+    minSugar,
+    setMinSugar,
+    maxSugar,
+    setMaxSugar,
+    minProt,
+    setMinProt,
+    maxProt,
+    setMaxProt,
+  };
 };

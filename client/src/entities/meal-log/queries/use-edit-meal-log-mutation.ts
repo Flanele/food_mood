@@ -21,7 +21,7 @@ export const useEditMealLogMutation = (id: number, onSuccess: () => void) => {
 
       await mealLogsApi.mealLogControllerPatchMealLog(id, dto);
     },
-    
+
     onSuccess: onSuccess,
   });
 };

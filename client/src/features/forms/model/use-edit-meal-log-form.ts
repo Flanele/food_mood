@@ -1,3 +1,5 @@
+"use client";
+
 import { useEditMealLogMutation } from "@/entities/meal-log";
 import { MealLogDto } from "@/shared/api/gen";
 import { splitIsoDateTime } from "@/shared/lib/utils";

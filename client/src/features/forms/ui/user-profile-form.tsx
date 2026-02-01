@@ -1,3 +1,5 @@
+"use client";
+
 import { ProfileDTO } from "@/shared/api/gen";
 import { cn } from "@/shared/lib/utils";
 import { FormProvider } from "react-hook-form";
@@ -23,9 +25,7 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
   } = useEditProfileForm(profile);
 
   return (
-    <div
-      className={cn("w-full border-2 border-secondary p-8", className)}
-    >
+    <div className={cn("w-full border-2 border-secondary p-8", className)}>
       <FormProvider {...form}>
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           {/* Sex */}
@@ -123,7 +123,9 @@ export const UserProfileForm: React.FC<Props> = ({ className, profile }) => {
               {isSubmitting ? "Saving..." : "Save profile"}
             </Button>
 
-            {isError && <span className="text-red-500">Something went wrong...</span>}
+            {isError && (
+              <span className="text-red-500">Something went wrong...</span>
+            )}
           </div>
         </form>
       </FormProvider>

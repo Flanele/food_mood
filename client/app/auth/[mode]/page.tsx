@@ -1,4 +1,4 @@
-import { AuthPage } from "@/screens";
+import { AuthPage } from "@/screens/auth";
 import { Mode } from "@/shared";
 import { notFound } from "next/navigation";
 
