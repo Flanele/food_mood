@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import animationData from "@/../../client/public/assets/walking_orange.json";
+import animationData from "../assets-json/walking_orange.json";
 import React from "react";
 
 interface Props {

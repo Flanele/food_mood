@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import animationData from "@/../../client/public/assets/404_error.json";
+import animationData from "../assets-json/404_error.json";
 import React from "react";
 
 interface Props {

@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import animationData from "@/../../client/public/assets/bouncing_fruits.json";
+import animationData from "../assets-json/bouncing_fruits.json";
 
 export const AppLoader = () => {
   return (
