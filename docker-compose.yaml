@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  server: 
+    build: ./server
+    ports: 
+      - "6005:6005"
+    env_file:
+      - ./server/.env 
+    container_name: nest_backend
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./client/.env 
+    container_name: next_frontend
+    depends_on:
+      - server
