@@ -9,7 +9,10 @@ services:
       - ./server/.env 
     container_name: nest_backend
   client:
-    build: ./client
+    build:
+      context: ./client
+      args:
+        NEXT_PUBLIC_BASE_URL: http://localhost:3000
     ports:
       - "3000:3000"
     env_file:
