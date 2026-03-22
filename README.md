@@ -51,7 +51,15 @@ Full-stack app that analyzes your meals and personal data to deliver personalize
 
 ```bash
 git clone https://github.com/Flanele/food_mood.git
-cd food-mood
+cd food_mood
 cp server/.env.example server/.env
 cp client/.env.example client/.env
 docker compose up --build
+```
+
+## 📸 Preview
+
+![App](./docs/home.png)
+![Dashboard](./docs/dashboard-1.png)
+![Dashboard](./docs/dashboard-2.png)
+![Recipe](./docs/recipe.png)
