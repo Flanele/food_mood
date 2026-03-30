@@ -47,6 +47,10 @@ Full-stack app that analyzes your meals and personal data to deliver personalize
 * Frontend: Vercel
 * Backend: Render
 
+## 🧩 Architecture
+
+The frontend follows Feature-Sliced Design (FSD), organizing code into layers and features to improve scalability, maintainability, and separation of concerns.
+
 ## 🚀 Run locally
 
 ```bash
